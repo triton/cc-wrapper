@@ -1,0 +1,7 @@
+**/.deps
+*.a
+*.o
+*.so*
+*_test
+*_test_log
+cc-wrapper
