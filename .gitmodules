@@ -1,0 +1,9 @@
+[submodule "third_party/fmt"]
+	path = third_party/fmt
+	url = https://github.com/fmtlib/fmt
+[submodule "third_party/re2"]
+	path = third_party/re2
+	url = https://github.com/google/re2
+[submodule "third_party/parallel-hashmap"]
+	path = third_party/parallel-hashmap
+	url = https://github.com/greg7mdp/parallel-hashmap
