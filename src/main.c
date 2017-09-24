@@ -27,7 +27,7 @@ void set_log_level()
 {
 	const char *debug = getenv("NIX_DEBUG");
 	if (debug != NULL && strcmp("1", debug) == 0)
-		log_level = LOG_LEVEL_DEBUG;
+		log_level = LOG_LEVEL_INFO;
 	else
 		log_level = LOG_LEVEL_WARN;
 }
