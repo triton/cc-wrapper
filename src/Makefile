@@ -14,9 +14,9 @@
 
 DEPDIR ?= .deps
 MAKEDEPEND ?= $(CPP) -M
-CFLAGS += -Wall -Wpedantic -Wextra -Werror
+CFLAGS += -Wall -Wpedantic -Wextra -Werror -I.. -I.
 
-LIB_SRCS = log.c
+LIB_SRCS = execinfo.c log.c
 CC_WRAPPER_SRCS = main.c libccwrapper.a
 TESTS = log
 
@@ -38,15 +38,18 @@ libccwrapper.a: $(LIB_SRCS:.c=.o)
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $(shell pkg-config gtest --cflags) \
 		-std=c++14 $^ -o $@ $(LDFLAGS) $(shell pkg-config gtest --libs)
 
-%.o: %.c | $(DEPDIR)
+%.o: %.c | $(DEPDIR) config.h
 	@$(MAKEDEPEND) $(CFLAGS) $< >$(DEPDIR)/$(<:.c=.d)
 	$(CC) $(CFLAGS) -std=c99 -c $< -o $@
+
+config.h:
+	../build/gen_config.sh
 
 $(DEPDIR):
 	@mkdir -p $(DEPDIR)
 
 clean:
-	-rm -rf $(DEPDIR) *_test_log *_test *.a *.o *.so* cc-wrapper
+	-rm -rf $(DEPDIR) config.h *_test_log *_test *.a *.o *.so* cc-wrapper
 
 .PHONY: all check clean
 

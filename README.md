@@ -5,7 +5,7 @@ written explicitly for use in the triton project.
 
 ## Building
 ```
-make
+make COMPILER_PATH=<PATH separated by : to compiler binaries>
 ```
 
 ## Testing

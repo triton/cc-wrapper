@@ -1,4 +1,5 @@
 **/.deps
+config.h
 *.a
 *.o
 *.so*

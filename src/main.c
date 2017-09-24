@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "log.h"
+#include "execinfo.h"
+#include "config.h"
 
 void set_log_level()
 {
@@ -28,12 +32,39 @@ void set_log_level()
 		log_level = LOG_LEVEL_WARN;
 }
 
+void print_args(char * const *args)
+{
+	for (size_t i = 0; args[i] != NULL; ++i)
+		LOG_INFO("  %s\n", args[i]);
+	LOG_INFO("\n");
+}
+
+void execute(const struct exec_info *exec_info, char * const *args)
+{
+	LOG_INFO("Calling `%s` with arguments:\n", exec_info->path);
+	print_args(args);
+	LOG_INFO("####################################\n");
+	execv(exec_info->path, args);
+}
+
 int main(int argc, char *argv[])
 {
 	set_log_level();
+
 	LOG_INFO("Got initial arguments:\n");
-	for (int i = 0; i < argc; ++i)
-		LOG_INFO("  %s\n", argv[i]);
-	LOG_INFO("\n");
-	return 1;
+	print_args(argv);
+
+	char **args = malloc(sizeof(char *) * (argc + 1));
+	if (args == NULL)
+		LOG_FATAL("Failed to allocate args list\n");
+
+	for (size_t i = 0; argv[i] != NULL; ++i)
+		args[i] = argv[i];
+
+	const struct exec_info *exec_info = get_exec_info(exec_infos, argv[0]);
+	if (exec_info == NULL)
+		LOG_FATAL("Failed to get exec info for: %s\n", argv[0]);
+
+	print_exec_info(exec_info);
+	execute(exec_info, args);
 }
