@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+PREFIX ?=
+
 DEPDIR ?= .deps
 MAKEDEPEND ?= $(CPP) -M
 CFLAGS += -Wall -Wpedantic -Wextra -Werror -I.. -I.
@@ -20,8 +22,8 @@ LIB_SRCS = execinfo.c log.c
 CC_WRAPPER_SRCS = main.c
 TESTS = log
 
+.PHONY: all
 all: cc-wrapper
-check: $(TESTS:=_test_log)
 
 cc-wrapper: $(CC_WRAPPER_SRCS:.c=.o) libccwrapper.a
 	$(CC) $(CFLAGS) $^ -o $@ -static $(LDFLAGS)
@@ -48,10 +50,26 @@ config.h:
 $(DEPDIR):
 	@mkdir -p $(DEPDIR)
 
+.PHONY: check
+check: $(TESTS:=_test_log)
+
+.PHONY: clear
 clean:
 	-rm -rf $(DEPDIR) config.h *_test_log *_test *.a *.o *.so* cc-wrapper
 
-.PHONY: all check clean
+INSTALL_EXES = $(shell ../build/compiler_exes.sh --exe-only)
+INSTALL_EXES_ABS = $(INSTALL_EXES:%=$(PREFIX)/bin/%)
+.PHONY: install
+install: $(INSTALL_EXES_ABS) $(PREFIX)/bin/cc-wrapper
+
+$(PREFIX)/bin/%:
+	@rm -f $@
+	@mkdir -p $(shell dirname $@)
+	@ln -sv cc-wrapper $@
+
+$(PREFIX)/bin/cc-wrapper: cc-wrapper
+	@rm -f $@
+	install -D -m0755 -s $< $(PREFIX)/bin
 
 include $(wildcard $(LIB_SRCS:%.c=$(DEPDIR)/%.d))
 include $(wildcard $(CC_WRAPPER_SRCS:%.c=$(DEPDIR)/%.d))

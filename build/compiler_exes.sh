@@ -24,6 +24,10 @@
 
 set -e
 
+if [ "$1" = "--exe-only" ]; then
+  exeOnly="1"
+fi
+
 getFull() {
   local oldpath="$PATH"
   export PATH="$COMPILER_PATH"
@@ -48,7 +52,11 @@ printTuple() {
     echo "Failed to find: $2" >&2
     return 1
   fi
-  echo "$1 $abs $3"
+  if [ "$exeOnly" = "1" ]; then
+    echo "$1"
+  else
+    echo "$1 $abs $3"
+  fi
 }
 
 # Figure out which compiler we are using
