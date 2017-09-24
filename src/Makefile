@@ -17,13 +17,13 @@ MAKEDEPEND ?= $(CPP) -M
 CFLAGS += -Wall -Wpedantic -Wextra -Werror -I.. -I.
 
 LIB_SRCS = execinfo.c log.c
-CC_WRAPPER_SRCS = main.c libccwrapper.a
+CC_WRAPPER_SRCS = main.c
 TESTS = log
 
 all: cc-wrapper
 check: $(TESTS:=_test_log)
 
-cc-wrapper: $(CC_WRAPPER_SRCS:.c=.o)
+cc-wrapper: $(CC_WRAPPER_SRCS:.c=.o) libccwrapper.a
 	$(CC) $(CFLAGS) $^ -o $@ -static $(LDFLAGS)
 
 libccwrapper.a: $(LIB_SRCS:.c=.o)
@@ -53,4 +53,6 @@ clean:
 
 .PHONY: all check clean
 
-include $(wildcard $(SRCS:%.c=$(DEPDIR)/%.d))
+include $(wildcard $(LIB_SRCS:%.c=$(DEPDIR)/%.d))
+include $(wildcard $(CC_WRAPPER_SRCS:%.c=$(DEPDIR)/%.d))
+include $(wildcard $(TESTS:%=$(DEPDIR)/%_test.d))
