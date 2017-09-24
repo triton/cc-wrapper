@@ -47,6 +47,7 @@ for tuple in $compiler_tuples; do
   echo $'\t''{' >>"$config_h"
   echo $'\t'$'\t'".name = \"${tuple[0]}\"," >>"$config_h"
   echo $'\t'$'\t'".path = \"${tuple[1]}\"," >>"$config_h"
+  echo $'\t'$'\t'".prefer = ${tuple[2]}," >>"$config_h"
   echo $'\t''},' >>"$config_h"
   IFS="$oldifs2"
 done

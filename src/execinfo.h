@@ -24,6 +24,7 @@ extern "C" {
 struct exec_info {
 	char *name;
 	char *path;
+	int prefer;
 };
 
 void print_exec_info(const struct exec_info *exec_info);

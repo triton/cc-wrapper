@@ -42,11 +42,25 @@ const struct exec_info *get_exec_info(
 	memcpy(arg0_copy, arg0, arg0_len + 1);
 	const char *name = basename(arg0_copy);
 
-	for (size_t i = 0; exec_infos[i].name != NULL; ++i)
+	for (size_t i = 0; exec_infos[i].name != NULL; ++i) {
+		// Exact matches always come first
 		if (strcmp(name, exec_infos[i].name) == 0) {
 			ret = &exec_infos[i];
 			goto out;
 		}
+
+		// Fallback to {exe}.{type} matching
+		size_t name_len = strlen(name);
+		size_t i_len = strlen(exec_infos[i].name);
+		if (name_len + 1 > i_len)
+			continue;
+		if (exec_infos[i].name[name_len] != '.')
+			continue;
+		if (strncmp(name, exec_infos[i].name, name_len) != 0)
+			continue;
+		if (ret == NULL || ret->prefer < exec_infos[i].prefer)
+			ret = &exec_infos[i];
+	}
 
 out:
 	free(arg0_copy);
