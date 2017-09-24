@@ -27,6 +27,7 @@ void print_exec_info(const struct exec_info *exec_info)
 	LOG_DEBUG("EXEC_INFO:\n");
 	LOG_DEBUG("  Name: %s\n", exec_info->name);
 	LOG_DEBUG("  Path: %s\n", exec_info->path);
+	LOG_DEBUG("  Prefer: %d\n", exec_info->prefer);
 	LOG_DEBUG("\n");
 }
 
