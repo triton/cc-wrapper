@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,6 +23,8 @@
 #include "log.h"
 #include "execinfo.h"
 #include "config.h"
+
+#define MAIN_BINARY "cc-wrapper"
 
 void set_log_level()
 {
@@ -47,9 +50,22 @@ void execute(const struct exec_info *exec_info, char * const *args)
 	execv(exec_info->path, args);
 }
 
+bool is_main_binary(const char *path)
+{
+	return strcmp(path, MAIN_BINARY) == 0;
+}
+
 int main(int argc, char *argv[])
 {
 	set_log_level();
+
+	if (argc >= 1 && is_main_binary(argv[0])) {
+		argc -= 1;
+		argv += 1;
+	}
+
+	if (argc < 1)
+		LOG_FATAL("We must have a binary name\n");
 
 	LOG_INFO("Got initial arguments:\n");
 	print_args(argv);
