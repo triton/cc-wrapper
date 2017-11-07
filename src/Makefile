@@ -19,11 +19,13 @@ MAKEDEPEND ?= $(CPP) -M
 CFLAGS += -Wall -Wpedantic -Wextra -Werror -I.. -I.
 
 LIB_SRCS = \
+	array.c \
 	execinfo.c \
 	log.c
 
 CC_WRAPPER_SRCS = main.c
 TESTS = \
+	array \
 	log
 
 .PHONY: all
