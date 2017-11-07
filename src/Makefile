@@ -16,7 +16,7 @@ PREFIX ?=
 
 DEPDIR ?= .deps
 MAKEDEPEND ?= $(CPP) -M
-CFLAGS += -Wall -Wpedantic -Wextra -Werror -I.. -I.
+CFLAGS += -g -Wall -Wpedantic -Wextra -Werror -I.. -I.
 
 LIB_SRCS = \
 	array.c \
