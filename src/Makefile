@@ -37,8 +37,9 @@ cc-wrapper: $(CC_WRAPPER_SRCS:.c=.o) libccwrapper.a
 libccwrapper.a: $(LIB_SRCS:.c=.o)
 	$(AR) rcs $@ $^
 
-%_test_log: %_test
-	@./$< 2>&1 | tee $@
+%_test_pass: %_test
+	valgrind --leak-check=full --error-exitcode=1 -- ./$<
+	touch $@
 
 .SECONDARY: $(TESTS:=_test)
 %_test: %_test.cc libccwrapper.a | $(DEPDIR)
@@ -57,11 +58,11 @@ $(DEPDIR):
 	@mkdir -p $(DEPDIR)
 
 .PHONY: check
-check: $(TESTS:=_test_log)
+check: $(TESTS:=_test_pass)
 
 .PHONY: clear
 clean:
-	-rm -rf $(DEPDIR) config.h *_test_log *_test *.a *.o *.so* cc-wrapper
+	-rm -rf $(DEPDIR) config.h *_test_pass *_test_log *_test *.a *.o *.so* cc-wrapper
 
 INSTALL_EXES = $(shell ../build/compiler_exes.sh --exe-only)
 INSTALL_EXES_ABS = $(INSTALL_EXES:%=$(PREFIX)/bin/%)
