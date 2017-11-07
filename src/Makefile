@@ -18,9 +18,13 @@ DEPDIR ?= .deps
 MAKEDEPEND ?= $(CPP) -M
 CFLAGS += -Wall -Wpedantic -Wextra -Werror -I.. -I.
 
-LIB_SRCS = execinfo.c log.c
+LIB_SRCS = \
+	execinfo.c \
+	log.c
+
 CC_WRAPPER_SRCS = main.c
-TESTS = log
+TESTS = \
+	log
 
 .PHONY: all
 all: cc-wrapper
