@@ -33,7 +33,8 @@ struct array;
 struct array *array_init(size_t elem_size, size_t nelems);
 
 /*
- * Frees the array
+ * Frees the array. Note this does not free any of the elements
+ * stored in the array.
  */
 void array_free(struct array *array);
 
