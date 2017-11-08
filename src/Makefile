@@ -20,12 +20,14 @@ CFLAGS += -g -Wall -Wpedantic -Wextra -Werror -I.. -I.
 
 LIB_SRCS = \
 	array.c \
+	avl.c \
 	execinfo.c \
 	log.c
 
 CC_WRAPPER_SRCS = main.c
 TESTS = \
 	array \
+	avl \
 	log
 
 .PHONY: all
