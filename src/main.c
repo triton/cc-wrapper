@@ -32,7 +32,8 @@ void set_log_level()
 	if (debug != NULL && strcmp("1", debug) == 0)
 		log_level = LOG_LEVEL_INFO;
 	else
-		log_level = LOG_LEVEL_WARN;
+		log_level = LOG_LEVEL_ERROR;
+	LOG_INFO("Log level: %s\n", log_level_to_string(log_level));
 }
 
 void print_args(char * const *args)
