@@ -24,4 +24,7 @@ install:
 clean:
 	@$(MAKE) -C src clean
 
-.PHONY: all install check clean
+distclean:
+	@$(MAKE) -C src distclean
+
+.PHONY: all install check clean distclean

@@ -15,12 +15,15 @@
 # limitations under the License.
 
 # Returns compiler executable tuples in the form
-#   (exe name) (full exe path) (preferred binary)
+#   (exe name) (full exe path) (preferred binary level)
 #   ...
 #
 # A preferred binary is used in the case of {exe}.{type}
 # like ld.bfd or ld.gold. The list of {exe} will be sorted to
 # choose the {type} with the highest value for preferred.
+#
+# Takes input from the environment variables:
+#   COMPILER_PATH: A colon(:) delimited path of compiler and linke executables
 
 set -e
 
@@ -28,7 +31,12 @@ if [ "$1" = "--exe-only" ]; then
   exeOnly="1"
 fi
 
+# Converts a named binary into the full path to that binary
+#   getFull <bin_name>
+#   Returns a string of the full path and code 0 on success
 getFull() {
+  local bin_name="$1"
+
   local oldpath="$PATH"
   export PATH="$COMPILER_PATH"
   if type -tP "$1"; then
@@ -40,13 +48,23 @@ getFull() {
   return "$st"
 }
 
+# Converts a named binary into the absolute path to that binary
+# following any symlinks along the way
+#   getAbs <bin_name>
+#   Returns the absolute path and code 0 on success
 getAbs() {
-  local full
-  full="$(getFull "$1")"
-  readlink -f "$full"
+  local bin_name="$1"
+
+  local bin_full
+  bin_full="$(getFull "$bin_name")"
+  readlink -f "$bin_full"
 }
 
+# Prints a tuple representing the input binary
+#   printTuple <exe_name> <searched_bin_name> <preference_level>
+#   Returns tuples in the above format and code 0 on success
 printTuple() {
+  local
   local abs
   if ! abs="$(getAbs "$2")"; then
     echo "Failed to find: $2" >&2

@@ -14,52 +14,57 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set -e
+# Outputs a C compatible header file enumerating all of the compiler
+# executables in the environment. The structs are compatible with
+# `struct exec_info` which can be found in src/execinfo.h
+#
+# Please refer to build/compiler_exes.sh for the input environment
+# for running this script as it does the heavy lifting
 
-config_h='config.h'
+set -e
 
 # Load the compiler configuration
 if ! compiler_tuples="$("$(dirname "$0")"/compiler_exes.sh)"; then
   exit 1
 fi
 
-echo '#ifndef CONFIG_H' >"$config_h"
-echo '#define CONFIG_H' >>"$config_h"
-echo '' >>"$config_h"
+echo '#ifndef CONFIG_H'
+echo '#define CONFIG_H'
+echo ''
 
 # Includes
-echo '#include "execinfo.h"' >>"$config_h"
+echo '#include "execinfo.h"'
 
-echo '' >>"$config_h"
-echo '#ifdef __cplusplus' >>"$config_h"
-echo 'extern "C" {' >>"$config_h"
-echo '#endif' >>"$config_h"
-echo '' >>"$config_h"
+echo ''
+echo '#ifdef __cplusplus'
+echo 'extern "C" {'
+echo '#endif'
+echo ''
 
 # Definitions
-echo 'struct exec_info exec_infos[] = {' >>"$config_h"
+echo 'struct exec_info exec_infos[] = {'
 oldifs="$IFS"
 IFS=$'\n'
 for tuple in $compiler_tuples; do
   oldifs2="$IFS"
   IFS=' '
   tuple=($tuple)
-  echo $'\t''{' >>"$config_h"
-  echo $'\t'$'\t'".name = \"${tuple[0]}\"," >>"$config_h"
-  echo $'\t'$'\t'".path = \"${tuple[1]}\"," >>"$config_h"
-  echo $'\t'$'\t'".prefer = ${tuple[2]}," >>"$config_h"
-  echo $'\t''},' >>"$config_h"
+  echo $'\t''{'
+  echo $'\t'$'\t'".name = \"${tuple[0]}\","
+  echo $'\t'$'\t'".path = \"${tuple[1]}\","
+  echo $'\t'$'\t'".prefer = ${tuple[2]},"
+  echo $'\t''},'
   IFS="$oldifs2"
 done
 IFS="$oldifs"
-echo $'\t''{' >>"$config_h"
-echo $'\t'$'\t''.name = NULL,' >>"$config_h"
-echo $'\t''},' >>"$config_h"
-echo '};' >>"$config_h"
+echo $'\t''{'
+echo $'\t'$'\t''.name = NULL,'
+echo $'\t''},'
+echo '};'
 
-echo '' >>"$config_h"
-echo '#ifdef __cplusplus' >>"$config_h"
-echo '}  // extern "C"' >>"$config_h"
-echo '#endif' >>"$config_h"
-echo '' >>"$config_h"
-echo '#endif  // CONIG_H' >>"$config_h"
+echo ''
+echo '#ifdef __cplusplus'
+echo '}  // extern "C"'
+echo '#endif'
+echo ''
+echo '#endif  // CONIG_H'
