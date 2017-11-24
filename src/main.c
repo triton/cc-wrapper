@@ -20,9 +20,10 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "log.h"
-#include "execinfo.h"
 #include "config.h"
+#include "execinfo.h"
+#include "log.h"
+#include "path.h"
 
 #define MAIN_BINARY "cc-wrapper"
 
@@ -53,7 +54,7 @@ void execute(const struct exec_info *exec_info, char * const *args)
 
 bool is_main_binary(const char *path)
 {
-	return strcmp(path, MAIN_BINARY) == 0;
+	return strcmp(path_base(path), MAIN_BINARY) == 0;
 }
 
 int main(int argc, char *argv[])
