@@ -114,4 +114,28 @@ TEST(ArrayTest, ResizeShrink) {
   array_free(array);
 }
 
+TEST(ArrayTest, ResizeBounce) {
+  const size_t size = 256;
+  struct array *array = array_init(sizeof(uint8_t), size);
+  ASSERT_NE(nullptr, array);
+
+  const size_t boundary_less = array_allocation(array) / sizeof(uint8_t);
+  const size_t boundary_more = boundary_less + 1;
+
+  EXPECT_TRUE(array_resize(array, sizeof(uint8_t) * boundary_less));
+  EXPECT_EQ(boundary_less, array_nelems(array));
+  EXPECT_EQ(boundary_less * sizeof(uint8_t), array_allocation(array));
+
+  EXPECT_TRUE(array_resize(array, sizeof(uint8_t) * boundary_more));
+  EXPECT_EQ(boundary_more, array_nelems(array));
+  size_t larger_allocation = array_allocation(array);
+  EXPECT_LE(boundary_more * sizeof(uint8_t), larger_allocation);
+
+  EXPECT_TRUE(array_resize(array, sizeof(uint8_t) * boundary_less));
+  EXPECT_EQ(boundary_less, array_nelems(array));
+  EXPECT_EQ(larger_allocation, array_allocation(array));
+
+  array_free(array);
+}
+
 }  // namespace
