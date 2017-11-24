@@ -19,6 +19,8 @@
 
 #include "array.h"
 
+namespace {
+
 TEST(ArrayTest, FreeNull) {
   array_free(nullptr);
 }
@@ -111,3 +113,5 @@ TEST(ArrayTest, ResizeShrink) {
 
   array_free(array);
 }
+
+}  // namespace

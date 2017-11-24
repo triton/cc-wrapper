@@ -22,6 +22,8 @@
 
 #include "avl.h"
 
+namespace {
+
 int intptr_compare(void *root, void *unplaced) {
   return reinterpret_cast<intptr_t>(unplaced) -
       reinterpret_cast<intptr_t>(root);
@@ -336,3 +338,5 @@ TEST(AvlTest, Ownership) {
   EXPECT_EQ(5, *our_own);
   free(our_own);
 }
+
+}  // namespace

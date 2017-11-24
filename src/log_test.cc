@@ -18,6 +18,8 @@
 
 #include "log.h"
 
+namespace {
+
 TEST(LogTest, FatalMessages) {
   log_level = LOG_LEVEL_FATAL;
   EXPECT_EXIT(LOG_FATAL("hi"), testing::ExitedWithCode(1), "^hi$");
@@ -32,3 +34,5 @@ TEST(LogTest, PrintLevels) {
   EXPECT_EXIT({ LOG_INFO("hi"); exit(0); }, testing::ExitedWithCode(0), "^hi$");
   EXPECT_EXIT({ LOG_DEBUG("hi"); exit(0); }, testing::ExitedWithCode(0), "^$");
 }
+
+}  // namespace
