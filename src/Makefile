@@ -22,7 +22,8 @@ LIB_SRCS = \
 	array.c \
 	avl.c \
 	execinfo.c \
-	log.c
+	log.c \
+	path.c
 
 CC_WRAPPER_SRCS = \
 	main.c
@@ -30,7 +31,8 @@ CC_WRAPPER_SRCS = \
 TESTS = \
 	array \
 	avl \
-	log
+	log \
+	path
 
 .PHONY: all
 all: cc-wrapper
