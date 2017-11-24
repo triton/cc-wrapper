@@ -15,10 +15,30 @@
  */
 
 #include <gtest/gtest.h>
+#include <string_view>
 
 #include "log.h"
 
 namespace {
+
+using std::string_view;
+
+TEST(LogTest, LogLevelToString) {
+  EXPECT_EQ(string_view("NONE"),
+      string_view(log_level_to_string(LOG_LEVEL_NONE)));
+  EXPECT_EQ(string_view("FATAL"),
+      string_view(log_level_to_string(LOG_LEVEL_FATAL)));
+  EXPECT_EQ(string_view("ERROR"),
+      string_view(log_level_to_string(LOG_LEVEL_ERROR)));
+  EXPECT_EQ(string_view("WARN"),
+      string_view(log_level_to_string(LOG_LEVEL_WARN)));
+  EXPECT_EQ(string_view("INFO"),
+      string_view(log_level_to_string(LOG_LEVEL_INFO)));
+  EXPECT_EQ(string_view("DEBUG"),
+      string_view(log_level_to_string(LOG_LEVEL_DEBUG)));
+  EXPECT_EQ(string_view("TRACE"),
+      string_view(log_level_to_string(LOG_LEVEL_TRACE)));
+}
 
 TEST(LogTest, FatalMessages) {
   log_level = LOG_LEVEL_FATAL;

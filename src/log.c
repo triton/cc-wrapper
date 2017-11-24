@@ -23,6 +23,28 @@
 
 enum log_level log_level = LOG_LEVEL_INFO;
 
+const char *log_level_to_string(enum log_level log_level)
+{
+	switch (log_level) {
+		case LOG_LEVEL_NONE:
+			return "NONE";
+		case LOG_LEVEL_FATAL:
+			return "FATAL";
+		case LOG_LEVEL_ERROR:
+			return "ERROR";
+		case LOG_LEVEL_WARN:
+			return "WARN";
+		case LOG_LEVEL_INFO:
+			return "INFO";
+		case LOG_LEVEL_DEBUG:
+			return "DEBUG";
+		case LOG_LEVEL_TRACE:
+			return "TRACE";
+		default:
+			return "UNKNOWN";
+	};
+}
+
 void log_printf(enum log_level level, const char *format, ...)
 {
 	va_list va_args;

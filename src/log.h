@@ -40,6 +40,11 @@ enum log_level {
 extern enum log_level log_level;
 
 /*
+ * Returns a string that describes the log level
+ */
+const char *log_level_to_string(enum log_level log_level);
+
+/*
  * Prints out the log lines if the level is below or matching the
  * current log level. If the input level is LOG_LEVEL_FATAL, this
  * will terminate the application regardless of the current level.
