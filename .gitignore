@@ -1,6 +1,6 @@
 **/.deps
 config.h
-Makefile.gen
+*.gen
 *.a
 *.o
 *.so*

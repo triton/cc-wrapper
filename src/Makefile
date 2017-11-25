@@ -43,9 +43,17 @@ cc-wrapper: $(CC_WRAPPER_SRCS:.c=.o) libccwrapper.a
 libccwrapper.a: $(LIB_SRCS:.c=.o)
 	$(AR) rcs $@ $^
 
-%_test_pass: %_test
-	valgrind --leak-check=full --error-exitcode=1 \
-		--child-silent-after-fork=yes -- ./$<
+suppressions.gen: suppressions_test
+	valgrind --leak-check=full --show-leak-kinds=all --gen-suppressions=all \
+		-- ./$<
+	valgrind --leak-check=full --show-leak-kinds=all --gen-suppressions=all \
+		-- ./$< 2>&1 >/dev/null | grep -v '^=' >suppressions.gen || true
+
+%_test_pass: %_test suppressions.gen
+	valgrind --leak-check=full --show-leak-kinds=all \
+		--error-exitcode=1 --child-silent-after-fork=yes \
+		--suppressions=suppressions.gen -- \
+		./$<
 	touch $@
 
 .SECONDARY: $(TESTS:=_test)
@@ -67,7 +75,8 @@ check: $(TESTS:=_test_pass)
 
 .PHONY: clean
 clean:
-	-rm -rf $(DEPDIR) *_test_pass *_test_log *_test *.d *.a *.o *.so* cc-wrapper
+	-rm -rf $(DEPDIR) suppressions.gen *_test_pass *_test_log *_test \
+		*.d *.a *.o *.so* cc-wrapper
 
 .PHONY: distclean
 distclean: clean
