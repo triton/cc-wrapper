@@ -33,8 +33,15 @@ error() {
 trap error ERR INT
 
 echo -n "">"$makefile_inc"
-compiler_exes="$(build/compiler_exes.sh --exe-only)"
+compiler_exes="$(build/compiler_exes.sh | awk '{ print $1; }')"
 echo "INSTALL_EXES = $(echo $compiler_exes)">>"$makefile_inc"
 echo "PREFIX ?= ${PREFIX-/usr}" >>"$makefile_inc"
+if pkg-config --cflags gtest >/dev/null 2>&1; then
+  echo "GTEST_CFLAGS = $(pkg-config --cflags gtest)" >>"$makefile_inc"
+  echo "GTEST_LIBS = $(pkg-config --libs gtest)" >>"$makefile_inc"
+else
+  echo "GTEST_CFLAGS = $(gtest-config --cppflags)" >>"$makefile_inc"
+  echo "GTEST_LIBS = $(gtest-config --libs)" >>"$makefile_inc"
+fi
 
 build/gen_config.sh >"$config_h" 2>/dev/null

@@ -50,9 +50,10 @@ libccwrapper.a: $(LIB_SRCS:.c=.o)
 
 .SECONDARY: $(TESTS:=_test)
 %_test: %_test.cc libccwrapper.a | $(DEPDIR)
-	@$(MAKEDEPEND) $(CFLAGS) $(CXXFLAGS) -std=c++17 $< >$(DEPDIR)/$(<:.cc=.d)
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $(shell pkg-config gtest --cflags) \
-		-std=c++17 $^ -o $@ $(LDFLAGS) $(shell pkg-config gtest --libs)
+	@$(MAKEDEPEND) $(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
+		-std=c++17 $< >$(DEPDIR)/$(<:.cc=.d)
+	$(CXX) $(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
+		-std=c++17 $^ -o $@ $(LDFLAGS) $(GTEST_LIBS)
 
 %.o: %.c | $(DEPDIR) config.h
 	@$(MAKEDEPEND) $(CFLAGS) -std=c99 $< >$(DEPDIR)/$(<:.c=.d)
