@@ -67,7 +67,7 @@ check: $(TESTS:=_test_pass)
 
 .PHONY: clean
 clean:
-	-rm -rf $(DEPDIR) *_test_pass *_test_log *_test *.a *.o *.so* cc-wrapper
+	-rm -rf $(DEPDIR) *_test_pass *_test_log *_test *.d *.a *.o *.so* cc-wrapper
 
 .PHONY: distclean
 distclean: clean
