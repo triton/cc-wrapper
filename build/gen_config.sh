@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Copyright 2017 cc-wrapper authors
 #
@@ -22,6 +22,7 @@
 # for running this script as it does the heavy lifting
 
 set -e
+set -o pipefail
 
 # Load the compiler configuration
 if ! compiler_tuples="$("$(dirname "$0")"/compiler_exes.sh)"; then

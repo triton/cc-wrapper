@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Copyright 2017 cc-wrapper authors
 #
@@ -26,6 +26,7 @@
 #   COMPILER_PATH: A colon(:) delimited path of compiler and linke executables
 
 set -e
+set -o pipefail
 
 if [ "$1" = "--exe-only" ]; then
   exeOnly="1"
@@ -39,7 +40,7 @@ getFull() {
 
   local oldpath="$PATH"
   export PATH="$COMPILER_PATH"
-  if type -tP "$1"; then
+  if type -P "$1"; then
     local st=0
   else
     local st="$?"

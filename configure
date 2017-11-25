@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Copyright 2017 cc-wrapper authors
 #
@@ -18,7 +18,9 @@
 # variables instead of command line flags.
 #   COMPILER_PATH: Used by the underlying build/compiler_exes.sh
 #   PREFIX: The location to install the cc-wrapper
+
 set -e
+set -o pipefail
 
 makefile_inc="src/Makefile.gen"
 config_h="src/config.h"
