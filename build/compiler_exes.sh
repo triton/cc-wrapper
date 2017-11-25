@@ -28,10 +28,6 @@
 set -e
 set -o pipefail
 
-if [ "$1" = "--exe-only" ]; then
-  exeOnly="1"
-fi
-
 # Converts a named binary into the full path to that binary
 #   getFull <bin_name>
 #   Returns a string of the full path and code 0 on success
@@ -65,17 +61,17 @@ getAbs() {
 #   printTuple <exe_name> <searched_bin_name> <preference_level>
 #   Returns tuples in the above format and code 0 on success
 printTuple() {
-  local
+  local exe_name="$1"
+  local searched_bin_name="$2"
+  local preference_level="$3"
+
   local abs
-  if ! abs="$(getAbs "$2")"; then
-    echo "Failed to find: $2" >&2
+  if ! abs="$(getAbs "$searched_bin_name")"; then
+    echo "Failed to find: $searched_bin_name" >&2
     return 1
   fi
-  if [ "$exeOnly" = "1" ]; then
-    echo "$1"
-  else
-    echo "$1 $abs $3"
-  fi
+
+  echo "$exe_name $abs $preference_level"
 }
 
 # Figure out which compiler we are using
