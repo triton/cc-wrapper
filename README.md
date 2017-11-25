@@ -5,10 +5,16 @@ written explicitly for use in the triton project.
 
 ## Building
 ```
-make COMPILER_PATH=<PATH separated by : to compiler binaries>
+COMPILER_PATH=<compiler binary path delimited by (:)> ./configure
+make all
 ```
 
 ## Testing
 ```
 make check
+```
+
+## Installing
+```
+make install
 ```
