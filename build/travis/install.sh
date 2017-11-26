@@ -91,6 +91,9 @@ install_googletest() {
 }
 
 install_make &
-install_valgrind &
-install_googletest &
+if [ "$BUILD_AND_CHECK" = "1" ]; then
+  install_valgrind &
+  install_googletest &
+fi
+
 wait

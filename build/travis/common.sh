@@ -49,17 +49,22 @@ else
 fi
 
 # Fixup the compiler variables
-if [ "$CC_NAME" = "gcc" ]; then
-  export CC="gcc-${CC_VERSION}"
-  export CPP="gcc-${CC_VERSION} -E"
-  export CXX="g++-${CC_VERSION}"
-elif [ "$CC_NAME" = "clang" ]; then
-  export CC="clang-${CC_VERSION}"
-  export CPP="clang-${CC_VERSION} -E"
-  export CXX="clang++-${CC_VERSION}"
-  # TODO: Figure out how to get a proper libc++
-  #export CXXFLAGS="$CXXFLAGS -stdlib=libc++"
-else
-  echo "Unsupported Compiler" >&2
-  exit 1
+if [ "$BUILD_AND_CHECK" = "1" ]; then
+  if [ "$CC_NAME" = "gcc" ]; then
+    export CC="gcc-${CC_VERSION_gcc}"
+    export CPP="gcc-${CC_VERSION_gcc} -E"
+    export CXX="g++-${CC_VERSION_gcc}"
+  elif [ "$CC_NAME" = "clang" ]; then
+    export CC="clang-${CC_VERSION_clang}"
+    export CPP="clang-${CC_VERSION_clang} -E"
+    export CXX="clang++-${CC_VERSION_clang}"
+    # TODO: Figure out how to get a proper libc++
+    #export CXXFLAGS="$CXXFLAGS -stdlib=libc++"
+  else
+    echo "Unsupported Compiler" >&2
+    exit 1
+  fi
+elif [ "$FORMAT_AND_LINT" = "1" ]; then
+  export CLANG_FORMAT="clang-format-${CC_VERSION_clang}"
+  export CLANG_TIDY="clang-tidy-${CC_VERSION_clang}"
 fi

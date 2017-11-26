@@ -45,8 +45,11 @@ env:
     - GOOGLETEST_VERSION=d175c8bf823e709d570772b038757fadf63bc632
     - MAKE_VERSION=4.2.1
     - VALGRIND_VERSION=3.13.0
+    - CC_VERSION_gcc=7
+    - CC_VERSION_clang=5.0
   matrix:
-    - CC_NAME=gcc CC_VERSION=7
-    - CC_NAME=clang CC_VERSION=5.0
+    - BUILD_AND_CHECK=1 CC_NAME=gcc
+    - BUILD_AND_CHECK=1 CC_NAME=clang
+    - FORMAT_AND_LINT=1
 install: ./build/travis/install.sh
 script: ./build/travis/script.sh

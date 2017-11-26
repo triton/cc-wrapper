@@ -25,11 +25,22 @@ set -e
 set -o pipefail
 set -x
 
-if [ "$BUILD_AND_CHECK" = "1" ]; then
-  exec "$(dirname "$0")/build_and_check.sh"
-elif [ "$FORMAT_AND_LINT" = "1" ]; then
-  exec "$(dirname "$0")/format_and_lint.sh"
-else
-  echo "Bad config" >&2
+source "$(dirname "$0")/common.sh"
+
+# Print out the relevant versions of our applications
+make --version
+$CLANG_FORMAT --version
+$CLANG_TIDY --version
+
+# Make sure output is not interleaved in parallel execution
+MAKEFLAGS+=("-O")
+
+# Run through the formatting and linting process
+COMPILER_PATH="$(dirname "$(type -P gcc)")" ./configure
+make "${MAKEFLAGS[@]}" format
+if [ -n "$(git diff)" ]; then
+  echo "Formatting produced differing output" >&2
+  git diff
   exit 1
 fi
+make "${MAKEFLAGS[@]}" lint
