@@ -31,8 +31,8 @@ void print_exec_info(const struct exec_info *exec_info)
 	LOG_DEBUG("\n");
 }
 
-const struct exec_info *get_exec_info(
-		const struct exec_info *exec_infos, const char *arg0)
+const struct exec_info *get_exec_info(const struct exec_info *exec_infos,
+				      const char *arg0)
 {
 	const struct exec_info *ret = NULL;
 

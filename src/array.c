@@ -75,7 +75,7 @@ bool array_resize(struct array *array, size_t nelems)
 		array->nelems = nelems;
 		return true;
 	}
-	
+
 	if (best_fit_size(new_size + 1) == array->data_size) {
 		array->nelems = nelems;
 		return true;

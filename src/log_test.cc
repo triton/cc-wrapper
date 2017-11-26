@@ -25,19 +25,19 @@ using std::string_view;
 
 TEST(LogTest, LogLevelToString) {
   EXPECT_EQ(string_view("NONE"),
-      string_view(log_level_to_string(LOG_LEVEL_NONE)));
+            string_view(log_level_to_string(LOG_LEVEL_NONE)));
   EXPECT_EQ(string_view("FATAL"),
-      string_view(log_level_to_string(LOG_LEVEL_FATAL)));
+            string_view(log_level_to_string(LOG_LEVEL_FATAL)));
   EXPECT_EQ(string_view("ERROR"),
-      string_view(log_level_to_string(LOG_LEVEL_ERROR)));
+            string_view(log_level_to_string(LOG_LEVEL_ERROR)));
   EXPECT_EQ(string_view("WARN"),
-      string_view(log_level_to_string(LOG_LEVEL_WARN)));
+            string_view(log_level_to_string(LOG_LEVEL_WARN)));
   EXPECT_EQ(string_view("INFO"),
-      string_view(log_level_to_string(LOG_LEVEL_INFO)));
+            string_view(log_level_to_string(LOG_LEVEL_INFO)));
   EXPECT_EQ(string_view("DEBUG"),
-      string_view(log_level_to_string(LOG_LEVEL_DEBUG)));
+            string_view(log_level_to_string(LOG_LEVEL_DEBUG)));
   EXPECT_EQ(string_view("TRACE"),
-      string_view(log_level_to_string(LOG_LEVEL_TRACE)));
+            string_view(log_level_to_string(LOG_LEVEL_TRACE)));
 }
 
 TEST(LogTest, FatalMessages) {
@@ -49,10 +49,24 @@ TEST(LogTest, FatalMessages) {
 
 TEST(LogTest, PrintLevels) {
   log_level = LOG_LEVEL_INFO;
-  EXPECT_EXIT({ LOG_ERROR("hi%s\n", "hi"); exit(0); }, testing::ExitedWithCode(0),
-              "^hihi\n$");
-  EXPECT_EXIT({ LOG_INFO("hi"); exit(0); }, testing::ExitedWithCode(0), "^hi$");
-  EXPECT_EXIT({ LOG_DEBUG("hi"); exit(0); }, testing::ExitedWithCode(0), "^$");
+  EXPECT_EXIT(
+      {
+        LOG_ERROR("hi%s\n", "hi");
+        exit(0);
+      },
+      testing::ExitedWithCode(0), "^hihi\n$");
+  EXPECT_EXIT(
+      {
+        LOG_INFO("hi");
+        exit(0);
+      },
+      testing::ExitedWithCode(0), "^hi$");
+  EXPECT_EXIT(
+      {
+        LOG_DEBUG("hi");
+        exit(0);
+      },
+      testing::ExitedWithCode(0), "^$");
 }
 
 }  // namespace

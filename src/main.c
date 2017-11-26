@@ -37,14 +37,14 @@ void set_log_level()
 	LOG_INFO("Log level: %s\n", log_level_to_string(log_level));
 }
 
-void print_args(char * const *args)
+void print_args(char *const *args)
 {
 	for (size_t i = 0; args[i] != NULL; ++i)
 		LOG_INFO("  %s\n", args[i]);
 	LOG_INFO("\n");
 }
 
-void execute(const struct exec_info *exec_info, char * const *args)
+void execute(const struct exec_info *exec_info, char *const *args)
 {
 	LOG_INFO("Calling `%s` with arguments:\n", exec_info->path);
 	print_args(args);

@@ -29,8 +29,8 @@ struct exec_info {
 
 void print_exec_info(const struct exec_info *exec_info);
 
-const struct exec_info *get_exec_info(
-		const struct exec_info *exec_infos, const char *arg0);
+const struct exec_info *get_exec_info(const struct exec_info *exec_infos,
+				      const char *arg0);
 
 #ifdef __cplusplus
 }  // extern "C"

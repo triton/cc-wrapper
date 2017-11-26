@@ -95,7 +95,7 @@ int8_t avl_height(struct avl *avl)
  * in the path array of the element.
  */
 int8_t avl_node_find(struct avl_node **path[], void *value,
-		binary_compare_t compare)
+		     binary_compare_t compare)
 {
 	int8_t path_idx = 0, compare_res;
 	struct avl_node *node;
@@ -105,7 +105,8 @@ int8_t avl_node_find(struct avl_node **path[], void *value,
 		compare_res = compare(node->data, value);
 		if (compare_res == 0)
 			return path_idx;
-		path[path_idx+1] = compare_res < 0 ? &node->left : &node->right;
+		path[path_idx + 1] =
+		    compare_res < 0 ? &node->left : &node->right;
 	}
 
 	return path_idx;
@@ -124,8 +125,8 @@ void avl_path_fix(struct avl_node **path[], int8_t start)
 		node = *path[i];
 
 		/* Find imbalances and rebalance */
-		delta = avl_node_height(node->left) -
-			avl_node_height(node->right);
+		delta =
+		    avl_node_height(node->left) - avl_node_height(node->right);
 		if (delta >= 2) {
 			delta = avl_node_height(node->left->left) -
 				avl_node_height(node->left->right);
@@ -138,7 +139,7 @@ void avl_path_fix(struct avl_node **path[], int8_t start)
 			} else {
 				node->height = avl_node_height(node->right) + 1;
 				node->left->height =
-					avl_node_height(node->left->left) + 1;
+				    avl_node_height(node->left->left) + 1;
 
 				*path[i] = node->left->right;
 				node->left->right = (*path[i])->left;
@@ -158,7 +159,7 @@ void avl_path_fix(struct avl_node **path[], int8_t start)
 			} else {
 				node->height = avl_node_height(node->left) + 1;
 				node->right->height =
-					avl_node_height(node->right->right) + 1;
+				    avl_node_height(node->right->right) + 1;
 
 				*path[i] = node->right->left;
 				node->right->left = (*path[i])->right;
@@ -245,9 +246,9 @@ void *avl_remove(struct avl *avl, void *value)
 		replacement_idx = found_idx + 1;
 		path[replacement_idx] = &deleted_node->left;
 		for (; (*path[replacement_idx])->right != NULL;
-				++replacement_idx)
-			path[replacement_idx+1] =
-				&(*path[replacement_idx])->right;
+		     ++replacement_idx)
+			path[replacement_idx + 1] =
+			    &(*path[replacement_idx])->right;
 
 		/* Replace the node in the tree with the predecessor */
 		*path[found_idx] = *path[replacement_idx];

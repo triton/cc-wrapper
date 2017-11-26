@@ -55,18 +55,30 @@ void log_printf(enum log_level level, const char *format, ...);
  * Shorthands to log_printf to make calling more convenient
  * LOG_{LEVEL} -> log_printf(LOG_LEVEL_{LEVEL}
  */
-#define LOG_FATAL(...) \
-	do { log_printf(LOG_LEVEL_FATAL, __VA_ARGS__); } while(0)
-#define LOG_ERROR(...) \
-	do { log_printf(LOG_LEVEL_ERROR, __VA_ARGS__); } while(0)
-#define LOG_WARN(...) \
-	do { log_printf(LOG_LEVEL_WARN, __VA_ARGS__); } while(0)
-#define LOG_INFO(...) \
-	do { log_printf(LOG_LEVEL_INFO, __VA_ARGS__); } while(0)
-#define LOG_DEBUG(...) \
-	do { log_printf(LOG_LEVEL_DEBUG, __VA_ARGS__); } while(0)
-#define LOG_TRACE(...) \
-	do { log_printf(LOG_LEVEL_TRACE, __VA_ARGS__); } while(0)
+#define LOG_FATAL(...)                                                         \
+	do {                                                                   \
+		log_printf(LOG_LEVEL_FATAL, __VA_ARGS__);                      \
+	} while (0)
+#define LOG_ERROR(...)                                                         \
+	do {                                                                   \
+		log_printf(LOG_LEVEL_ERROR, __VA_ARGS__);                      \
+	} while (0)
+#define LOG_WARN(...)                                                          \
+	do {                                                                   \
+		log_printf(LOG_LEVEL_WARN, __VA_ARGS__);                       \
+	} while (0)
+#define LOG_INFO(...)                                                          \
+	do {                                                                   \
+		log_printf(LOG_LEVEL_INFO, __VA_ARGS__);                       \
+	} while (0)
+#define LOG_DEBUG(...)                                                         \
+	do {                                                                   \
+		log_printf(LOG_LEVEL_DEBUG, __VA_ARGS__);                      \
+	} while (0)
+#define LOG_TRACE(...)                                                         \
+	do {                                                                   \
+		log_printf(LOG_LEVEL_TRACE, __VA_ARGS__);                      \
+	} while (0)
 
 #ifdef __cplusplus
 }  // extern "C"

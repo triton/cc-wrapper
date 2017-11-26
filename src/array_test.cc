@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#include <cstdint>
 #include <gtest/gtest.h>
+#include <cstdint>
 
 #include "array.h"
 
@@ -48,7 +48,7 @@ TEST(ArrayTest, ResizeNoRealloc) {
 
   uint8_t *data = reinterpret_cast<uint8_t *>(array_data(array));
   for (size_t i = 0; i < size; ++i)
-      data[i] = 10;
+    data[i] = 10;
 
   size_t allocation = array_allocation(array);
   const size_t new_size = allocation - size;
@@ -59,7 +59,7 @@ TEST(ArrayTest, ResizeNoRealloc) {
   EXPECT_EQ(new_size, array_nelems(array));
 
   for (size_t i = 0; i < size; ++i)
-      EXPECT_EQ(data[i], 10);
+    EXPECT_EQ(data[i], 10);
 
   array_free(array);
 }
@@ -73,7 +73,7 @@ TEST(ArrayTest, ResizeRealloc) {
 
   uint8_t *data = reinterpret_cast<uint8_t *>(array_data(array));
   for (size_t i = 0; i < size; ++i)
-      data[i] = 10;
+    data[i] = 10;
 
   size_t allocation = array_allocation(array);
   const size_t new_size = allocation + size;
@@ -84,7 +84,7 @@ TEST(ArrayTest, ResizeRealloc) {
 
   data = reinterpret_cast<uint8_t *>(array_data(array));
   for (size_t i = 0; i < size; ++i)
-      EXPECT_EQ(data[i], 10);
+    EXPECT_EQ(data[i], 10);
 
   array_free(array);
 }
@@ -98,7 +98,7 @@ TEST(ArrayTest, ResizeShrink) {
 
   uint8_t *data = reinterpret_cast<uint8_t *>(array_data(array));
   for (size_t i = 0; i < size; ++i)
-      data[i] = 10;
+    data[i] = 10;
 
   size_t allocation = array_allocation(array);
   const size_t new_size = 10;
@@ -109,7 +109,7 @@ TEST(ArrayTest, ResizeShrink) {
 
   data = reinterpret_cast<uint8_t *>(array_data(array));
   for (size_t i = 0; i < new_size; ++i)
-      EXPECT_EQ(data[i], 10);
+    EXPECT_EQ(data[i], 10);
 
   array_free(array);
 }

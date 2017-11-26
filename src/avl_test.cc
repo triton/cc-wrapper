@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
+#include <gtest/gtest.h>
 #include <cerrno>
 #include <cstdbool>
 #include <cstdint>
 #include <cstdlib>
-#include <gtest/gtest.h>
 
 #include "avl.h"
 
@@ -26,7 +26,7 @@ namespace {
 
 int intptr_compare(void *root, void *unplaced) {
   return reinterpret_cast<intptr_t>(unplaced) -
-      reinterpret_cast<intptr_t>(root);
+         reinterpret_cast<intptr_t>(root);
 }
 
 int intptr_insert(struct avl *avl, intptr_t value) {

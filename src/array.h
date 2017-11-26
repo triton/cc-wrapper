@@ -27,7 +27,7 @@ extern "C" {
 struct array;
 
 /*
- * Returns a new array with the number of elems specified by elems or 
+ * Returns a new array with the number of elems specified by elems or
  * NULL on failure.
  */
 struct array *array_init(size_t elem_size, size_t nelems);
