@@ -18,6 +18,12 @@ all:
 check:
 	@$(MAKE) -C src check
 
+format:
+	@$(MAKE) -C src format
+
+lint:
+	@$(MAKE) -C src lint
+
 install:
 	@$(MAKE) -C src install
 

@@ -14,6 +14,8 @@
 
 include Makefile.gen
 
+CLANG_FORMAT ?= clang-format
+
 DEPDIR ?= .deps
 MAKEDEPEND ?= $(CPP) -M
 CFLAGS += -g -Wall -Wpedantic -Wextra -Werror -I.. -I.
@@ -72,6 +74,16 @@ $(DEPDIR):
 
 .PHONY: check
 check: $(TESTS:=_test_pass)
+
+.PHONY: format
+format:
+	cd ../build/format-c && pwd && $(CLANG_FORMAT) -i \
+		../../src/*.c ../../src/*.h
+	cd ../build/format-cc; $(CLANG_FORMAT) -i \
+		../../src/*.cc
+
+.PHONY: lint
+lint:
 
 .PHONY: clean
 clean:
