@@ -39,7 +39,7 @@ echo "PREFIX ?= ${PREFIX-/usr}" >>"$makefile_inc"
 if pkg-config --cflags gtest_main >/dev/null 2>&1; then
   echo "GTEST_CFLAGS = $(pkg-config --cflags gtest_main)" >>"$makefile_inc"
   echo "GTEST_LIBS = $(pkg-config --libs gtest_main)" >>"$makefile_inc"
-else
+elif type -P gtest-config >/dev/null; then
   echo "GTEST_CFLAGS = $(gtest-config --cppflags)" >>"$makefile_inc"
   echo "GTEST_LIBS = $(gtest-config --libs)" >>"$makefile_inc"
 fi
