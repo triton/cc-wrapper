@@ -65,7 +65,7 @@ suppressions.gen: suppressions_test
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
 		-std=c++17 $^ -o $@ $(LDFLAGS) $(GTEST_LIBS)
 
-%.o: %.c | $(DEPDIR) config.h
+%.o: %.c | $(DEPDIR)
 	@$(MAKEDEPEND) $(CFLAGS) -std=c99 $< >$(DEPDIR)/$(<:.c=.d)
 	$(CC) $(CFLAGS) -std=c99 -c $< -o $@
 
