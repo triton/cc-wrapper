@@ -59,7 +59,7 @@ void log_printf(enum log_level level, const char *format, ...);
 #define LOG_FATAL(...)                                                         \
 	do {                                                                   \
 		log_printf(LOG_LEVEL_FATAL, __VA_ARGS__);                      \
-		exit(1);                                                       \
+		exit(EXIT_FAILURE);                                            \
 	} while (0)
 #define LOG_ERROR(...)                                                         \
 	do {                                                                   \

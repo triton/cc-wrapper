@@ -55,5 +55,5 @@ void log_printf(enum log_level level, const char *format, ...)
 	va_end(va_args);
 
 	if (level == LOG_LEVEL_FATAL)
-		exit(1);
+		exit(EXIT_FAILURE);
 }

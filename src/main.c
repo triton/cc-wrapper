@@ -91,6 +91,7 @@ int main(int argc, char *argv[])
 	print_exec_info(exec_info);
 	execute(exec_info, args);
 
+	/* We should never reach here */
 	free(args);
-	return EXIT_SUCCESS;
+	return EXIT_FAILURE;
 }
