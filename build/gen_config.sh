@@ -34,6 +34,8 @@ echo '#define CONFIG_H'
 echo ''
 
 # Includes
+echo '#include <stddef.h>'
+echo ''
 echo '#include "execinfo.h"'
 
 echo ''
