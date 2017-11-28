@@ -18,6 +18,7 @@
 #define LOG_H
 
 #include <stdbool.h>
+#include <stdlib.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -58,6 +59,7 @@ void log_printf(enum log_level level, const char *format, ...);
 #define LOG_FATAL(...)                                                         \
 	do {                                                                   \
 		log_printf(LOG_LEVEL_FATAL, __VA_ARGS__);                      \
+		exit(1);                                                       \
 	} while (0)
 #define LOG_ERROR(...)                                                         \
 	do {                                                                   \
