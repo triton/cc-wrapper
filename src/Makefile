@@ -15,6 +15,7 @@
 include Makefile.gen
 
 CLANG_FORMAT ?= clang-format
+CLANG_TIDY ?= clang-tidy
 
 DEPDIR ?= .deps
 MAKEDEPEND ?= $(CPP) -M
@@ -26,6 +27,15 @@ LIB_SRCS = \
 	execinfo.c \
 	log.c \
 	path.c
+
+LIB_HDRS = \
+	array.h \
+	avl.h \
+	config.h \
+	execinfo.h \
+	func.h \
+	log.h \
+	path.h
 
 CC_WRAPPER_SRCS = \
 	main.c
@@ -82,12 +92,33 @@ format:
 	cd ../build/format-cc; $(CLANG_FORMAT) -i \
 		../../src/*.cc
 
+%_lint_pass: %
+	$(CLANG_TIDY) $< -- \
+		$(CFLAGS) -std=c99 \
+		2>&1 | tee $@.err
+	stat -c '%s' $@.err | grep -q '^0$$'
+	touch $@
+
+%_test_lint_pass: %_test.cc
+	$(CLANG_TIDY) $< -- \
+		$(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) -std=c++17 \
+		2>&1 | tee $@.err
+	stat -c '%s' $@.err | grep -q '^0$$'
+	touch $@
+
+LINT_PASS = \
+	$(LIB_HDRS:=_lint_pass) \
+	$(LIB_SRCS:=_lint_pass) \
+	$(CC_WRAPPER_SRCS:=_lint_pass) \
+	$(TESTS:=_test_lint_pass)
+
 .PHONY: lint
-lint:
+lint: $(LINT_PASS)
 
 .PHONY: clean
 clean:
-	-rm -rf $(DEPDIR) suppressions.gen *_test_pass *_test_log *_test \
+	-rm -rf $(DEPDIR) suppressions.gen \
+		*_lint_pass* *_test_pass *_test \
 		*.d *.a *.o *.so* cc-wrapper
 
 .PHONY: distclean

@@ -4,6 +4,8 @@ config.h
 *.a
 *.o
 *.so*
+*_lint_pass
+*_lint_pass.err
 *_test
 *_test_log
 *_test_pass

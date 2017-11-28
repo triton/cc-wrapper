@@ -32,6 +32,17 @@ make --version
 $CLANG_FORMAT --version
 $CLANG_TIDY --version
 
+# Print out the configuration information
+pushd build/format-c >/dev/null
+$CLANG_FORMAT -dump-config
+popd >/dev/null
+
+pushd build/format-cc >/dev/null
+$CLANG_FORMAT -dump-config
+popd >/dev/null
+
+$CLANG_TIDY -list-checks
+
 # Make sure output is not interleaved in parallel execution
 MAKEFLAGS+=("-O")
 

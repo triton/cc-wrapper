@@ -65,6 +65,9 @@ if [ "$BUILD_AND_CHECK" = "1" ]; then
     exit 1
   fi
 elif [ "$FORMAT_AND_LINT" = "1" ]; then
+  export CC="clang-${CC_VERSION_clang}"
+  export CPP="clang-${CC_VERSION_clang} -E"
+  export CXX="clang++-${CC_VERSION_clang}"
   export CLANG_FORMAT="clang-format-${CC_VERSION_clang}"
   export CLANG_TIDY="clang-tidy-${CC_VERSION_clang}"
 fi
