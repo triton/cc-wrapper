@@ -76,13 +76,21 @@ int main(int argc, char *argv[])
 	if (args == NULL)
 		LOG_FATAL("Failed to allocate args list\n");
 
-	for (size_t i = 0; argv[i] != NULL; ++i)
+	for (size_t i = 0; true; ++i) {
 		args[i] = argv[i];
+		if (argv[i] == NULL)
+			break;
+	}
 
 	const struct exec_info *exec_info = get_exec_info(exec_infos, argv[0]);
-	if (exec_info == NULL)
+	if (exec_info == NULL) {
+		free(args);
 		LOG_FATAL("Failed to get exec info for: %s\n", argv[0]);
+	}
 
 	print_exec_info(exec_info);
 	execute(exec_info, args);
+
+	free(args);
+	return EXIT_SUCCESS;
 }
