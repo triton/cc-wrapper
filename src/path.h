@@ -17,7 +17,7 @@
 #ifndef PATH_H
 #define PATH_H
 
-#include <stddef.h>
+#include <unistd.h>
 
 #ifdef __cplusplus
 extern "C" {

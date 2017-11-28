@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-/* TODO: Is this the right header */
-#include <sys/types.h>
-
 #include "path.h"
 
 ssize_t path_base_split(const char *path)
