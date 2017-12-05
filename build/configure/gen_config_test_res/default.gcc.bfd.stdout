@@ -1,0 +1,57 @@
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#include <stddef.h>
+
+#include "execinfo.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+struct exec_info exec_infos[] = {
+	{
+		.name = "cpp",
+		.path = "@TMPDIR@/bin/cpp",
+		.prefer = 0,
+	},
+	{
+		.name = "gcc",
+		.path = "@TMPDIR@/bin/gcc",
+		.prefer = 0,
+	},
+	{
+		.name = "cc",
+		.path = "@TMPDIR@/bin/gcc",
+		.prefer = 0,
+	},
+	{
+		.name = "g++",
+		.path = "@TMPDIR@/bin/g++",
+		.prefer = 0,
+	},
+	{
+		.name = "c++",
+		.path = "@TMPDIR@/bin/g++",
+		.prefer = 0,
+	},
+	{
+		.name = "ld.bfd",
+		.path = "@TMPDIR@/bin/ld.bfd",
+		.prefer = 1,
+	},
+	{
+		.name = "ld.gold",
+		.path = "@TMPDIR@/bin/ld.gold",
+		.prefer = 0,
+	},
+	{
+		.name = NULL,
+	},
+};
+
+#ifdef __cplusplus
+}  // extern "C"
+#endif
+
+#endif  // CONIG_H

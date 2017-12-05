@@ -12,28 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+TESTS = \
+	compiler_exes \
+	gen_config
+
+.PHONY: all
 all:
-	@$(MAKE) -C src all
 
-check:
-	@$(MAKE) -C src check
-	@$(MAKE) -C build/configure check
+.PHONY: check
+check: $(TESTS:=_test_pass)
 
-format:
-	@$(MAKE) -C src format
+%_test_pass: %_test.sh %.sh test_common.sh
+	./$<
+	@touch $@
 
-lint:
-	@$(MAKE) -C src lint
-
-install:
-	@$(MAKE) -C src install
-
+.PHONY: clean
 clean:
-	@$(MAKE) -C src clean
-	@$(MAKE) -C build/configure clean
+	-rm -rf *_test_pass
 
-distclean:
-	@$(MAKE) -C src distclean
-	@$(MAKE) -C build/configure distclean
-
-.PHONY: all install check clean distclean
+.PHONY: distclean
+distclean: clean

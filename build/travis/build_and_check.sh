@@ -38,7 +38,7 @@ make --version
 MAKEFLAGS+=("-O")
 
 # Run through the typical build process
-COMPILER_PATH="$(dirname "$(type -P gcc)")" PREFIX="$LOCAL_PREFIX" ./configure
+PREFIX="$LOCAL_PREFIX" ./configure
 make "${MAKEFLAGS[@]}" all
 make "${MAKEFLAGS[@]}" check
 make "${MAKEFLAGS[@]}" install
@@ -66,12 +66,6 @@ if [ -n "$(find . -name \*.o -or -name cc-wrapper)" ]; then
 fi
 if make "${MAKEFLAGS[@]}" all; then
   echo "Make after a distclean should fail" >&2
-  exit 1
-fi
-
-# Make sure configure fails without a compiler path
-if ./configure; then
-  echo "Configure should fail with empty COMPILER_PATH" >&2
   exit 1
 fi
 

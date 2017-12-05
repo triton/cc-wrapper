@@ -47,7 +47,7 @@ $CLANG_TIDY -list-checks
 MAKEFLAGS+=("-O")
 
 # Run through the formatting and linting process
-COMPILER_PATH="$(dirname "$(type -P gcc)")" ./configure
+./configure
 make "${MAKEFLAGS[@]}" format
 if [ -n "$(git diff)" ]; then
   echo "Formatting produced differing output" >&2

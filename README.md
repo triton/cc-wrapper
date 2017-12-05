@@ -8,7 +8,7 @@ written explicitly for use in the triton project.
 
 ## Building
 ```
-COMPILER_PATH=<compiler binary path delimited by (:)> ./configure
+./configure
 make all
 ```
 
