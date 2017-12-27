@@ -125,7 +125,8 @@ clean:
 distclean: clean
 	-rm -rf Makefile.gen config.h
 
-INSTALL_EXES_ABS = $(INSTALL_EXES:%=$(PREFIX)/bin/%)
+INSTALL_EXES_EXT = $(basename $(INSTALL_EXES)) $(INSTALL_EXES)
+INSTALL_EXES_ABS = $(INSTALL_EXES_EXT:%=$(PREFIX)/bin/%)
 .PHONY: install
 install: $(INSTALL_EXES_ABS) $(PREFIX)/bin/cc-wrapper
 

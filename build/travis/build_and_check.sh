@@ -78,3 +78,7 @@ fi
 # Make sure the installed cc-wrapper works
 "$LOCAL_PREFIX"/bin/cc-wrapper gcc --version
 "$LOCAL_PREFIX"/bin/gcc --version
+"$LOCAL_PREFIX"/bin/g++ --version
+"$LOCAL_PREFIX"/bin/ld.bfd --version
+"$LOCAL_PREFIX"/bin/ld --version
+"$LOCAL_PREFIX"/bin/cpp --version
