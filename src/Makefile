@@ -50,7 +50,7 @@ TESTS = \
 all: cc-wrapper
 
 cc-wrapper: $(CC_WRAPPER_SRCS:.c=.o) libccwrapper.a
-	$(CC) $(CFLAGS) $^ -o $@ -static $(LDFLAGS)
+	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
 
 libccwrapper.a: $(LIB_SRCS:.c=.o)
 	$(AR) rcs $@ $^
