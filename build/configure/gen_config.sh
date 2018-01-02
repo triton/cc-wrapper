@@ -55,7 +55,8 @@ for tuple in $compiler_tuples; do
   echo $'\t''{'
   echo $'\t'$'\t'".name = \"${tuple[0]}\","
   echo $'\t'$'\t'".path = \"${tuple[1]}\","
-  echo $'\t'$'\t'".prefer = ${tuple[2]},"
+  echo $'\t'$'\t'".type = \"${tuple[2]}\","
+  echo $'\t'$'\t'".prefer = ${tuple[3]},"
   echo $'\t''},'
   IFS="$oldifs2"
 done

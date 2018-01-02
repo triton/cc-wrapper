@@ -13,36 +13,43 @@ struct exec_info exec_infos[] = {
 	{
 		.name = "cpp",
 		.path = "@TMPDIR@/bin/cpp",
+		.type = "gcc",
 		.prefer = 0,
 	},
 	{
 		.name = "gcc",
 		.path = "@TMPDIR@/bin/gcc",
+		.type = "gcc",
 		.prefer = 0,
 	},
 	{
 		.name = "cc",
 		.path = "@TMPDIR@/bin/gcc",
+		.type = "gcc",
 		.prefer = 0,
 	},
 	{
 		.name = "g++",
 		.path = "@TMPDIR@/bin/g++",
+		.type = "gcc",
 		.prefer = 0,
 	},
 	{
 		.name = "c++",
 		.path = "@TMPDIR@/bin/g++",
+		.type = "gcc",
 		.prefer = 0,
 	},
 	{
 		.name = "ld.bfd",
 		.path = "@TMPDIR@/bin/ld.bfd",
+		.type = "bfd",
 		.prefer = 1,
 	},
 	{
 		.name = "ld.gold",
 		.path = "@TMPDIR@/bin/ld.gold",
+		.type = "gold",
 		.prefer = 0,
 	},
 	{

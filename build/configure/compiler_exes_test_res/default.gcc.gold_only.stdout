@@ -1,6 +1,6 @@
-c++ @TMPDIR@/bin/g++ 0
-cc @TMPDIR@/bin/gcc 0
-cpp @TMPDIR@/bin/cpp 0
-g++ @TMPDIR@/bin/g++ 0
-gcc @TMPDIR@/bin/gcc 0
-ld.gold @TMPDIR@/bin/ld 1
+c++ @TMPDIR@/bin/g++ gcc 0
+cc @TMPDIR@/bin/gcc gcc 0
+cpp @TMPDIR@/bin/cpp gcc 0
+g++ @TMPDIR@/bin/g++ gcc 0
+gcc @TMPDIR@/bin/gcc gcc 0
+ld.gold @TMPDIR@/bin/ld gold 1

@@ -1,7 +1,7 @@
-c++ @TMPDIR@/bin/clang 0
-cc @TMPDIR@/bin/clang 0
-clang @TMPDIR@/bin/clang 0
-clang++ @TMPDIR@/bin/clang 0
-cpp @TMPDIR@/bin/clang 0
-ld.bfd @TMPDIR@/bin/ld.bfd 0
-ld.gold @TMPDIR@/bin/ld.gold 1
+c++ @TMPDIR@/bin/clang clang 0
+cc @TMPDIR@/bin/clang clang 0
+clang @TMPDIR@/bin/clang clang 0
+clang++ @TMPDIR@/bin/clang clang 0
+cpp @TMPDIR@/bin/clang clang 0
+ld.bfd @TMPDIR@/bin/ld.bfd bfd 0
+ld.gold @TMPDIR@/bin/ld.gold gold 1

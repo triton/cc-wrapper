@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # Returns compiler executable tuples in the form
-#   (exe name) (full exe path) (preferred binary level)
+#   (exe name) (full exe path) (exe type) (preferred binary level)
 #   ...
 #
 # A preferred binary is used in the case of {exe}.{type}
@@ -65,12 +65,13 @@ getAbs() {
 }
 
 # Prints a tuple representing the input binary
-#   printTuple <exe_name> <searched_bin_name> <preference_level>
+#   printTuple <exe_name> <searched_bin_name> <exe_type> <preference_level>
 #   Returns tuples in the above format and code 0 on success
 printTuple() {
   local exe_name="$1"
   local searched_bin_name="$2"
-  local preference_level="$3"
+  local exe_type="$3"
+  local preference_level="$4"
 
   local abs
   if ! abs="$(getAbs "$searched_bin_name")"; then
@@ -78,7 +79,7 @@ printTuple() {
     return 1
   fi
 
-  echo "$exe_name $abs $preference_level"
+  echo "$exe_name $abs $exe_type $preference_level"
 }
 
 gccSupportArch() {
@@ -135,12 +136,12 @@ target_prefix="${TARGET_ARCH}${TARGET_ARCH:+-}"
 if canUseCompiler 'gcc'; then
   compiler="gcc"
   compiler_suffix="${TARGET_COMPILER:3}"
-  printTuple "$target_prefix"cpp"$compiler_suffix"     "$target_prefix"cpp"$compiler_suffix"     0 || \
-    printTuple "$target_prefix"cpp"$compiler_suffix"     "$target_prefix"g++"$compiler_suffix"     0
-  printTuple "$target_prefix"gcc"$compiler_suffix"     "$target_prefix"gcc"$compiler_suffix"     0
-  printTuple "$target_prefix"cc"$compiler_suffix"      "$target_prefix"gcc"$compiler_suffix"     0
-  printTuple "$target_prefix"g++"$compiler_suffix"     "$target_prefix"g++"$compiler_suffix"     0
-  printTuple "$target_prefix"c++"$compiler_suffix"     "$target_prefix"g++"$compiler_suffix"     0
+  printTuple "$target_prefix"cpp"$compiler_suffix"     "$target_prefix"cpp"$compiler_suffix" "gcc" 0 || \
+    printTuple "$target_prefix"cpp"$compiler_suffix"     "$target_prefix"g++"$compiler_suffix" "gcc" 0
+  printTuple "$target_prefix"gcc"$compiler_suffix"     "$target_prefix"gcc"$compiler_suffix" "gcc" 0
+  printTuple "$target_prefix"cc"$compiler_suffix"      "$target_prefix"gcc"$compiler_suffix" "gcc" 0
+  printTuple "$target_prefix"g++"$compiler_suffix"     "$target_prefix"g++"$compiler_suffix" "gcc" 0
+  printTuple "$target_prefix"c++"$compiler_suffix"     "$target_prefix"g++"$compiler_suffix" "gcc" 0
 elif canUseCompiler 'clang'; then
   compiler="clang"
   compiler_suffix="${TARGET_COMPILER:5}"
@@ -149,11 +150,11 @@ elif canUseCompiler 'clang'; then
   else
     clang_binary="clang${compiler_suffix}"
   fi
-  printTuple "$target_prefix"cpp"$compiler_suffix"     "$clang_binary"   0
-  printTuple "$target_prefix"clang"$compiler_suffix"   "$clang_binary"   0
-  printTuple "$target_prefix"cc"$compiler_suffix"      "$clang_binary"   0
-  printTuple "$target_prefix"clang++"$compiler_suffix" "$clang_binary"   0
-  printTuple "$target_prefix"c++"$compiler_suffix"     "$clang_binary"   0
+  printTuple "$target_prefix"cpp"$compiler_suffix"     "$clang_binary" "clang" 0
+  printTuple "$target_prefix"clang"$compiler_suffix"   "$clang_binary" "clang" 0
+  printTuple "$target_prefix"cc"$compiler_suffix"      "$clang_binary" "clang" 0
+  printTuple "$target_prefix"clang++"$compiler_suffix" "$clang_binary" "clang" 0
+  printTuple "$target_prefix"c++"$compiler_suffix"     "$clang_binary" "clang" 0
 else
   echo "Unsupported compiler" >&2
   exit 1
@@ -166,29 +167,29 @@ ld="$(getAbs ld)" || true
 default_ld="$(basename "$ld")" || true
 if [ "$default_ld" = "ld.gold" ]; then
   linker="binutils"
-  printTuple ld.bfd  ld.bfd  0 2>/dev/null || true
-  printTuple ld.gold ld.gold 1
+  printTuple ld.bfd  ld.bfd  bfd  0 2>/dev/null || true
+  printTuple ld.gold ld.gold gold 1
 elif [ "$default_ld" = "ld.bfd" ]; then
   linker="binutils"
-  printTuple ld.bfd  ld.bfd  1
-  printTuple ld.gold ld.gold 0 2>/dev/null || true
+  printTuple ld.bfd  ld.bfd  bfd  1
+  printTuple ld.gold ld.gold gold 0 2>/dev/null || true
 elif [ "$default_ld" = "ld.lld" ] && [ "$compiler" = "clang" ]; then
   linker="lld"
-  printTuple ld.lld  ld.lld  1
+  printTuple ld.lld  ld.lld  lld  1
 elif [ "$default_ld" = "lld" ] && [ "$compiler" = "clang" ]; then
   linker="lld"
-  printTuple ld.lld  ld.lld  1
+  printTuple ld.lld  ld.lld  lld  1
 elif [ -n "$ld" ] && "$ld" -v | grep -q '^GNU gold'; then
   linker="binutils"
-  printTuple ld.bfd  ld.bfd  0 2>/dev/null || true
-  printTuple ld.gold ld.gold 1 2>/dev/null || printTuple ld.gold ld 1
+  printTuple ld.bfd  ld.bfd  bfd  0 2>/dev/null || true
+  printTuple ld.gold ld.gold gold 1 2>/dev/null || printTuple ld.gold ld gold 1
 elif [ -n "$ld" ] && "$ld" -v | grep -q '^GNU ld'; then
   linker="binutils"
-  printTuple ld.bfd  ld.bfd  1 2>/dev/null || printTuple ld.bfd ld 1
-  printTuple ld.gold ld.gold 0 2>/dev/null || true
+  printTuple ld.bfd  ld.bfd  bfd  1 2>/dev/null || printTuple ld.bfd ld bfd 1
+  printTuple ld.gold ld.gold gold 0 2>/dev/null || true
 elif [ -n "$ld" ] && "$ld" -v | grep -q '^LLD' && [ "$compiler" = "clang" ]; then
   linker="lld"
-  printTuple ld.lld  ld.lld  1
+  printTuple ld.lld  ld.lld  lld  1
 else
   echo "Unsupported Linker" >&2
   exit 1
