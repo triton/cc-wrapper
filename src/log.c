@@ -24,6 +24,17 @@
 
 enum log_level log_level = LOG_LEVEL_INFO;
 
+void log_levels_print(enum log_level log_level)
+{
+	log_printf(log_level, "  NONE / none\n"
+			      "  FATAL / fatal\n"
+			      "  ERROR / error\n"
+			      "  WARN / warn\n"
+			      "  INFO / info\n"
+			      "  DEBUG / debug\n"
+			      "  TRACE / trace\n");
+}
+
 enum log_level log_level_from_string(const char *level_string)
 {
 	if (strcmp("NONE", level_string) == 0 ||
