@@ -29,11 +29,30 @@
 
 void set_log_level()
 {
+	/* We want to figure out our base log level from the build environment
+	 * for proper integration so it is trivial to get lots of useful build
+	 * info
+	 */
 	const char *debug = getenv("NIX_DEBUG");
 	if (debug != NULL && strcmp("1", debug) == 0)
 		log_level = LOG_LEVEL_INFO;
 	else
 		log_level = LOG_LEVEL_ERROR;
+
+	/* If a more specific log level is set we should use that instead */
+	const char *level_str = getenv("CC_WRAPPER_LOG_LEVEL");
+	if (level_str != NULL) {
+		enum log_level specific_level =
+		    log_level_from_string(level_str);
+		if (specific_level != LOG_LEVEL_UNKNOWN) {
+			log_level = specific_level;
+		} else {
+			LOG_ERROR("Invalid log level `%s`, valid levels are:\n",
+				  level_str);
+			log_levels_print(LOG_LEVEL_FATAL);
+		}
+	}
+
 	LOG_INFO("Log level: %s\n", log_level_to_string(log_level));
 }
 
