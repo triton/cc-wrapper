@@ -25,6 +25,7 @@ extern "C" {
 #endif
 
 enum log_level {
+	LOG_LEVEL_UNKNOWN = -1,
 	LOG_LEVEL_NONE = 0,
 	LOG_LEVEL_FATAL = 1,
 	LOG_LEVEL_ERROR = 2,
@@ -39,6 +40,17 @@ enum log_level {
  * should be ignored.
  */
 extern enum log_level log_level;
+
+/*
+ * Logs all of the valid names for log levels at the
+ * given log level.
+ */
+void log_levels_print(enum log_level log_level);
+
+/*
+ * Returns a log level described by the input string
+ */
+enum log_level log_level_from_string(const char *level_str);
 
 /*
  * Returns a string that describes the log level

@@ -18,10 +18,37 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "log.h"
 
 enum log_level log_level = LOG_LEVEL_INFO;
+
+enum log_level log_level_from_string(const char *level_string)
+{
+	if (strcmp("NONE", level_string) == 0 ||
+	    strcmp("none", level_string) == 0)
+		return LOG_LEVEL_NONE;
+	if (strcmp("FATAL", level_string) == 0 ||
+	    strcmp("fatal", level_string) == 0)
+		return LOG_LEVEL_FATAL;
+	if (strcmp("ERROR", level_string) == 0 ||
+	    strcmp("error", level_string) == 0)
+		return LOG_LEVEL_ERROR;
+	if (strcmp("WARN", level_string) == 0 ||
+	    strcmp("warn", level_string) == 0)
+		return LOG_LEVEL_WARN;
+	if (strcmp("INFO", level_string) == 0 ||
+	    strcmp("info", level_string) == 0)
+		return LOG_LEVEL_INFO;
+	if (strcmp("DEBUG", level_string) == 0 ||
+	    strcmp("debug", level_string) == 0)
+		return LOG_LEVEL_DEBUG;
+	if (strcmp("TRACE", level_string) == 0 ||
+	    strcmp("trace", level_string) == 0)
+		return LOG_LEVEL_TRACE;
+	return LOG_LEVEL_UNKNOWN;
+}
 
 const char *log_level_to_string(enum log_level log_level)
 {

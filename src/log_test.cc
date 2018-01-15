@@ -23,6 +23,36 @@ namespace {
 
 using std::string_view;
 
+TEST(LogTest, LogLevelFromString) {
+  EXPECT_EQ(LOG_LEVEL_NONE, log_level_from_string("NONE"));
+  EXPECT_EQ(LOG_LEVEL_NONE, log_level_from_string("none"));
+
+  EXPECT_EQ(LOG_LEVEL_FATAL, log_level_from_string("FATAL"));
+  EXPECT_EQ(LOG_LEVEL_FATAL, log_level_from_string("fatal"));
+
+  EXPECT_EQ(LOG_LEVEL_ERROR, log_level_from_string("ERROR"));
+  EXPECT_EQ(LOG_LEVEL_ERROR, log_level_from_string("error"));
+
+  EXPECT_EQ(LOG_LEVEL_WARN, log_level_from_string("WARN"));
+  EXPECT_EQ(LOG_LEVEL_WARN, log_level_from_string("warn"));
+
+  EXPECT_EQ(LOG_LEVEL_INFO, log_level_from_string("INFO"));
+  EXPECT_EQ(LOG_LEVEL_INFO, log_level_from_string("info"));
+
+  EXPECT_EQ(LOG_LEVEL_DEBUG, log_level_from_string("DEBUG"));
+  EXPECT_EQ(LOG_LEVEL_DEBUG, log_level_from_string("debug"));
+
+  EXPECT_EQ(LOG_LEVEL_TRACE, log_level_from_string("TRACE"));
+  EXPECT_EQ(LOG_LEVEL_TRACE, log_level_from_string("trace"));
+
+  EXPECT_EQ(LOG_LEVEL_UNKNOWN, log_level_from_string("NON"));
+  EXPECT_EQ(LOG_LEVEL_UNKNOWN, log_level_from_string("non"));
+  EXPECT_EQ(LOG_LEVEL_UNKNOWN, log_level_from_string("NONEE"));
+  EXPECT_EQ(LOG_LEVEL_UNKNOWN, log_level_from_string("nonee"));
+
+  EXPECT_EQ(LOG_LEVEL_UNKNOWN, log_level_from_string("1"));
+}
+
 TEST(LogTest, LogLevelToString) {
   EXPECT_EQ(string_view("NONE"),
             string_view(log_level_to_string(LOG_LEVEL_NONE)));
