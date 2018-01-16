@@ -26,7 +26,8 @@ LIB_SRCS = \
 	avl.c \
 	execinfo.c \
 	log.c \
-	path.c
+	path.c \
+	string-util.c
 
 LIB_HDRS = \
 	array.h \
@@ -35,7 +36,8 @@ LIB_HDRS = \
 	execinfo.h \
 	func.h \
 	log.h \
-	path.h
+	path.h \
+	string-util.h
 
 CC_WRAPPER_SRCS = \
 	main.c
@@ -44,7 +46,8 @@ TESTS = \
 	array \
 	avl \
 	log \
-	path
+	path \
+	string-util
 
 .PHONY: all
 all: cc-wrapper
