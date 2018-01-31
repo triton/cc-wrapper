@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 cc-wrapper authors
+ * Copyright 2017,2018 cc-wrapper authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
 #ifndef STRING_UTIL_H
 #define STRING_UTIL_H
 
+#include "array.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -25,6 +27,12 @@ extern "C" {
  * Returns allocated memory containing the a copy of the string contents
  */
 char *string_clone(const char *str);
+
+/*
+ * Frees an array containing c-strings as a convenience for environment
+ * and arguments.
+ */
+void string_array_free(struct array *arr);
 
 #ifdef __cplusplus
 }  // extern "C"

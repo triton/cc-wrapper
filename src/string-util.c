@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 cc-wrapper authors
+ * Copyright 2017,2018 cc-wrapper authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,4 +31,15 @@ char *string_clone(const char *str)
 	}
 
 	return memcpy(ret, str, str_bytes);
+}
+
+void string_array_free(struct array *arr)
+{
+	if (arr == NULL)
+		return;
+
+	char **arr_data = array_data(arr);
+	for (size_t i = 0; i < array_nelems(arr); ++i)
+		free(arr_data[i]);
+	array_free(arr);
 }

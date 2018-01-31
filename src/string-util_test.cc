@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 cc-wrapper authors
+ * Copyright 2017,2018 cc-wrapper authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #include <gtest/gtest.h>
 #include <string_view>
 
+#include "array.h"
 #include "string-util.h"
 
 namespace {
@@ -29,6 +30,19 @@ TEST(StringUtilTest, StringClone) {
   EXPECT_NE(expected, clone);
   EXPECT_EQ(string_view(expected), string_view(clone));
   free(clone);
+}
+
+TEST(StringUtilTest, StringArrayFree) {
+  struct array *arr = array_init(sizeof(char *), 4);
+  ASSERT_NE(nullptr, arr);
+  auto arr_data = reinterpret_cast<char **>(array_data(arr));
+  arr_data[0] = string_clone("example1");
+  arr_data[1] = nullptr;
+  arr_data[2] = string_clone("example2");
+  arr_data[3] = nullptr;
+
+  string_array_free(arr);
+  string_array_free(nullptr);
 }
 
 }  // namespace
