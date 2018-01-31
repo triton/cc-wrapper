@@ -20,6 +20,7 @@ CLANG_TIDY ?= clang-tidy
 DEPDIR ?= .deps
 MAKEDEPEND ?= $(CPP) -M
 CFLAGS += -g -Wall -Wpedantic -Wextra -Werror -I.. -I.
+BINDIR ?= $(PREFIX)/bin
 
 LIB_SRCS = \
 	array.c \
@@ -129,18 +130,18 @@ distclean: clean
 	-rm -rf Makefile.gen config.h
 
 INSTALL_EXES_EXT = $(basename $(INSTALL_EXES)) $(INSTALL_EXES)
-INSTALL_EXES_ABS = $(INSTALL_EXES_EXT:%=$(PREFIX)/bin/%)
+INSTALL_EXES_ABS = $(INSTALL_EXES_EXT:%=$(BINDIR)/%)
 .PHONY: install
-install: $(INSTALL_EXES_ABS) $(PREFIX)/bin/cc-wrapper
+install: $(INSTALL_EXES_ABS) $(BINDIR)/cc-wrapper
 
-$(PREFIX)/bin/%:
+$(BINDIR)/%:
 	@rm -f $@
 	@mkdir -p $(shell dirname $@)
 	@ln -sv cc-wrapper $@
 
-$(PREFIX)/bin/cc-wrapper: cc-wrapper
+$(BINDIR)/cc-wrapper: cc-wrapper
 	@rm -f $@
-	install -D -m0755 -s $< $(PREFIX)/bin
+	install -D -m0755 -s $< $(BINDIR)
 
 include $(wildcard $(LIB_SRCS:%.c=$(DEPDIR)/%.d))
 include $(wildcard $(CC_WRAPPER_SRCS:%.c=$(DEPDIR)/%.d))
