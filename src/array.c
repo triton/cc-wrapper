@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 cc-wrapper authors
+ * Copyright 2017,2018 cc-wrapper authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,7 +91,7 @@ bool array_resize(struct array *array, size_t nelems)
 	return true;
 }
 
-size_t array_nelems(struct array *array)
+size_t array_nelems(const struct array *array)
 {
 	return array->nelems;
 }
@@ -101,7 +101,12 @@ void *array_data(struct array *array)
 	return array->data;
 }
 
-size_t array_allocation(struct array *array)
+const void *array_data_const(const struct array *array)
+{
+	return array->data;
+}
+
+size_t array_allocation(const struct array *array)
 {
 	return array->data_size;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 cc-wrapper authors
+ * Copyright 2017,2018 cc-wrapper authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ bool array_resize(struct array *array, size_t nelems);
 /*
  * Returns the number of elements available in the array.
  */
-size_t array_nelems(struct array *array);
+size_t array_nelems(const struct array *array);
 
 /*
  * Returns the array data backing the structure.
@@ -55,11 +55,12 @@ size_t array_nelems(struct array *array);
  * Note this is invalidated by an array_resize returning true.
  */
 void *array_data(struct array *array);
+const void *array_data_const(const struct array *array);
 
 /*
  * Returns the size of the underlying array allocation
  */
-size_t array_allocation(struct array *array);
+size_t array_allocation(const struct array *array);
 
 #ifdef __cplusplus
 }  // extern "C"
