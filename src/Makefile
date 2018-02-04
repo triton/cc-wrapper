@@ -73,9 +73,13 @@ suppressions.gen: suppressions_test
 	touch $@
 
 .SECONDARY: $(TESTS:=_test)
-%_test: %_test.cc libccwrapper.a | $(DEPDIR)
+%_test.o: %_test.cc | $(DEPDIR)
 	@$(MAKEDEPEND) $(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
 		-std=c++17 $< >$(DEPDIR)/$(<:.cc=.d)
+	$(CXX) $(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
+		-std=c++17 -c $< -o $@
+
+%_test: %_test.o libccwrapper.a
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
 		-std=c++17 $^ -o $@ $(LDFLAGS) $(GTEST_LIBS)
 
