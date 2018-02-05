@@ -22,6 +22,9 @@
 
 char *string_clone(const char *str)
 {
+	if (str == NULL)
+		return NULL;
+
 	size_t str_bytes = sizeof(char) * (strlen(str) + 1);
 
 	char *ret = malloc(str_bytes);

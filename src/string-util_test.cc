@@ -24,7 +24,11 @@ namespace {
 
 using std::string_view;
 
-TEST(StringUtilTest, StringClone) {
+TEST(StringUtilTest, StringCloneNull) {
+  EXPECT_EQ(nullptr, string_clone(nullptr));
+}
+
+TEST(StringUtilTest, StringCloneValid) {
   const char *expected = "this test str";
   char *clone = string_clone(expected);
   EXPECT_NE(expected, clone);
