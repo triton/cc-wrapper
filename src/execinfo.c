@@ -40,15 +40,12 @@ const struct exec_info *get_exec_info(const struct exec_info *exec_infos,
 
 	for (size_t i = 0; exec_infos[i].name != NULL; ++i) {
 		// Exact matches always come first
-		if (strcmp(name, exec_infos[i].name) == 0) {
-			ret = &exec_infos[i];
-			goto out;
-		}
+		if (strcmp(name, exec_infos[i].name) == 0)
+			return &exec_infos[i];
 
 		// Fallback to {exe}.{type} matching
-		size_t name_len = strlen(name);
-		size_t i_len = strlen(exec_infos[i].name);
-		if (name_len + 1 > i_len)
+		const size_t name_len = strlen(name);
+		if (name_len > strlen(exec_infos[i].name))
 			continue;
 		if (exec_infos[i].name[name_len] != '.')
 			continue;
@@ -58,6 +55,5 @@ const struct exec_info *get_exec_info(const struct exec_info *exec_infos,
 			ret = &exec_infos[i];
 	}
 
-out:
 	return ret;
 }
