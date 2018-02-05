@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 cc-wrapper authors
+ * Copyright 2017,2018 cc-wrapper authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,15 @@
  */
 
 #include <stdbool.h>
-#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
-#include "array.h"
+#include "arguments.h"
 #include "config.h"
 #include "execinfo.h"
 #include "log.h"
 #include "path.h"
-#include "string-util.h"
 
 #define MAIN_BINARY "cc-wrapper"
 
@@ -58,19 +56,12 @@ void set_log_level()
 	LOG_INFO("Log level: %s\n", log_level_to_string(log_level));
 }
 
-void print_args(char *const *args, enum log_level log_level)
-{
-	for (size_t i = 0; args[i] != NULL; ++i)
-		log_printf(log_level, "  %s\n", args[i]);
-	log_printf(log_level, "\n");
-}
-
-void execute(const struct exec_info *exec_info, char *const *args)
+void execute(const struct exec_info *exec_info, const struct arguments *args)
 {
 	LOG_INFO("Calling `%s` with arguments:\n", exec_info->path);
-	print_args(args, LOG_LEVEL_INFO);
+	arguments_print(args, LOG_LEVEL_INFO);
 	LOG_INFO("####################################\n");
-	execv(exec_info->path, args);
+	execv(exec_info->path, arguments_array_copy(args));
 }
 
 bool is_main_binary(const char *path)
@@ -81,7 +72,7 @@ bool is_main_binary(const char *path)
 int main(int argc, char *argv[])
 {
 	int ret = EXIT_FAILURE;
-	struct array *args = NULL;
+	struct arguments *args = NULL;
 
 	set_log_level();
 
@@ -105,48 +96,26 @@ int main(int argc, char *argv[])
 	}
 	print_exec_info(exec_info);
 
-	/* Make a copy of our arguments to manipulate */
-	args = array_init(sizeof(char *), 0);
+	/* Make a copy of our arguments and environment to manipulate */
+	args = arguments_from_array((const char *const *)argv);
 	if (args == NULL) {
-		LOG_ERROR("Failed to allocate args list\n");
+		LOG_ERROR("Failed to make a copy of arguments\n");
 		goto out;
-	}
-
-	for (ssize_t i = 0; i < argc; ++i) {
-		if (!array_resize(args, i + 1)) {
-			LOG_ERROR("Failed to expand args list\n");
-			goto out;
-		}
-		char **args_data = array_data(args);
-		args_data[i] = string_clone(argv[i]);
-	}
-	{
-		if (!array_resize(args, argc + 1)) {
-			LOG_ERROR("Failed to expand args list\n");
-			goto out;
-		}
-		char **args_data = array_data(args);
-		args_data[argc] = NULL;
 	}
 
 	/* Print out some info to help debugging */
 	LOG_INFO("Got initial arguments:\n");
-	print_args(array_data(args), LOG_LEVEL_INFO);
+	arguments_print(args, LOG_LEVEL_INFO);
 
 	/* Execute handlers for rewriting the environment */
 	// TODO(wak)
 
-	execute(exec_info, array_data(args));
+	execute(exec_info, args);
 
 	/* We should never reach here */
 	LOG_FATAL("Went past exec!\n");
 
 out:
-	if (args != NULL) {
-		char **args_data = array_data(args);
-		for (size_t i = 0; i < array_nelems(args); ++i)
-			free(args_data[i]);
-	}
-	array_free(args);
+	arguments_free(args);
 	return ret;
 }
