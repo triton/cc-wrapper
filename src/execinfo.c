@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 cc-wrapper authors
+ * Copyright 2017,2018 cc-wrapper authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,11 @@
 
 #include <libgen.h>
 #include <stddef.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "execinfo.h"
 #include "log.h"
+#include "path.h"
 
 void print_exec_info(const struct exec_info *exec_info)
 {
@@ -35,14 +35,8 @@ void print_exec_info(const struct exec_info *exec_info)
 const struct exec_info *get_exec_info(const struct exec_info *exec_infos,
 				      const char *arg0)
 {
+	const char *name = path_base(arg0);
 	const struct exec_info *ret = NULL;
-
-	size_t arg0_len = strlen(arg0);
-	char *arg0_copy = malloc(sizeof(char) * (arg0_len + 1));
-	if (arg0_copy == NULL)
-		goto out;
-	memcpy(arg0_copy, arg0, arg0_len + 1);
-	const char *name = basename(arg0_copy);
 
 	for (size_t i = 0; exec_infos[i].name != NULL; ++i) {
 		// Exact matches always come first
@@ -65,6 +59,5 @@ const struct exec_info *get_exec_info(const struct exec_info *exec_infos,
 	}
 
 out:
-	free(arg0_copy);
 	return ret;
 }
