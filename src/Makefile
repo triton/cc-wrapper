@@ -78,13 +78,14 @@ suppressions.gen: suppressions_test
 		./$<
 	touch $@
 
-.SECONDARY: $(TESTS:=_test)
+.SECONDARY: $(TESTS:=_test.o)
 %_test.o: %_test.cc | $(DEPDIR)
 	@$(MAKEDEPEND) $(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
 		-std=c++17 $< >$(DEPDIR)/$(<:.cc=.d)
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
 		-std=c++17 -c $< -o $@
 
+.SECONDARY: $(TESTS:=_test)
 .SECONDARY: $(TEST_EXTRAS:.c=.o)
 PERCENT = %
 .SECONDEXPANSION:
@@ -116,6 +117,7 @@ format:
 	stat -c '%s' $@.err | grep -q '^0$$'
 	touch $@
 
+.SECONDARY: $(TESTS:=_test_lint_pass)
 %_test_lint_pass: %_test.cc
 	$(CLANG_TIDY) $< -- \
 		$(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) -std=c++17 \
