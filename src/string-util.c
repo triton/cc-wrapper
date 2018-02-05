@@ -46,3 +46,13 @@ void string_array_free(struct array *arr)
 		free(arr_data[i]);
 	array_free(arr);
 }
+
+void strings_free(char **strings)
+{
+	if (strings == NULL)
+		return;
+
+	for (size_t i = 0; strings[i] != NULL; ++i)
+		free(strings[i]);
+	free(strings);
+}

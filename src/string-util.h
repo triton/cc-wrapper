@@ -34,6 +34,12 @@ char *string_clone(const char *str);
  */
 void string_array_free(struct array *arr);
 
+/*
+ * Frees a c-style array of c-strings as a convenience for freeing copies of
+ * argv.
+ */
+void strings_free(char **strings);
+
 #ifdef __cplusplus
 }  // extern "C"
 #endif

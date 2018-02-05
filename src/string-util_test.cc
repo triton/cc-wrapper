@@ -15,6 +15,7 @@
  */
 
 #include <gtest/gtest.h>
+#include <cstdlib>
 #include <string_view>
 
 #include "array.h"
@@ -36,9 +37,13 @@ TEST(StringUtilTest, StringCloneValid) {
   free(clone);
 }
 
+TEST(StringUtilTest, StringArrayFreeNull) {
+  string_array_free(nullptr);
+}
+
 TEST(StringUtilTest, StringArrayFree) {
   struct array *arr = array_init(sizeof(char *), 4);
-  ASSERT_NE(nullptr, arr);
+  EXPECT_NE(nullptr, arr);
   auto arr_data = reinterpret_cast<char **>(array_data(arr));
   arr_data[0] = string_clone("example1");
   arr_data[1] = nullptr;
@@ -46,7 +51,21 @@ TEST(StringUtilTest, StringArrayFree) {
   arr_data[3] = nullptr;
 
   string_array_free(arr);
-  string_array_free(nullptr);
+}
+
+TEST(StringUtilTest, StringsFreeNull) {
+  strings_free(nullptr);
+}
+
+TEST(StringUtilTest, StringsFree) {
+  auto strings = reinterpret_cast<char **>(malloc(sizeof(char *) * 4));
+  EXPECT_NE(nullptr, strings);
+  strings[0] = string_clone("example1");
+  strings[1] = string_clone("example2");
+  strings[2] = string_clone("example3");
+  strings[3] = nullptr;
+
+  strings_free(strings);
 }
 
 }  // namespace
