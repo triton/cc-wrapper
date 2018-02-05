@@ -21,11 +21,14 @@
 
 #include "arguments.h"
 #include "config.h"
+#include "environment.h"
 #include "execinfo.h"
 #include "log.h"
 #include "path.h"
 
 #define MAIN_BINARY "cc-wrapper"
+
+extern char **environ;
 
 void set_log_level()
 {
@@ -56,12 +59,16 @@ void set_log_level()
 	LOG_INFO("Log level: %s\n", log_level_to_string(log_level));
 }
 
-void execute(const struct exec_info *exec_info, const struct arguments *args)
+void execute(const struct exec_info *exec_info, const struct arguments *args,
+	     const struct environment *env)
 {
 	LOG_INFO("Calling `%s` with arguments:\n", exec_info->path);
 	arguments_print(args, LOG_LEVEL_INFO);
+	LOG_INFO("and environment:\n");
+	environment_print(env, LOG_LEVEL_INFO);
 	LOG_INFO("####################################\n");
-	execv(exec_info->path, arguments_array_copy(args));
+	execve(exec_info->path, arguments_array_copy(args),
+	       environment_array_copy(env));
 }
 
 bool is_main_binary(const char *path)
@@ -73,6 +80,7 @@ int main(int argc, char *argv[])
 {
 	int ret = EXIT_FAILURE;
 	struct arguments *args = NULL;
+	struct environment *env = NULL;
 
 	set_log_level();
 
@@ -102,20 +110,28 @@ int main(int argc, char *argv[])
 		LOG_ERROR("Failed to make a copy of arguments\n");
 		goto out;
 	}
+	env = environment_from_array((const char *const *)environ);
+	if (env == NULL) {
+		LOG_ERROR("Failed to make a copy of environ\n");
+		goto out;
+	}
 
 	/* Print out some info to help debugging */
 	LOG_INFO("Got initial arguments:\n");
 	arguments_print(args, LOG_LEVEL_INFO);
+	LOG_INFO("Got initial environment:\n");
+	environment_print(env, LOG_LEVEL_INFO);
 
 	/* Execute handlers for rewriting the environment */
 	// TODO(wak)
 
-	execute(exec_info, args);
+	execute(exec_info, args, env);
 
 	/* We should never reach here */
 	LOG_FATAL("Went past exec!\n");
 
 out:
 	arguments_free(args);
+	environment_free(env);
 	return ret;
 }

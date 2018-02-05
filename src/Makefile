@@ -26,6 +26,7 @@ LIB_SRCS = \
 	arguments.c \
 	array.c \
 	avl.c \
+	environment.c \
 	execinfo.c \
 	log.c \
 	path.c \
@@ -48,6 +49,7 @@ TESTS = \
 	arguments \
 	array \
 	avl \
+	environment \
 	execinfo \
 	log \
 	path \
@@ -55,6 +57,9 @@ TESTS = \
 
 TEST_arguments_extra = \
 	arguments_test_util.c
+
+TEST_environment_extra = \
+	environment_test_util.c
 
 TEST_execinfo_extra = \
 	execinfo_test_util.c
