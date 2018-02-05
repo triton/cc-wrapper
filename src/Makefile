@@ -46,9 +46,13 @@ CC_WRAPPER_SRCS = \
 TESTS = \
 	array \
 	avl \
+	execinfo \
 	log \
 	path \
 	string-util
+
+TEST_execinfo_extra = \
+	execinfo_test_util.c
 
 TEST_EXTRAS = $(foreach test,$(TESTS),$(TEST_$(test)_extra))
 
