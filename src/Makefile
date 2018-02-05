@@ -23,6 +23,7 @@ CFLAGS += -g -Wall -Wpedantic -Wextra -Werror -I.. -I.
 BINDIR ?= $(PREFIX)/bin
 
 LIB_SRCS = \
+	arguments.c \
 	array.c \
 	avl.c \
 	execinfo.c \
@@ -44,12 +45,16 @@ CC_WRAPPER_SRCS = \
 	main.c
 
 TESTS = \
+	arguments \
 	array \
 	avl \
 	execinfo \
 	log \
 	path \
 	string-util
+
+TEST_arguments_extra = \
+	arguments_test_util.c
 
 TEST_execinfo_extra = \
 	execinfo_test_util.c
