@@ -1,4 +1,4 @@
-# Copyright 2017 cc-wrapper authors
+# Copyright 2017,2018 cc-wrapper authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -50,6 +50,8 @@ TESTS = \
 	path \
 	string-util
 
+TEST_EXTRAS = $(foreach test,$(TESTS),$(TEST_$(test)_extra))
+
 .PHONY: all
 all: cc-wrapper
 
@@ -79,7 +81,10 @@ suppressions.gen: suppressions_test
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
 		-std=c++17 -c $< -o $@
 
-%_test: %_test.o libccwrapper.a
+.SECONDARY: $(TEST_EXTRAS:.c=.o)
+PERCENT = %
+.SECONDEXPANSION:
+%_test: %_test.o $$(patsubst $$(PERCENT).c,$$(PERCENT).o,$$(TEST_$$*_extra)) libccwrapper.a
 	$(CXX) $(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
 		-std=c++17 $^ -o $@ $(LDFLAGS) $(GTEST_LIBS)
 
@@ -118,7 +123,8 @@ LINT_PASS = \
 	$(LIB_HDRS:=_lint_pass) \
 	$(LIB_SRCS:=_lint_pass) \
 	$(CC_WRAPPER_SRCS:=_lint_pass) \
-	$(TESTS:=_test_lint_pass)
+	$(TESTS:=_test_lint_pass) \
+	$(TEST_EXTRAS:=_lint_pass)
 
 .PHONY: lint
 lint: $(LINT_PASS)
