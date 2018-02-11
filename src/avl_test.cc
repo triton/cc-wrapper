@@ -24,7 +24,7 @@
 
 namespace {
 
-int intptr_compare(void *root, void *unplaced) {
+int intptr_compare(const void *root, const void *unplaced) {
   return reinterpret_cast<intptr_t>(unplaced) -
          reinterpret_cast<intptr_t>(root);
 }
@@ -304,8 +304,9 @@ TEST(AvlTest, LargerSample) {
   avl_free(avl);
 }
 
-int int_block_compare(void *root, void *unplaced) {
-  return *(int *)unplaced - *(int *)root;
+int int_block_compare(const void *root, const void *unplaced) {
+  return *reinterpret_cast<const int *>(unplaced) -
+         *reinterpret_cast<const int *>(root);
 }
 
 int *int_block_alloc(int value) {

@@ -25,7 +25,7 @@ extern "C" {
  * Function should return negative for left of root,
  * 0 for equal to root, and positive for right of root
  */
-typedef int (*binary_compare_t)(void *root, void *unplaced);
+typedef int (*binary_compare_t)(const void *root, const void *unplaced);
 
 /*
  * Function for deallocating the data in a structure
