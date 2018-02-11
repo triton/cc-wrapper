@@ -32,6 +32,11 @@ typedef int (*binary_compare_t)(const void *root, const void *unplaced);
  */
 typedef void (*free_t)(void *data);
 
+/*
+ * Function for performing a callback inside of another function
+ */
+typedef void (*callback_t)(const void *data, void *priv);
+
 #ifdef __cplusplus
 }  // extern "C"
 #endif
