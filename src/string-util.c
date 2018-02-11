@@ -36,6 +36,29 @@ char *string_clone(const char *str)
 	return memcpy(ret, str, str_bytes);
 }
 
+char *string_clone_n(const char *str, size_t n)
+{
+	if (n == 0)
+		return NULL;
+
+	char *ret = malloc(n * sizeof(char));
+	if (ret == NULL) {
+		LOG_DEBUG("Failed to allocate string\n");
+		return NULL;
+	}
+
+	size_t str_len = 0;
+	if (str != NULL) {
+		str_len = sizeof(char) * strlen(str);
+		memcpy(ret, str, str_len < n ? str_len : n);
+	}
+
+	if (str_len < n)
+		memset(ret + str_len, 0, n - str_len);
+
+	return ret;
+}
+
 void string_array_free(struct array *arr)
 {
 	if (arr == NULL)

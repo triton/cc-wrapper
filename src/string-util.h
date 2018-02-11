@@ -29,6 +29,13 @@ extern "C" {
 char *string_clone(const char *str);
 
 /*
+ * Returns allocated memory containing the a copy of the string contents
+ * up to n characters. If the string is shorter it will append null characters
+ * to reach n.
+ */
+char *string_clone_n(const char *str, size_t n);
+
+/*
  * Frees an array containing c-strings as a convenience for environment
  * and arguments.
  */

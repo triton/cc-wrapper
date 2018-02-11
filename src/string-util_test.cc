@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 #include <cstdlib>
+#include <string>
 #include <string_view>
 
 #include "array.h"
@@ -23,6 +24,7 @@
 
 namespace {
 
+using std::string;
 using std::string_view;
 
 TEST(StringUtilTest, StringCloneNull) {
@@ -30,11 +32,43 @@ TEST(StringUtilTest, StringCloneNull) {
 }
 
 TEST(StringUtilTest, StringCloneValid) {
-  const char *expected = "this test str";
-  char *clone = string_clone(expected);
-  EXPECT_NE(expected, clone);
-  EXPECT_EQ(string_view(expected), string_view(clone));
+  const string_view expected = "this test str";
+  char *clone = string_clone(expected.data());
+  EXPECT_NE(expected.data(), clone);
+  EXPECT_EQ(expected, string_view(clone));
   free(clone);
+}
+
+TEST(StringUtilTest, StringCloneNNull) {
+  EXPECT_EQ(nullptr, string_clone_n(nullptr, 0));
+
+  const size_t len = 10;
+  char *str = string_clone_n(nullptr, len);
+  EXPECT_EQ(string(len, '\0'), string_view(str, len));
+  free(str);
+}
+
+TEST(StringUtilTest, StringCloneNValid) {
+  const string_view expected = "This is a test string";
+  const size_t len = expected.length() + 1;
+  char *str = string_clone_n(expected.data(), len);
+  EXPECT_EQ(expected, string_view(str));
+  free(str);
+
+  const size_t len2 = expected.length() + 10;
+  string expected2(len2, '\0');
+  memcpy(expected2.data(), expected.data(), expected.length());
+  str = string_clone_n(expected.data(), len2);
+  EXPECT_EQ(expected2, string_view(str, len2));
+  free(str);
+}
+
+TEST(StringUtilTest, StringCloneNTrunc) {
+  const string_view expected = "This is a test string";
+  const size_t len = expected.length() - 3;
+  char *str = string_clone_n(expected.data(), len);
+  EXPECT_EQ(expected.substr(0, len), string_view(str, len));
+  free(str);
 }
 
 TEST(StringUtilTest, StringArrayFreeNull) {
