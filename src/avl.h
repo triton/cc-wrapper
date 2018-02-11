@@ -42,7 +42,7 @@ void avl_free(struct avl *avl);
 /*
  * Returns the height of the current AVL tree
  */
-int8_t avl_height(struct avl *avl);
+int8_t avl_height(const struct avl *avl);
 
 /*
  * Inserts a value into the AVL. Fails if the value is already contained
@@ -56,7 +56,7 @@ int avl_insert(struct avl *avl, void *value, bool own);
 /*
  * Returns the data stored in the AVL for value
  */
-void *avl_find(struct avl *avl, void *value);
+void *avl_find(const struct avl *avl, const void *value);
 
 /*
  * Removes a node in the AVL by value. Returns the data of the node
@@ -64,7 +64,7 @@ void *avl_find(struct avl *avl, void *value);
  *
  * Note: This data is not freed by the AVL even if owned.
  */
-void *avl_remove(struct avl *avl, void *value);
+void *avl_remove(struct avl *avl, const void *value);
 
 #ifdef __cplusplus
 }  // extern "C"

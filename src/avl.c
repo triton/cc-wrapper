@@ -70,7 +70,7 @@ void avl_free(struct avl *avl)
 	free(avl);
 }
 
-int8_t avl_node_height(struct avl_node *root)
+int8_t avl_node_height(const struct avl_node *root)
 {
 	if (root == NULL)
 		return -1;
@@ -85,7 +85,7 @@ void avl_node_height_fix(struct avl_node *root)
 	root->height = (left > right ? left : right) + 1;
 }
 
-int8_t avl_height(struct avl *avl)
+int8_t avl_height(const struct avl *avl)
 {
 	return avl_node_height(avl->root);
 }
@@ -94,11 +94,11 @@ int8_t avl_height(struct avl *avl)
  * Populates the avl tree path to the element. Returns the index
  * in the path array of the element.
  */
-int8_t avl_node_find(struct avl_node **path[], void *value,
+int8_t avl_node_find(const struct avl_node *const *path[], const void *value,
 		     binary_compare_t compare)
 {
 	int8_t path_idx = 0, compare_res;
-	struct avl_node *node;
+	const struct avl_node *node;
 
 	for (; *path[path_idx] != NULL; ++path_idx) {
 		node = *path[path_idx];
@@ -106,7 +106,9 @@ int8_t avl_node_find(struct avl_node **path[], void *value,
 		if (compare_res == 0)
 			return path_idx;
 		path[path_idx + 1] =
-		    compare_res < 0 ? &node->left : &node->right;
+		    (const struct avl_node *const *)(compare_res < 0
+							 ? &node->left
+							 : &node->right);
 	}
 
 	return path_idx;
@@ -184,7 +186,8 @@ int avl_insert(struct avl *avl, void *value, bool own)
 
 	/* Find where we should place our node in the tree */
 	path[0] = &avl->root;
-	found_idx = avl_node_find(path, value, avl->compare);
+	found_idx = avl_node_find((const struct avl_node *const **)path, value,
+				  avl->compare);
 	if (*path[found_idx] != NULL)
 		return EEXIST;
 
@@ -207,12 +210,12 @@ int avl_insert(struct avl *avl, void *value, bool own)
 	return 0;
 }
 
-void *avl_find(struct avl *avl, void *value)
+void *avl_find(const struct avl *avl, const void *value)
 {
-	struct avl_node **path[avl_height(avl) + 2];
+	const struct avl_node *const *path[avl_height(avl) + 2];
 	int8_t found_idx;
 
-	path[0] = &avl->root;
+	path[0] = (const struct avl_node *const *)&avl->root;
 	found_idx = avl_node_find(path, value, avl->compare);
 	if (*path[found_idx] == NULL)
 		return NULL;
@@ -220,7 +223,7 @@ void *avl_find(struct avl *avl, void *value)
 	return (*path[found_idx])->data;
 }
 
-void *avl_remove(struct avl *avl, void *value)
+void *avl_remove(struct avl *avl, const void *value)
 {
 	struct avl_node **path[avl_height(avl) + 2];
 	struct avl_node *deleted_node;
@@ -229,7 +232,8 @@ void *avl_remove(struct avl *avl, void *value)
 
 	/* Find the path to the node through the tree */
 	path[0] = &avl->root;
-	found_idx = avl_node_find(path, value, avl->compare);
+	found_idx = avl_node_find((const struct avl_node *const **)path, value,
+				  avl->compare);
 	deleted_node = *path[found_idx];
 	if (deleted_node == NULL)
 		return NULL;
