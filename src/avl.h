@@ -66,6 +66,12 @@ void *avl_find(const struct avl *avl, const void *value);
  */
 void *avl_remove(struct avl *avl, const void *value);
 
+/*
+ * Traverses the avl tree in order fashion calling the callback
+ * on each node.
+ */
+void avl_order_traverse(const struct avl *avl, callback_t cb, void *priv);
+
 #ifdef __cplusplus
 }  // extern "C"
 #endif

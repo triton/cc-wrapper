@@ -276,6 +276,37 @@ TEST(AvlTest, RemoveTwoSubtrees) {
   avl_free(avl);
 }
 
+struct avl_arr {
+  intptr_t data[6];
+  size_t i;
+};
+
+void avl_to_arr(const void *data, void *priv) {
+  auto arr_p = reinterpret_cast<struct avl_arr *>(priv);
+  arr_p->data[arr_p->i++] = reinterpret_cast<intptr_t>(data);
+}
+
+TEST(AvlTest, InOrderTraverse) {
+  struct avl *avl = intptr_init();
+  EXPECT_EQ(0, intptr_insert(avl, 6));
+  EXPECT_EQ(0, intptr_insert(avl, 1));
+  EXPECT_EQ(0, intptr_insert(avl, 3));
+  EXPECT_EQ(0, intptr_insert(avl, 2));
+  EXPECT_EQ(0, intptr_insert(avl, 4));
+  EXPECT_EQ(0, intptr_insert(avl, 5));
+
+  struct avl_arr arr;
+  arr.i = 0;
+  avl_order_traverse(avl, avl_to_arr, &arr);
+  EXPECT_EQ(1, arr.data[0]);
+  EXPECT_EQ(2, arr.data[1]);
+  EXPECT_EQ(3, arr.data[2]);
+  EXPECT_EQ(4, arr.data[3]);
+  EXPECT_EQ(5, arr.data[4]);
+  EXPECT_EQ(6, arr.data[5]);
+  avl_free(avl);
+}
+
 TEST(AvlTest, LargerSample) {
   struct avl *avl = intptr_init();
 

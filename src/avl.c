@@ -278,3 +278,19 @@ void *avl_remove(struct avl *avl, const void *value)
 
 	return data;
 }
+
+void avl_node_order_traverse(const struct avl_node *node, callback_t cb,
+			     void *priv)
+{
+	if (node == NULL)
+		return;
+
+	avl_node_order_traverse(node->left, cb, priv);
+	cb(node->data, priv);
+	avl_node_order_traverse(node->right, cb, priv);
+}
+
+void avl_order_traverse(const struct avl *avl, callback_t cb, void *priv)
+{
+	avl_node_order_traverse(avl->root, cb, priv);
+}
