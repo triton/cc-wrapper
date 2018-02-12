@@ -19,6 +19,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <sys/types.h>
 
 #include "func.h"
 
@@ -43,6 +44,11 @@ void avl_free(struct avl *avl);
  * Returns the height of the current AVL tree
  */
 int8_t avl_height(const struct avl *avl);
+
+/*
+ * Returns the number of elements store in the AVL tree
+ */
+size_t avl_nelems(const struct avl *avl);
 
 /*
  * Inserts a value into the AVL. Fails if the value is already contained

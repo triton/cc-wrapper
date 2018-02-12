@@ -31,6 +31,7 @@ struct avl_node {
 
 struct avl {
 	struct avl_node *root;
+	size_t nelems;
 	binary_compare_t compare;
 	free_t data_free;
 };
@@ -44,6 +45,7 @@ struct avl *avl_init(binary_compare_t compare, free_t data_free)
 		return NULL;
 
 	avl->root = NULL;
+	avl->nelems = 0;
 	avl->compare = compare;
 	avl->data_free = data_free;
 	return avl;
@@ -88,6 +90,11 @@ void avl_node_height_fix(struct avl_node *root)
 int8_t avl_height(const struct avl *avl)
 {
 	return avl_node_height(avl->root);
+}
+
+size_t avl_nelems(const struct avl *avl)
+{
+	return avl->nelems;
 }
 
 /*
@@ -207,6 +214,7 @@ int avl_insert(struct avl *avl, void *value, bool own)
 	/* Fixup our uptree path to make sure we maintain balance */
 	avl_path_fix(path, found_idx - 1);
 
+	++avl->nelems;
 	return 0;
 }
 
@@ -276,6 +284,7 @@ void *avl_remove(struct avl *avl, const void *value)
 	/* Fixup our uptree path to make sure we maintain balance */
 	avl_path_fix(path, replacement_idx - 1);
 
+	--avl->nelems;
 	return data;
 }
 

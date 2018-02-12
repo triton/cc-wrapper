@@ -54,20 +54,24 @@ TEST(AvlTest, FreeNull) {
 TEST(AvlTest, BasicInsert) {
   struct avl *avl = intptr_init();
   EXPECT_EQ(-1, avl_height(avl));
+  EXPECT_EQ(static_cast<size_t>(0), avl_nelems(avl));
 
   EXPECT_EQ(0, intptr_insert(avl, 3));
   EXPECT_EQ(0, avl_height(avl));
+  EXPECT_EQ(static_cast<size_t>(1), avl_nelems(avl));
   EXPECT_TRUE(intptr_find(avl, 3));
   EXPECT_FALSE(intptr_find(avl, 2));
 
   EXPECT_EQ(0, intptr_insert(avl, 1));
   EXPECT_EQ(1, avl_height(avl));
+  EXPECT_EQ(static_cast<size_t>(2), avl_nelems(avl));
   EXPECT_TRUE(intptr_find(avl, 3));
   EXPECT_TRUE(intptr_find(avl, 1));
   EXPECT_FALSE(intptr_find(avl, 2));
 
   EXPECT_EQ(0, intptr_insert(avl, 5));
   EXPECT_EQ(1, avl_height(avl));
+  EXPECT_EQ(static_cast<size_t>(3), avl_nelems(avl));
   EXPECT_TRUE(intptr_find(avl, 5));
   EXPECT_TRUE(intptr_find(avl, 3));
   EXPECT_TRUE(intptr_find(avl, 1));
@@ -165,14 +169,20 @@ TEST(AvlTest, InsertRLBalance) {
 TEST(AvlTest, BasicRemove) {
   struct avl *avl = intptr_init();
   EXPECT_EQ(0, intptr_insert(avl, 3));
+  EXPECT_EQ(0, avl_height(avl));
+  EXPECT_EQ(static_cast<size_t>(1), avl_nelems(avl));
   EXPECT_TRUE(intptr_find(avl, 3));
   EXPECT_FALSE(intptr_find(avl, 2));
 
   EXPECT_FALSE(intptr_remove(avl, 2));
+  EXPECT_EQ(0, avl_height(avl));
+  EXPECT_EQ(static_cast<size_t>(1), avl_nelems(avl));
   EXPECT_TRUE(intptr_find(avl, 3));
   EXPECT_FALSE(intptr_find(avl, 2));
 
   EXPECT_TRUE(intptr_remove(avl, 3));
+  EXPECT_EQ(-1, avl_height(avl));
+  EXPECT_EQ(static_cast<size_t>(0), avl_nelems(avl));
   EXPECT_FALSE(intptr_find(avl, 3));
   EXPECT_FALSE(intptr_find(avl, 2));
 
@@ -184,9 +194,13 @@ TEST(AvlTest, RemoveLeaf) {
   EXPECT_EQ(0, intptr_insert(avl, 2));
   EXPECT_EQ(0, intptr_insert(avl, 1));
   EXPECT_EQ(0, intptr_insert(avl, 3));
+  EXPECT_EQ(1, avl_height(avl));
+  EXPECT_EQ(static_cast<size_t>(3), avl_nelems(avl));
 
   EXPECT_TRUE(intptr_remove(avl, 3));
 
+  EXPECT_EQ(1, avl_height(avl));
+  EXPECT_EQ(static_cast<size_t>(2), avl_nelems(avl));
   EXPECT_TRUE(intptr_find(avl, 1));
   EXPECT_TRUE(intptr_find(avl, 2));
   EXPECT_FALSE(intptr_find(avl, 3));
