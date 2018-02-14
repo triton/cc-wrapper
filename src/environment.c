@@ -124,6 +124,7 @@ void environment_print(const struct environment *env, enum log_level log_level)
 	    .log_level = log_level,
 	};
 	avl_order_traverse(env->dict, environment_print_cb, &print_data);
+	log_printf(log_level, "\n");
 }
 
 const char *environment_get(const struct environment *env, const char *key)
