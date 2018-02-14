@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+#include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -56,6 +58,23 @@ char *string_clone_n(const char *str, size_t n)
 	if (str_len < n)
 		memset(ret + str_len, 0, n - str_len);
 
+	return ret;
+}
+
+char *string_printf(const char *format, ...)
+{
+	va_list args;
+	va_start(args, format);
+	const size_t ret_size = vsnprintf(NULL, 0, format, args) + 1;
+	va_end(args);
+
+	char *ret = malloc(sizeof(char) * ret_size);
+	if (ret == NULL)
+		return NULL;
+
+	va_start(args, format);
+	vsnprintf(ret, ret_size, format, args);
+	va_end(args);
 	return ret;
 }
 

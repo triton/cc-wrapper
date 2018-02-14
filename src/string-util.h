@@ -42,6 +42,11 @@ char *string_clone_n(const char *str, size_t n);
 void string_array_free(struct array *arr);
 
 /*
+ * Returns a string based on the format string passed in
+ */
+char *string_printf(const char *format, ...);
+
+/*
  * Frees a c-style array of c-strings as a convenience for freeing copies of
  * argv.
  */

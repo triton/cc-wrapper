@@ -71,6 +71,12 @@ TEST(StringUtilTest, StringCloneNTrunc) {
   free(str);
 }
 
+TEST(StringUtilTest, StringFormat) {
+  char *str = string_printf("%s %d\n", "Hello", 1024);
+  EXPECT_EQ(string_view("Hello 1024\n"), string_view(str));
+  free(str);
+}
+
 TEST(StringUtilTest, StringArrayFreeNull) {
   string_array_free(nullptr);
 }
