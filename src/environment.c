@@ -200,20 +200,12 @@ void environment_array_copy_cb(const void *data, void *priv)
 	if (copy->arr == NULL)
 		return;
 
-	const size_t key_len = strlen(node->key);
-	const size_t val_len = strlen(node->val);
-	const size_t res_size = key_len + 1 + val_len + 1;
-	char *res = malloc(sizeof(char) * res_size);
+	char *res = string_printf("%s=%s", node->key, node->val);
 	if (res == NULL) {
 		strings_free(copy->arr);
 		copy->arr = NULL;
 		return;
 	}
-
-	memcpy(res, node->key, key_len);
-	res[key_len] = '=';
-	memcpy(res + key_len + 1, node->val, val_len);
-	res[res_size - 1] = '\0';
 	*(copy->arr++) = res;
 }
 
