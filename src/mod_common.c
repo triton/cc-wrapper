@@ -14,13 +14,37 @@
  * limitations under the License.
  */
 
+#include <stdbool.h>
+#include <string.h>
+
 #include "mod_common.h"
+#include "string-util.h"
 
 bool mod_common_rewrite(const struct exec_info *exec_info,
 			struct arguments *args, struct environment *env)
 {
+	bool ret = false;
+	char *path_new = NULL;
+
+	/* Our binaries should prioritize calling each other over those in
+	 * the provided path.
+	 */
+	const char *path_old = environment_get(env, "PATH");
+	/* Avoid including the current directory in the path */
+	if (path_old == NULL || path_old[0] == '\0')
+		path_new = string_clone(CC_WRAPPER_BIN);
+	else
+		path_new = string_printf("%s:%s", CC_WRAPPER_BIN, path_old);
+	if (path_new == NULL)
+		goto out;
+
+	if (!environment_set(env, "PATH", path_new))
+		goto out;
+
 	(void)exec_info;
 	(void)args;
-	(void)env;
-	return true;
+	ret = true;
+out:
+	free(path_new);
+	return ret;
 }

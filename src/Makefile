@@ -20,7 +20,8 @@ CLANG_TIDY ?= clang-tidy
 DEPDIR ?= .deps
 MAKEDEPEND ?= $(CPP) -M
 BINDIR ?= $(PREFIX)/bin
-CFLAGS += -g -Wall -Wpedantic -Wextra -Werror -I.. -I.
+CFLAGS += -g -Wall -Wpedantic -Wextra -Werror -I.. -I. \
+	-DCC_WRAPPER_BIN=\"$(BINDIR)\"
 
 LIB_SRCS = \
 	arguments.c \
