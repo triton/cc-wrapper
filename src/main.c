@@ -24,6 +24,9 @@
 #include "environment.h"
 #include "execinfo.h"
 #include "log.h"
+#include "mod_cc.h"
+#include "mod_common.h"
+#include "mod_ld.h"
 #include "path.h"
 
 #define MAIN_BINARY "cc-wrapper"
@@ -123,7 +126,18 @@ int main(int argc, char *argv[])
 	environment_print(env, LOG_LEVEL_INFO);
 
 	/* Execute handlers for rewriting the environment */
-	// TODO(wak)
+	if (!mod_common_rewrite(exec_info, args, env)) {
+		LOG_ERROR("Failed to do common rewrite\n");
+		goto out;
+	}
+	if (!mod_cc_rewrite(exec_info, args, env)) {
+		LOG_ERROR("Failed to do cc rewrite\n");
+		goto out;
+	}
+	if (!mod_ld_rewrite(exec_info, args, env)) {
+		LOG_ERROR("Failed to do ld rewrite\n");
+		goto out;
+	}
 
 	execute(exec_info, args, env);
 

@@ -19,8 +19,8 @@ CLANG_TIDY ?= clang-tidy
 
 DEPDIR ?= .deps
 MAKEDEPEND ?= $(CPP) -M
-CFLAGS += -g -Wall -Wpedantic -Wextra -Werror -I.. -I.
 BINDIR ?= $(PREFIX)/bin
+CFLAGS += -g -Wall -Wpedantic -Wextra -Werror -I.. -I.
 
 LIB_SRCS = \
 	arguments.c \
@@ -43,7 +43,10 @@ LIB_HDRS = \
 	string-util.h
 
 CC_WRAPPER_SRCS = \
-	main.c
+	main.c \
+	mod_cc.c \
+	mod_common.c \
+	mod_ld.c \
 
 TESTS = \
 	arguments \
