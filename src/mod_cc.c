@@ -14,12 +14,27 @@
  * limitations under the License.
  */
 
+#include <string.h>
+
 #include "mod_cc.h"
+
+bool is_cc(const struct exec_info *exec_info)
+{
+	if (strcmp("cpp", exec_info->type) == 0)
+		return true;
+	if (strcmp("c", exec_info->type) == 0)
+		return true;
+	if (strcmp("c++", exec_info->type) == 0)
+		return true;
+	return false;
+}
 
 bool mod_cc_rewrite(const struct exec_info *exec_info, struct arguments *args,
 		    struct environment *env)
 {
-	(void)exec_info;
+	if (!is_cc(exec_info))
+		return true;
+
 	(void)args;
 	(void)env;
 	return true;
