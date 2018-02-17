@@ -17,6 +17,8 @@
 #ifndef ARGUMENTS_H
 #define ARGUMENTS_H
 
+#include <stdbool.h>
+
 #include "log.h"
 
 #ifdef __cplusplus
@@ -40,6 +42,20 @@ void arguments_free(struct arguments *args);
  * Prints out the arguments using the built in logging facility.
  */
 void arguments_print(const struct arguments *args, enum log_level log_level);
+
+/*
+ * Copies the specified value and stores it in the arguments list at idx.
+ * Pushed the rest of the elements up the list.
+ * Returns true on success, false if allocation fails or the element is out
+ * of bounds.
+ */
+bool arguments_insert(struct arguments *args, size_t idx, const char *arg);
+
+/*
+ * Copies the specified value and overwrites the argument at idx.
+ * Returns true on success, false if allocation fails or idx is out of bounds.
+ */
+bool arguments_set(struct arguments *args, size_t idx, const char *arg);
 
 /*
  * Returns a reference to the c-style arguments list
