@@ -44,6 +44,11 @@ void arguments_free(struct arguments *args);
 void arguments_print(const struct arguments *args, enum log_level log_level);
 
 /*
+ * Gets the number of arguments in the list
+ */
+size_t arguments_nelems(const struct arguments *args);
+
+/*
  * Copies the specified value and stores it in the arguments list at idx.
  * Pushed the rest of the elements up the list.
  * Returns true on success, false if allocation fails or the element is out

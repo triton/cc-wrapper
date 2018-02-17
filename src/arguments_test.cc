@@ -38,6 +38,7 @@ TEST(ArgumentsTest, ArgumentsEmpty) {
   ASSERT_NE(nullptr, args);
   arguments_print(args, LOG_LEVEL_INFO);
 
+  EXPECT_EQ(0u, arguments_nelems(args));
   EXPECT_EQ(nullptr, arguments_array(args)[0]);
   arguments_free(args);
 }
@@ -47,6 +48,7 @@ TEST(ArgumentsTest, Arguments) {
   ASSERT_NE(nullptr, args);
   arguments_print(args, LOG_LEVEL_INFO);
 
+  EXPECT_EQ(3u, arguments_nelems(args));
   const char *const *data = arguments_array(args);
   size_t i = 0;
   for (; argv_sample[i] != nullptr; ++i)
@@ -69,6 +71,7 @@ TEST(ArgumentsTest, ArgumentsInsert) {
   EXPECT_TRUE(arguments_insert(args, 5, i5.data()));
   EXPECT_FALSE(arguments_insert(args, 7, "boop"));
 
+  EXPECT_EQ(6u, arguments_nelems(args));
   const char *const *data = arguments_array(args);
   EXPECT_EQ(i0, string_view(data[0]));
   EXPECT_EQ(string_view(argv_sample[0]), string_view(data[1]));
@@ -89,6 +92,7 @@ TEST(ArgumentsTest, ArgumentsSet) {
   EXPECT_FALSE(arguments_set(args, 3, "boop"));
   EXPECT_TRUE(arguments_set(args, 1, i1.data()));
 
+  EXPECT_EQ(3u, arguments_nelems(args));
   const char *const *data = arguments_array(args);
   EXPECT_EQ(string_view(argv_sample[0]), string_view(data[0]));
   EXPECT_EQ(i1, string_view(data[1]));

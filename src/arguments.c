@@ -72,6 +72,11 @@ void arguments_print(const struct arguments *args, enum log_level log_level)
 	log_printf(log_level, "\n");
 }
 
+size_t arguments_nelems(const struct arguments *args)
+{
+	return array_nelems(args->data) - 1;
+}
+
 bool arguments_insert(struct arguments *args, size_t idx, const char *arg)
 {
 	if (idx >= array_nelems(args->data))
@@ -85,7 +90,7 @@ bool arguments_insert(struct arguments *args, size_t idx, const char *arg)
 		goto error;
 
 	char **data = array_data(args->data);
-	for (size_t i = array_nelems(args->data) - 1; i > idx; --i)
+	for (size_t i = arguments_nelems(args); i > idx; --i)
 		data[i] = data[i - 1];
 	data[idx] = new_arg;
 
@@ -97,7 +102,7 @@ error:
 
 bool arguments_set(struct arguments *args, size_t idx, const char *arg)
 {
-	if (idx >= array_nelems(args->data) - 1)
+	if (idx >= arguments_nelems(args))
 		return false;
 
 	char *new_arg = string_clone(arg);
