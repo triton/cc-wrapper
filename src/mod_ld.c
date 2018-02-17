@@ -14,12 +14,22 @@
  * limitations under the License.
  */
 
+#include <string.h>
+
 #include "mod_ld.h"
 
+bool is_ld(const struct exec_info *exec_info)
+{
+	if (strcmp("ld", exec_info->type) == 0)
+		return true;
+	return false;
+}
 bool mod_ld_rewrite(const struct exec_info *exec_info, struct arguments *args,
 		    struct environment *env)
 {
-	(void)exec_info;
+	if (!is_ld(exec_info))
+		return true;
+
 	(void)args;
 	(void)env;
 	return true;
