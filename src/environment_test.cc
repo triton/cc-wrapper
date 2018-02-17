@@ -36,7 +36,7 @@ TEST(EnvironmentTest, EnvironmentEmpty) {
 
   struct environment *env = environment_from_array(env_empty);
   EXPECT_NE(nullptr, env);
-  EXPECT_EQ(static_cast<size_t>(0), environment_nelems(env));
+  EXPECT_EQ(0u, environment_nelems(env));
   environment_print(env, LOG_LEVEL_INFO);
 
   char **env_copy = environment_array_copy(env);
@@ -50,7 +50,7 @@ TEST(EnvironmentTest, EnvironmentConversion) {
   EXPECT_NE(nullptr, env);
 
   environment_print(env, LOG_LEVEL_INFO);
-  EXPECT_EQ(static_cast<size_t>(3), environment_nelems(env));
+  EXPECT_EQ(3u, environment_nelems(env));
   EXPECT_EQ(nullptr, environment_get(env, "NONEXISTANT"));
   EXPECT_EQ(string_view("hi"), string_view(environment_get(env, "VAR1")));
   EXPECT_EQ(string_view("lo"), string_view(environment_get(env, "VAR11")));
@@ -73,7 +73,7 @@ TEST(EnvironmentTest, EnvironmentSet) {
   EXPECT_TRUE(environment_set(env, "NONEXISTANT", nullptr));
 
   environment_print(env, LOG_LEVEL_INFO);
-  EXPECT_EQ(static_cast<size_t>(3), environment_nelems(env));
+  EXPECT_EQ(3u, environment_nelems(env));
   EXPECT_EQ(nullptr, environment_get(env, "NONEXISTANT"));
   EXPECT_EQ(string_view("hi"), string_view(environment_get(env, "VAR1")));
   EXPECT_EQ(string_view("on"), string_view(environment_get(env, "VAR2")));
