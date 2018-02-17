@@ -62,6 +62,7 @@ TEST(ArgumentsTest, ArgumentsInsert) {
 
   struct arguments *args = arguments_from_array(argv_sample);
   ASSERT_NE(nullptr, args);
+  EXPECT_FALSE(arguments_insert(args, 1, nullptr));
   EXPECT_FALSE(arguments_insert(args, 4, "boop"));
   EXPECT_TRUE(arguments_insert(args, 0, i0.data()));
   EXPECT_TRUE(arguments_insert(args, 2, i2.data()));
@@ -84,6 +85,7 @@ TEST(ArgumentsTest, ArgumentsSet) {
 
   struct arguments *args = arguments_from_array(argv_sample);
   ASSERT_NE(nullptr, args);
+  EXPECT_FALSE(arguments_set(args, 1, nullptr));
   EXPECT_FALSE(arguments_set(args, 3, "boop"));
   EXPECT_TRUE(arguments_set(args, 1, i1.data()));
 
