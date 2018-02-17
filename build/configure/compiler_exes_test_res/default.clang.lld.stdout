@@ -1,6 +1,6 @@
-c++ @TMPDIR@/bin/clang clang 0
-cc @TMPDIR@/bin/clang clang 0
-clang @TMPDIR@/bin/clang clang 0
-clang++ @TMPDIR@/bin/clang clang 0
-cpp @TMPDIR@/bin/clang clang 0
-ld.lld @TMPDIR@/bin/lld lld 1
+c++ @TMPDIR@/bin/clang clang c++ 0
+cc @TMPDIR@/bin/clang clang c 0
+clang @TMPDIR@/bin/clang clang c 0
+clang++ @TMPDIR@/bin/clang clang c++ 0
+cpp @TMPDIR@/bin/clang clang cpp 0
+ld.lld @TMPDIR@/bin/lld lld ld 1

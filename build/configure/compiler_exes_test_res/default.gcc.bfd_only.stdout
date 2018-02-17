@@ -1,6 +1,6 @@
-c++ @TMPDIR@/bin/g++ gcc 0
-cc @TMPDIR@/bin/gcc gcc 0
-cpp @TMPDIR@/bin/cpp gcc 0
-g++ @TMPDIR@/bin/g++ gcc 0
-gcc @TMPDIR@/bin/gcc gcc 0
-ld.bfd @TMPDIR@/bin/ld bfd 1
+c++ @TMPDIR@/bin/g++ gcc c++ 0
+cc @TMPDIR@/bin/gcc gcc c 0
+cpp @TMPDIR@/bin/cpp gcc cpp 0
+g++ @TMPDIR@/bin/g++ gcc c++ 0
+gcc @TMPDIR@/bin/gcc gcc c 0
+ld.bfd @TMPDIR@/bin/ld bfd ld 1

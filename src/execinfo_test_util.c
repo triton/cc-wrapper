@@ -22,25 +22,29 @@ const struct exec_info exec_infos[] = {
     {
 	.name = "cpp",
 	.path = "/no-such-path/bin/cpp",
-	.type = "gcc",
+	.package = "gcc",
+	.type = "cc",
 	.prefer = 0,
     },
     {
 	.name = "gcc",
 	.path = "/no-such-path/bin/gcc",
-	.type = "gcc",
+	.package = "gcc",
+	.type = "cc",
 	.prefer = 0,
     },
     {
 	.name = "ld.bfd",
 	.path = "/no-such-path/bin/ld.bfd",
-	.type = "bfd",
+	.package = "bfd",
+	.type = "ld",
 	.prefer = 1,
     },
     {
 	.name = "ld.gold",
 	.path = "/no-such-path/bin/ld.gold",
-	.type = "gold",
+	.package = "gold",
+	.type = "ld",
 	.prefer = 0,
     },
     {

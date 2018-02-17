@@ -53,16 +53,17 @@ for tuple in $compiler_tuples; do
   IFS=' '
   tuple=($tuple)
   echo $'\t''{'
-  echo $'\t'$'\t'".name = \"${tuple[0]}\","
-  echo $'\t'$'\t'".path = \"${tuple[1]}\","
-  echo $'\t'$'\t'".type = \"${tuple[2]}\","
-  echo $'\t'$'\t'".prefer = ${tuple[3]},"
+  echo $'\t'$'\t'".name    = \"${tuple[0]}\","
+  echo $'\t'$'\t'".path    = \"${tuple[1]}\","
+  echo $'\t'$'\t'".package = \"${tuple[2]}\","
+  echo $'\t'$'\t'".type    = \"${tuple[3]}\","
+  echo $'\t'$'\t'".prefer  = ${tuple[4]},"
   echo $'\t''},'
   IFS="$oldifs2"
 done
 IFS="$oldifs"
 echo $'\t''{'
-echo $'\t'$'\t''.name = NULL,'
+echo $'\t'$'\t''.name    = NULL,'
 echo $'\t''},'
 echo '};'
 
