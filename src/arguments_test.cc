@@ -100,6 +100,19 @@ TEST(ArgumentsTest, ArgumentsSet) {
   arguments_free(args);
 }
 
+TEST(ArgumentsTest, ArgumentsRemove) {
+  struct arguments *args = arguments_from_array(argv_sample);
+  ASSERT_NE(nullptr, args);
+  EXPECT_FALSE(arguments_remove(args, 3));
+  EXPECT_TRUE(arguments_remove(args, 1));
+
+  EXPECT_EQ(2u, arguments_nelems(args));
+  const char *const *data = arguments_array(args);
+  EXPECT_EQ(string_view(argv_sample[0]), string_view(data[0]));
+  EXPECT_EQ(string_view(argv_sample[2]), string_view(data[1]));
+  arguments_free(args);
+}
+
 TEST(ArgumentTest, ArgumentsCopy) {
   struct arguments *args = arguments_from_array(argv_sample);
   ASSERT_NE(nullptr, args);

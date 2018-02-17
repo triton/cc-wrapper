@@ -115,6 +115,22 @@ bool arguments_set(struct arguments *args, size_t idx, const char *arg)
 	return true;
 }
 
+bool arguments_remove(struct arguments *args, size_t idx)
+{
+	if (idx >= arguments_nelems(args))
+		return false;
+
+	if (!array_resize(args->data, array_nelems(args->data) - 1))
+		return false;
+
+	char **data = array_data(args->data);
+	free(data[idx]);
+	for (size_t i = idx; i < arguments_nelems(args); ++i)
+		data[i] = data[i + 1];
+	data[arguments_nelems(args)] = NULL;
+	return true;
+}
+
 const char *const *arguments_array(const struct arguments *args)
 {
 	return array_data_const(args->data);

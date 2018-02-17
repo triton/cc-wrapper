@@ -63,6 +63,12 @@ bool arguments_insert(struct arguments *args, size_t idx, const char *arg);
 bool arguments_set(struct arguments *args, size_t idx, const char *arg);
 
 /*
+ * Removes the argument at idx and shrinks args list down.
+ * Returns true on success, false if idx is out of bounds.
+ */
+bool arguments_remove(struct arguments *args, size_t idx);
+
+/*
  * Returns a reference to the c-style arguments list
  */
 const char *const *arguments_array(const struct arguments *args);
