@@ -77,6 +77,13 @@ size_t arguments_nelems(const struct arguments *args)
 	return array_nelems(args->data) - 1;
 }
 
+const char *arguments_get(const struct arguments *args, size_t idx)
+{
+	if (idx >= arguments_nelems(args))
+		return NULL;
+	return arguments_array(args)[idx];
+}
+
 bool arguments_insert(struct arguments *args, size_t idx, const char *arg)
 {
 	if (idx >= array_nelems(args->data))

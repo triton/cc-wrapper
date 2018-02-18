@@ -57,6 +57,18 @@ TEST(ArgumentsTest, Arguments) {
   arguments_free(args);
 }
 
+TEST(ArgumentsTest, ArgumentsGet) {
+  struct arguments *args = arguments_from_array(argv_sample);
+  ASSERT_NE(nullptr, args);
+
+  size_t i = 0;
+  for (; argv_sample[i] != nullptr; ++i)
+    EXPECT_EQ(string_view(argv_sample[i]), string_view(arguments_get(args, i)));
+  EXPECT_EQ(nullptr, arguments_get(args, i));
+  EXPECT_EQ(nullptr, arguments_get(args, i + 10));
+  arguments_free(args);
+}
+
 TEST(ArgumentsTest, ArgumentsInsert) {
   const string_view i0 = "boop0";
   const string_view i2 = "boop2";
