@@ -20,7 +20,7 @@ CLANG_TIDY ?= clang-tidy
 DEPDIR ?= .deps
 MAKEDEPEND ?= $(CPP) -M
 BINDIR ?= $(PREFIX)/bin
-CFLAGS += -g -Wall -Wpedantic -Wextra -Werror -I.. -I. \
+CPPFLAGS += -g -Wall -Wpedantic -Wextra -Werror -I.. -I. \
 	-DCC_WRAPPER_BIN=\"$(BINDIR)\"
 
 LIB_SRCS = \
@@ -74,7 +74,7 @@ TEST_EXTRAS = $(foreach test,$(TESTS),$(TEST_$(test)_extra))
 all: cc-wrapper
 
 cc-wrapper: $(CC_WRAPPER_SRCS:.c=.o) libccwrapper.a
-	$(CC) $(CFLAGS) $^ -o $@ $(LDFLAGS)
+	$(CC) $^ -o $@ $(LDFLAGS)
 
 libccwrapper.a: $(LIB_SRCS:.c=.o)
 	$(AR) rcs $@ $^
@@ -94,9 +94,9 @@ suppressions.gen: suppressions_test
 
 .SECONDARY: $(TESTS:=_test.o)
 %_test.o: %_test.cc | $(DEPDIR)
-	@$(MAKEDEPEND) $(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
+	@$(MAKEDEPEND) $(CPPFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
 		-std=c++17 $< >$(DEPDIR)/$(<:.cc=.d)
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
 		-std=c++17 -c $< -o $@
 
 .SECONDARY: $(TESTS:=_test)
@@ -104,12 +104,12 @@ suppressions.gen: suppressions_test
 PERCENT = %
 .SECONDEXPANSION:
 %_test: %_test.o $$(patsubst $$(PERCENT).c,$$(PERCENT).o,$$(TEST_$$*_extra)) libccwrapper.a
-	$(CXX) $(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) \
 		-std=c++17 $^ -o $@ $(LDFLAGS) $(GTEST_LIBS)
 
 %.o: %.c | $(DEPDIR)
-	@$(MAKEDEPEND) $(CFLAGS) -std=c99 $< >$(DEPDIR)/$(<:.c=.d)
-	$(CC) $(CFLAGS) -std=c99 -c $< -o $@
+	@$(MAKEDEPEND) $(CPPFLAGS) $(CFLAGS) -std=c99 $< >$(DEPDIR)/$(<:.c=.d)
+	$(CC) $(CPPFLAGS) $(CFLAGS) -std=c99 -c $< -o $@
 
 $(DEPDIR):
 	@mkdir -p $(DEPDIR)
@@ -126,7 +126,7 @@ format:
 
 %_lint_pass: %
 	$(CLANG_TIDY) $< -- \
-		$(CFLAGS) -std=c99 \
+		$(CPPFLAGS) $(CFLAGS) -std=c99 \
 		2>&1 | tee $@.err
 	stat -c '%s' $@.err | grep -q '^0$$'
 	touch $@
@@ -134,7 +134,7 @@ format:
 .SECONDARY: $(TESTS:=_test_lint_pass)
 %_test_lint_pass: %_test.cc
 	$(CLANG_TIDY) $< -- \
-		$(CFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) -std=c++17 \
+		$(CPPFLAGS) $(CXXFLAGS) $(GTEST_CFLAGS) -std=c++17 \
 		2>&1 | tee $@.err
 	stat -c '%s' $@.err | grep -q '^0$$'
 	touch $@
