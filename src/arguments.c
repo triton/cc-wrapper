@@ -68,7 +68,12 @@ void arguments_free(struct arguments *args)
 void arguments_print(const struct arguments *args, enum log_level log_level)
 {
 	for (size_t i = 0; i < array_nelems(args->data) - 1; ++i)
-		log_printf(log_level, "  %s\n", arguments_array(args)[i]);
+		if (log_level >= LOG_LEVEL_DEBUG)
+			log_printf(log_level, "  %3lu - %s\n", i,
+				   arguments_array(args)[i]);
+		else
+			log_printf(log_level, "  %s\n",
+				   arguments_array(args)[i]);
 	log_printf(log_level, "\n");
 }
 

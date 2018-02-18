@@ -66,9 +66,11 @@ void execute(const struct exec_info *exec_info, const struct arguments *args,
 	     const struct environment *env)
 {
 	LOG_INFO("Calling `%s` with arguments:\n", exec_info->path);
-	arguments_print(args, LOG_LEVEL_INFO);
+	if (log_level >= LOG_LEVEL_INFO)
+		arguments_print(args, log_level);
 	LOG_INFO("and environment:\n");
-	environment_print(env, LOG_LEVEL_INFO);
+	if (log_level >= LOG_LEVEL_INFO)
+		environment_print(env, log_level);
 	LOG_INFO("####################################\n");
 	execve(exec_info->path, arguments_array_copy(args),
 	       environment_array_copy(env));
@@ -121,9 +123,11 @@ int main(int argc, char *argv[])
 
 	/* Print out some info to help debugging */
 	LOG_INFO("Got initial arguments:\n");
-	arguments_print(args, LOG_LEVEL_INFO);
+	if (log_level >= LOG_LEVEL_INFO)
+		arguments_print(args, log_level);
 	LOG_INFO("Got initial environment:\n");
-	environment_print(env, LOG_LEVEL_INFO);
+	if (log_level >= LOG_LEVEL_INFO)
+		environment_print(env, log_level);
 
 	/* Execute handlers for rewriting the environment */
 	if (!mod_common_rewrite(exec_info, args, env)) {
