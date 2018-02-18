@@ -16,6 +16,7 @@
 
 #include <string.h>
 
+#include "arguments.h"
 #include "mod_cc.h"
 
 bool is_cc(const struct exec_info *exec_info)
@@ -35,7 +36,10 @@ bool mod_cc_rewrite(const struct exec_info *exec_info, struct arguments *args,
 	if (!is_cc(exec_info))
 		return true;
 
-	(void)args;
+	/* We want to avoid adding arguments if there aren't any */
+	if (arguments_nelems(args) <= 1)
+		return true;
+
 	(void)env;
 	return true;
 }

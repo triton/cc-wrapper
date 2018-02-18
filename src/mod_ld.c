@@ -16,6 +16,7 @@
 
 #include <string.h>
 
+#include "arguments.h"
 #include "mod_ld.h"
 
 bool is_ld(const struct exec_info *exec_info)
@@ -30,7 +31,10 @@ bool mod_ld_rewrite(const struct exec_info *exec_info, struct arguments *args,
 	if (!is_ld(exec_info))
 		return true;
 
-	(void)args;
+	/* We want to avoid adding arguments if there aren't any */
+	if (arguments_nelems(args) <= 1)
+		return true;
+
 	(void)env;
 	return true;
 }
