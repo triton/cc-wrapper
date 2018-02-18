@@ -20,6 +20,7 @@
 #
 # Please refer to build/compiler_exes.sh for the input environment
 # for running this script as it does the heavy lifting
+#   TARGET_DL: The location of the dynamic linker
 
 set -e
 set -o pipefail
@@ -58,3 +59,11 @@ echo $'\t''{'
 echo $'\t'$'\t''.name    = NULL,'
 echo $'\t''},'
 echo '};'
+
+echo "Using dynamic linker: ${TARGET_DL:-NONE}" >&2
+echo ''
+if [ -n "$TARGET_DL" ]; then
+  echo "const char *target_dl = \"$TARGET_DL\";"
+else
+  echo "const char *target_dl = NULL;"
+fi

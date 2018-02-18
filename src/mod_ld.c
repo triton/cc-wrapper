@@ -17,6 +17,7 @@
 #include <string.h>
 
 #include "arguments.h"
+#include "config.h"
 #include "log.h"
 #include "mod_ld.h"
 
@@ -54,6 +55,27 @@ bool is_ld(const struct exec_info *exec_info)
 		return true;
 	return false;
 }
+
+bool replace_dl(struct ld_args *ld_args)
+{
+	if (target_dl == NULL)
+		return true;
+
+	LOG_DEBUG("Finding dynamic linker to replace with: %s\n", target_dl);
+	for (size_t i = 0; i < ld_args->user_args_start; ++i)
+		if (strcmp("-dynamic-linker",
+			   arguments_get(ld_args->args, i)) == 0) {
+			LOG_DEBUG("Replacing %s with %s\n",
+				  arguments_get(ld_args->args, i + 1),
+				  target_dl);
+			if (!arguments_set(ld_args->args, i + 1, target_dl))
+				return false;
+			break;
+		}
+
+	return true;
+}
+
 bool mod_ld_rewrite(const struct exec_info *exec_info, struct arguments *args,
 		    struct environment *env)
 {
@@ -66,6 +88,9 @@ bool mod_ld_rewrite(const struct exec_info *exec_info, struct arguments *args,
 
 	struct ld_args ld_args;
 	ld_args_init(args, &ld_args);
+
+	if (!replace_dl(&ld_args))
+		return false;
 
 	(void)env;
 	return true;

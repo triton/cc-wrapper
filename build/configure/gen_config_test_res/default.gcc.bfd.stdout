@@ -57,3 +57,5 @@ const struct exec_info exec_infos[] = {
 		.name    = NULL,
 	},
 };
+
+const char *target_dl = NULL;
