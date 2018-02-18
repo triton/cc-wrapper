@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright 2017 cc-wrapper authors
+# Copyright 2017,2018 cc-wrapper authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,17 +23,17 @@ set -e
 set -o pipefail
 
 makefile_inc="src/Makefile.gen"
-config_h="src/config.h"
+config_c="src/config.c"
 
 error() {
   local status="$?"
-  rm -f "$makefile_inc" "$config_h"
+  rm -f "$makefile_inc" "$config_c"
   return "$status"
 }
 trap error ERR INT
 
 echo -n "">"$makefile_inc"
-compiler_exes="$(build/configure/compiler_exes.sh | awk '{ print $1; }')"
+compiler_exes="$(build/configure/compiler_exes.sh 2>/dev/null | awk '{ print $1; }')"
 echo "INSTALL_EXES = $(echo $compiler_exes)">>"$makefile_inc"
 echo "PREFIX ?= ${PREFIX-/usr}" >>"$makefile_inc"
 if pkg-config --cflags gtest_main >/dev/null 2>&1; then
@@ -44,4 +44,4 @@ elif type -P gtest-config >/dev/null; then
   echo "GTEST_LIBS = $(gtest-config --libs)" >>"$makefile_inc"
 fi
 
-build/configure/gen_config.sh >"$config_h" 2>/dev/null
+build/configure/gen_config.sh >"$config_c"

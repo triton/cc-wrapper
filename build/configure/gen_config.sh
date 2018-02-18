@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Copyright 2017 cc-wrapper authors
+# Copyright 2017,2018 cc-wrapper authors
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,23 +29,15 @@ if ! compiler_tuples="$("$(dirname "$0")"/compiler_exes.sh)"; then
   exit 1
 fi
 
-echo '#ifndef CONFIG_H'
-echo '#define CONFIG_H'
-echo ''
-
 # Includes
 echo '#include <stddef.h>'
 echo ''
+echo '#include "config.h"'
 echo '#include "execinfo.h"'
 
-echo ''
-echo '#ifdef __cplusplus'
-echo 'extern "C" {'
-echo '#endif'
-echo ''
-
 # Definitions
-echo 'struct exec_info exec_infos[] = {'
+echo ''
+echo 'const struct exec_info exec_infos[] = {'
 oldifs="$IFS"
 IFS=$'\n'
 for tuple in $compiler_tuples; do
@@ -66,10 +58,3 @@ echo $'\t''{'
 echo $'\t'$'\t''.name    = NULL,'
 echo $'\t''},'
 echo '};'
-
-echo ''
-echo '#ifdef __cplusplus'
-echo '}  // extern "C"'
-echo '#endif'
-echo ''
-echo '#endif  // CONIG_H'

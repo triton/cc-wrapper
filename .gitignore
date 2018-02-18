@@ -1,5 +1,5 @@
 **/.deps
-config.h
+config.c
 *.gen
 *.a
 *.o

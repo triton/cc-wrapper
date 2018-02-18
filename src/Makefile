@@ -36,7 +36,6 @@ LIB_SRCS = \
 LIB_HDRS = \
 	array.h \
 	avl.h \
-	config.h \
 	execinfo.h \
 	func.h \
 	log.h \
@@ -44,10 +43,17 @@ LIB_HDRS = \
 	string-util.h
 
 CC_WRAPPER_SRCS = \
+	config.c \
 	main.c \
 	mod_cc.c \
 	mod_common.c \
-	mod_ld.c \
+	mod_ld.c
+
+CC_WRAPPER_HDRS = \
+	config.h \
+	mod_cc.h \
+	mod_common.h \
+	mod_ld.h
 
 TESTS = \
 	arguments \
@@ -142,6 +148,7 @@ format:
 LINT_PASS = \
 	$(LIB_HDRS:=_lint_pass) \
 	$(LIB_SRCS:=_lint_pass) \
+	$(CC_WRAPPER_HDRS:=_lint_pass) \
 	$(CC_WRAPPER_SRCS:=_lint_pass) \
 	$(TESTS:=_test_lint_pass) \
 	$(TEST_EXTRAS:=_lint_pass)

@@ -1,15 +1,9 @@
-#ifndef CONFIG_H
-#define CONFIG_H
-
 #include <stddef.h>
 
+#include "config.h"
 #include "execinfo.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-struct exec_info exec_infos[] = {
+const struct exec_info exec_infos[] = {
 	{
 		.name    = "cpp",
 		.path    = "@TMPDIR@/bin/cpp",
@@ -63,9 +57,3 @@ struct exec_info exec_infos[] = {
 		.name    = NULL,
 	},
 };
-
-#ifdef __cplusplus
-}  // extern "C"
-#endif
-
-#endif  // CONIG_H
