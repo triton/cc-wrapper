@@ -17,7 +17,36 @@
 #include <string.h>
 
 #include "arguments.h"
+#include "log.h"
 #include "mod_ld.h"
+
+struct ld_args {
+	struct arguments *args;
+	size_t user_args_start;
+	size_t user_args_end;
+};
+
+void ld_args_init(struct arguments *args, struct ld_args *ld_args)
+{
+	ld_args->args = args;
+	ld_args->user_args_start = 0;
+	ld_args->user_args_end = arguments_nelems(args);
+	for (size_t i = 0; i < arguments_nelems(args); ++i) {
+		if (strcmp("--cc-wrapper-begin", arguments_get(args, i)) == 0) {
+			arguments_remove(args, i);
+			ld_args->user_args_start = i--;
+			continue;
+		}
+		if (strcmp("--cc-wrapper-end", arguments_get(args, i)) == 0) {
+			arguments_remove(args, i);
+			ld_args->user_args_end = i--;
+			continue;
+		}
+	}
+
+	LOG_DEBUG("User args between: %lu and %lu\n", ld_args->user_args_start,
+		  ld_args->user_args_end);
+}
 
 bool is_ld(const struct exec_info *exec_info)
 {
@@ -34,6 +63,9 @@ bool mod_ld_rewrite(const struct exec_info *exec_info, struct arguments *args,
 	/* We want to avoid adding arguments if there aren't any */
 	if (arguments_nelems(args) <= 1)
 		return true;
+
+	struct ld_args ld_args;
+	ld_args_init(args, &ld_args);
 
 	(void)env;
 	return true;

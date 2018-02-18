@@ -30,6 +30,16 @@ bool is_cc(const struct exec_info *exec_info)
 	return false;
 }
 
+bool add_linker_user_wrapper(struct arguments *args)
+{
+	if (!arguments_insert(args, 1, "-Wl,--cc-wrapper-begin"))
+		return false;
+	if (!arguments_insert(args, arguments_nelems(args),
+			      "-Wl,--cc-wrapper-end"))
+		return false;
+	return true;
+}
+
 bool mod_cc_rewrite(const struct exec_info *exec_info, struct arguments *args,
 		    struct environment *env)
 {
@@ -39,6 +49,9 @@ bool mod_cc_rewrite(const struct exec_info *exec_info, struct arguments *args,
 	/* We want to avoid adding arguments if there aren't any */
 	if (arguments_nelems(args) <= 1)
 		return true;
+
+	if (!add_linker_user_wrapper(args))
+		return false;
 
 	(void)env;
 	return true;
