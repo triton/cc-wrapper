@@ -62,6 +62,7 @@ TESTS = \
 	environment \
 	execinfo \
 	log \
+	mod_common \
 	path \
 	string-util
 
@@ -73,6 +74,9 @@ TEST_environment_extra = \
 
 TEST_execinfo_extra = \
 	execinfo_test_util.c
+
+TEST_mod_common_extra = \
+	mod_common.c
 
 TEST_EXTRAS = $(foreach test,$(TESTS),$(TEST_$(test)_extra))
 
