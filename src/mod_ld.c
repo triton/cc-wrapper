@@ -90,8 +90,29 @@ static bool replace_dl(struct ld_args *ld_args)
 				  target_dl);
 			if (!arguments_set(ld_args->args, i + 1, target_dl))
 				return false;
-			break;
 		}
+
+	return true;
+}
+
+static bool rpath_all_cc_paths(struct ld_args *ld_args)
+{
+	LOG_DEBUG("Adding rpaths to all -L switches passed by gcc\n");
+	for (size_t i = 0;; ++i) {
+		if (i == ld_args->user_args_start)
+			i = ld_args->user_args_end;
+		if (i >= arguments_nelems(ld_args->args))
+			break;
+
+		const char *arg = arguments_get(ld_args->args, i);
+		if (strncmp("-L", arg, 2) == 0) {
+			LOG_DEBUG("Adding rpath for %s\n", arg + 2);
+			if (!ld_args_insert(ld_args, ++i, "-rpath"))
+				return false;
+			if (!ld_args_insert(ld_args, ++i, arg + 2))
+				return false;
+		}
+	}
 
 	return true;
 }
@@ -152,6 +173,10 @@ bool mod_ld_rewrite(const struct exec_info *exec_info, struct arguments *args,
 	if (!add_libc_shared_path(&ld_args))
 		return false;
 	if (!add_libc_static_path(&ld_args))
+		return false;
+
+	/* Make sure this comes after all library flag manipulations */
+	if (!rpath_all_cc_paths(&ld_args))
 		return false;
 
 	(void)env;
