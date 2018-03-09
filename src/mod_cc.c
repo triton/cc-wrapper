@@ -20,7 +20,6 @@
 
 #include "arguments.h"
 #include "config.h"
-#include "environment.h"
 #include "execinfo.h"
 #include "log.h"
 #include "mod_cc.h"
@@ -111,14 +110,11 @@ static bool rewrite_if_linking(const struct exec_info *exec_info,
 	return true;
 }
 
-static bool flag_rewrite(struct arguments *args, struct environment *env)
+static bool flag_rewrite(struct arguments *args, const struct environment *env)
 {
 	LOG_DEBUG("Checking if we should rewrite flags\n");
-	const char *env_flag_rewrite =
-	    environment_get(env, CC_WRAPPER_FLAG_REWRITE);
-	if (env_flag_rewrite == NULL || strcmp("1", env_flag_rewrite) != 0)
+	if (!should_rewrite_flags(env))
 		return true;
-
 	LOG_DEBUG("Rewriting flags\n");
 
 	if (!remove_debug(args))

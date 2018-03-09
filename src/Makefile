@@ -78,7 +78,8 @@ TEST_execinfo_extra = \
 	execinfo_test_util.c
 
 TEST_mod_cc_extra = \
-	mod_cc.c
+	mod_cc.c \
+	mod_common.c
 
 TEST_mod_common_extra = \
 	mod_common.c
