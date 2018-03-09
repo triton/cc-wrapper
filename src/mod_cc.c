@@ -18,6 +18,7 @@
 #include <string.h>
 
 #include "arguments.h"
+#include "config.h"
 #include "execinfo.h"
 #include "mod_cc.h"
 #include "mod_common.h"
@@ -31,6 +32,21 @@ static bool is_cc(const struct exec_info *exec_info)
 	if (strcmp("c++", exec_info->type) == 0)
 		return true;
 	return false;
+}
+
+static bool add_libc_include(struct arguments *args)
+{
+	if (target_libc_include == NULL)
+		return true;
+	for (size_t i = 0; i < arguments_nelems(args); ++i)
+		if (strcmp("-nostdinc", arguments_get(args, i)) == 0)
+			return true;
+
+	if (!arguments_insert(args, 1, "-idirafter"))
+		return false;
+	if (!arguments_insert(args, 2, target_libc_include))
+		return false;
+	return true;
 }
 
 static bool add_linker_user_wrapper(struct arguments *args)
@@ -54,6 +70,9 @@ bool mod_cc_rewrite(const struct exec_info *exec_info, struct arguments *args,
 		return true;
 
 	if (!add_linker_user_wrapper(args))
+		return false;
+
+	if (!add_libc_include(args))
 		return false;
 
 	(void)env;
