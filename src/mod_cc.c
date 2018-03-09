@@ -20,6 +20,7 @@
 
 #include "arguments.h"
 #include "config.h"
+#include "environment.h"
 #include "execinfo.h"
 #include "log.h"
 #include "mod_cc.h"
@@ -62,6 +63,18 @@ static bool add_linker_user_wrapper(struct arguments *args)
 	return true;
 }
 
+static bool remove_debug(struct arguments *args)
+{
+	LOG_DEBUG("Removing debug flags\n");
+	for (size_t i = 0; i < arguments_nelems(args); ++i) {
+		if (strncmp("-g", arguments_get(args, i), 2) != 0)
+			continue;
+		if (!arguments_remove(args, i--))
+			return false;
+	}
+	return true;
+}
+
 static bool add_libc_object_path(struct arguments *args)
 {
 	if (target_libc_static_libs == NULL)
@@ -95,6 +108,22 @@ static bool rewrite_if_linking(struct arguments *args)
 	return true;
 }
 
+static bool flag_rewrite(struct arguments *args, struct environment *env)
+{
+	LOG_DEBUG("Checking if we should rewrite flags\n");
+	const char *env_flag_rewrite =
+	    environment_get(env, "CC_WRAPPER_FLAG_REWRITE");
+	if (env_flag_rewrite == NULL || strcmp("1", env_flag_rewrite) != 0)
+		return true;
+
+	LOG_DEBUG("Rewriting flags\n");
+
+	if (!remove_debug(args))
+		return false;
+
+	return true;
+}
+
 bool mod_cc_rewrite(const struct exec_info *exec_info, struct arguments *args,
 		    struct environment *env)
 {
@@ -117,6 +146,8 @@ bool mod_cc_rewrite(const struct exec_info *exec_info, struct arguments *args,
 	if (!rewrite_if_linking(args))
 		return false;
 
-	(void)env;
+	if (!flag_rewrite(args, env))
+		return false;
+
 	return true;
 }
