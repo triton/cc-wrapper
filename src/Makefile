@@ -62,6 +62,7 @@ TESTS = \
 	environment \
 	execinfo \
 	log \
+	mod_cc \
 	mod_common \
 	path \
 	string-util
@@ -74,6 +75,9 @@ TEST_environment_extra = \
 
 TEST_execinfo_extra = \
 	execinfo_test_util.c
+
+TEST_mod_cc_extra = \
+	mod_cc.c
 
 TEST_mod_common_extra = \
 	mod_common.c
