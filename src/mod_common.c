@@ -17,34 +17,39 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "environment.h"
 #include "mod_common.h"
 #include "string-util.h"
+
+static bool add_our_path(struct environment *env)
+{
+	char *path_new = NULL;
+	const char *path_old = environment_get(env, "PATH");
+	if (path_old == NULL || path_old[0] == '\0')
+		/* Avoid including the current directory in the path */
+		path_new = string_clone(CC_WRAPPER_BIN);
+	else
+		/* Our binaries should prioritize calling each other over those
+		 * in the provided path.
+		 */
+		path_new = string_printf("%s:%s", CC_WRAPPER_BIN, path_old);
+
+	if (path_new == NULL)
+		return false;
+
+	LOG_DEBUG("Adding our path to PATH: %s\n", path_new);
+	bool ret = environment_set(env, "PATH", path_new);
+	free(path_new);
+	return ret;
+}
 
 bool mod_common_rewrite(const struct exec_info *exec_info,
 			struct arguments *args, struct environment *env)
 {
-	bool ret = false;
-	char *path_new = NULL;
-
-	/* Our binaries should prioritize calling each other over those in
-	 * the provided path.
-	 */
-	const char *path_old = environment_get(env, "PATH");
-	/* Avoid including the current directory in the path */
-	if (path_old == NULL || path_old[0] == '\0')
-		path_new = string_clone(CC_WRAPPER_BIN);
-	else
-		path_new = string_printf("%s:%s", CC_WRAPPER_BIN, path_old);
-	if (path_new == NULL)
-		goto out;
-
-	if (!environment_set(env, "PATH", path_new))
-		goto out;
+	if (!add_our_path(env))
+		return false;
 
 	(void)exec_info;
 	(void)args;
-	ret = true;
-out:
-	free(path_new);
-	return ret;
+	return true;
 }
