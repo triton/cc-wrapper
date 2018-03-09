@@ -165,7 +165,7 @@ TEST_F(ModCcTest, TestDebugNoRewrite) {
 TEST_F(ModCcTest, TestDebugRewrite) {
   SetExecType("c");
   AppendArgs({"cc", "-ggdb", "-g", "main.c"});
-  EXPECT_TRUE(environment_set(env, "CC_WRAPPER_FLAG_REWRITE", "1"));
+  EXPECT_TRUE(environment_set(env, CC_WRAPPER_FLAG_REWRITE, "1"));
   EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), args, env));
 
   ExpectArgs({

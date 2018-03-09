@@ -115,7 +115,7 @@ static bool flag_rewrite(struct arguments *args, struct environment *env)
 {
 	LOG_DEBUG("Checking if we should rewrite flags\n");
 	const char *env_flag_rewrite =
-	    environment_get(env, "CC_WRAPPER_FLAG_REWRITE");
+	    environment_get(env, CC_WRAPPER_FLAG_REWRITE);
 	if (env_flag_rewrite == NULL || strcmp("1", env_flag_rewrite) != 0)
 		return true;
 

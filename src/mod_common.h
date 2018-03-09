@@ -30,6 +30,8 @@ extern "C" {
 #define CC_WRAPPER_USER_ARGS_BEGIN "--cc-wrapper-begin"
 #define CC_WRAPPER_USER_ARGS_END "--cc-wrapper-end"
 
+#define CC_WRAPPER_FLAG_REWRITE "CC_WRAPPER_FLAG_REWRITE"
+
 bool mod_common_rewrite(const struct exec_info *exec_info,
 			struct arguments *args, struct environment *env);
 
