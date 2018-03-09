@@ -49,14 +49,14 @@ void ld_args_init(struct arguments *args, struct ld_args *ld_args)
 		  ld_args->user_args_end);
 }
 
-bool is_ld(const struct exec_info *exec_info)
+static bool is_ld(const struct exec_info *exec_info)
 {
 	if (strcmp("ld", exec_info->type) == 0)
 		return true;
 	return false;
 }
 
-bool replace_dl(struct ld_args *ld_args)
+static bool replace_dl(struct ld_args *ld_args)
 {
 	if (target_dl == NULL)
 		return true;

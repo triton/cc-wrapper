@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
+#include <stdbool.h>
 #include <string.h>
 
 #include "arguments.h"
+#include "execinfo.h"
 #include "mod_cc.h"
 
-bool is_cc(const struct exec_info *exec_info)
+static bool is_cc(const struct exec_info *exec_info)
 {
 	if (strcmp("cpp", exec_info->type) == 0)
 		return true;
@@ -30,7 +32,7 @@ bool is_cc(const struct exec_info *exec_info)
 	return false;
 }
 
-bool add_linker_user_wrapper(struct arguments *args)
+static bool add_linker_user_wrapper(struct arguments *args)
 {
 	if (!arguments_insert(args, 1, "-Wl,--cc-wrapper-begin"))
 		return false;
