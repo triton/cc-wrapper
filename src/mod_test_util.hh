@@ -19,6 +19,7 @@
 #include <gtest/gtest.h>
 #include <map>
 #include <string_view>
+#include <vector>
 
 #include "arguments.h"
 #include "environment.h"
@@ -67,6 +68,17 @@ class ModTest : public ::testing::Test {
     EXPECT_EQ(expected.size(), environment_nelems(env));
     for (auto [ k, v ] : expected)
       EXPECT_EQ(v, std::string_view(environment_get(env, k.data())));
+  }
+
+  void AppendArgs(const std::vector<std::string_view> &a) {
+    for (auto v : a)
+      EXPECT_TRUE(arguments_insert(args, arguments_nelems(args), v.data()));
+  }
+
+  void ExpectArgs(const std::vector<std::string_view> &expected) {
+    EXPECT_EQ(expected.size(), arguments_nelems(args));
+    for (size_t i = 0; i < expected.size(); ++i)
+      EXPECT_EQ(expected[i], std::string_view(arguments_get(args, i)));
   }
 
  private:
