@@ -117,39 +117,20 @@ static bool rpath_all_cc_paths(struct ld_args *ld_args)
 	return true;
 }
 
-static bool add_libc_shared_path(struct ld_args *ld_args)
+static bool add_lib_path(struct ld_args *ld_args, const char *arg_path)
 {
-	if (target_libc_dynamic_libs == NULL)
+	if (arg_path == NULL)
 		return true;
 
-	char *arg = string_printf("-L%s", target_libc_dynamic_libs);
+	char *arg = string_printf("-L%s", arg_path);
 	if (arg == NULL)
 		return false;
-
 	if (!ld_args_insert(ld_args, arguments_nelems(ld_args->args), arg)) {
 		free(arg);
 		return false;
 	}
-
 	free(arg);
-	return true;
-}
 
-static bool add_libc_static_path(struct ld_args *ld_args)
-{
-	if (target_libc_static_libs == NULL)
-		return true;
-
-	char *arg = string_printf("-L%s", target_libc_static_libs);
-	if (arg == NULL)
-		return false;
-
-	if (!ld_args_insert(ld_args, arguments_nelems(ld_args->args), arg)) {
-		free(arg);
-		return false;
-	}
-
-	free(arg);
 	return true;
 }
 
@@ -170,9 +151,9 @@ bool mod_ld_rewrite(const struct exec_info *exec_info, struct arguments *args,
 	if (!replace_dl(&ld_args))
 		return false;
 
-	if (!add_libc_shared_path(&ld_args))
+	if (!add_lib_path(&ld_args, target_libc_dynamic_libs))
 		return false;
-	if (!add_libc_static_path(&ld_args))
+	if (!add_lib_path(&ld_args, target_libc_static_libs))
 		return false;
 
 	/* Make sure this comes after all library flag manipulations */
