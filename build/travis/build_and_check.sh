@@ -27,6 +27,8 @@ set -x
 
 source "$(dirname "$0")/common.sh"
 
+export CC_WRAPPER_LOG_LEVEL=DEBUG
+
 # Print out the relevant versions of our applications
 valgrind --version
 $CC --version
