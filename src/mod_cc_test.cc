@@ -47,8 +47,7 @@ TEST_F(ModCcTest, TestCheckCc) {
   EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), nullptr, nullptr));
 
   SetExecType("c");
-  EXPECT_TRUE(arguments_insert(args, 0, "cc"));
-  EXPECT_TRUE(arguments_insert(args, 1, "main.c"));
+  AppendArgs({"cc", "main.c"});
   EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), args, env));
 
   EXPECT_LT(2u, arguments_nelems(args));
@@ -56,7 +55,7 @@ TEST_F(ModCcTest, TestCheckCc) {
 
 TEST_F(ModCcTest, TestShortArgs) {
   SetExecType("c");
-  EXPECT_TRUE(arguments_insert(args, 0, "cc"));
+  AppendArgs({"cc"});
   EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), args, env));
 
   EXPECT_EQ(1u, arguments_nelems(args));
@@ -64,124 +63,100 @@ TEST_F(ModCcTest, TestShortArgs) {
 
 TEST_F(ModCcTest, TestNoLibc) {
   SetExecType("cpp");
-  EXPECT_TRUE(arguments_insert(args, 0, "cc"));
-  EXPECT_TRUE(arguments_insert(args, 1, "-I/usr/include"));
-  EXPECT_TRUE(arguments_insert(args, 2, "main.c"));
+  AppendArgs({"cc", "-I/usr/include", "main.c"});
   EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), args, env));
 
-  EXPECT_EQ(5u, arguments_nelems(args));
-  EXPECT_EQ(string_view("cc"), string_view(arguments_get(args, 0)));
-  EXPECT_EQ(string_view("-Wl," CC_WRAPPER_USER_ARGS_BEGIN),
-            string_view(arguments_get(args, 1)));
-  EXPECT_EQ(string_view("-I/usr/include"), string_view(arguments_get(args, 2)));
-  EXPECT_EQ(string_view("main.c"), string_view(arguments_get(args, 3)));
-  EXPECT_EQ(string_view("-Wl," CC_WRAPPER_USER_ARGS_END),
-            string_view(arguments_get(args, 4)));
+  ExpectArgs({
+      "cc",
+      "-Wl," CC_WRAPPER_USER_ARGS_BEGIN,
+      "-I/usr/include",
+      "main.c",
+      "-Wl," CC_WRAPPER_USER_ARGS_END,
+  });
 }
 
 TEST_F(ModCcTest, TestLibcNoLink) {
-  SetExecType("cpp");
-  EXPECT_TRUE(arguments_insert(args, 0, "cc"));
-  EXPECT_TRUE(arguments_insert(args, 1, "-I/usr/include"));
-  EXPECT_TRUE(arguments_insert(args, 2, "-c"));
-  EXPECT_TRUE(arguments_insert(args, 3, "main.c"));
   target_libc_include = "/libc-include";
   target_libc_static_libs = "/libc-libs";
+  SetExecType("c");
+  AppendArgs({"cc", "-I/usr/include", "-c", "main.c"});
   EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), args, env));
 
-  EXPECT_EQ(8u, arguments_nelems(args));
-  EXPECT_EQ(string_view("cc"), string_view(arguments_get(args, 0)));
-  EXPECT_EQ(string_view("-idirafter"), string_view(arguments_get(args, 1)));
-  EXPECT_EQ(string_view(target_libc_include),
-            string_view(arguments_get(args, 2)));
-  EXPECT_EQ(string_view("-Wl," CC_WRAPPER_USER_ARGS_BEGIN),
-            string_view(arguments_get(args, 3)));
-  EXPECT_EQ(string_view("-I/usr/include"), string_view(arguments_get(args, 4)));
-  EXPECT_EQ(string_view("-c"), string_view(arguments_get(args, 5)));
-  EXPECT_EQ(string_view("main.c"), string_view(arguments_get(args, 6)));
-  EXPECT_EQ(string_view("-Wl," CC_WRAPPER_USER_ARGS_END),
-            string_view(arguments_get(args, 7)));
+  ExpectArgs({
+      "cc",
+      "-idirafter",
+      target_libc_include,
+      "-Wl," CC_WRAPPER_USER_ARGS_BEGIN,
+      "-I/usr/include",
+      "-c",
+      "main.c",
+      "-Wl," CC_WRAPPER_USER_ARGS_END,
+  });
 }
 
 TEST_F(ModCcTest, TestLibcNostdinc) {
   SetExecType("cpp");
-  EXPECT_TRUE(arguments_insert(args, 0, "cc"));
-  EXPECT_TRUE(arguments_insert(args, 1, "-nostdinc"));
-  EXPECT_TRUE(arguments_insert(args, 2, "-I/usr/include"));
-  EXPECT_TRUE(arguments_insert(args, 3, "main.c"));
   target_libc_include = "/libc-include";
+  SetExecType("cpp");
+  AppendArgs({"cc", "-nostdinc", "-I/usr/include", "main.c"});
   EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), args, env));
 
-  EXPECT_EQ(6u, arguments_nelems(args));
-  EXPECT_EQ(string_view("cc"), string_view(arguments_get(args, 0)));
-  EXPECT_EQ(string_view("-Wl," CC_WRAPPER_USER_ARGS_BEGIN),
-            string_view(arguments_get(args, 1)));
-  EXPECT_EQ(string_view("-nostdinc"), string_view(arguments_get(args, 2)));
-  EXPECT_EQ(string_view("-I/usr/include"), string_view(arguments_get(args, 3)));
-  EXPECT_EQ(string_view("main.c"), string_view(arguments_get(args, 4)));
-  EXPECT_EQ(string_view("-Wl," CC_WRAPPER_USER_ARGS_END),
-            string_view(arguments_get(args, 5)));
+  ExpectArgs({
+      "cc",
+      "-Wl," CC_WRAPPER_USER_ARGS_BEGIN,
+      "-nostdinc",
+      "-I/usr/include",
+      "main.c",
+      "-Wl," CC_WRAPPER_USER_ARGS_END,
+  });
 }
 
 TEST_F(ModCcTest, TestLibc) {
-  SetExecType("cpp");
-  EXPECT_TRUE(arguments_insert(args, 0, "cc"));
-  EXPECT_TRUE(arguments_insert(args, 1, "-I/usr/include"));
-  EXPECT_TRUE(arguments_insert(args, 2, "main.c"));
   target_libc_include = "/libc-include";
   target_libc_static_libs = "/libc-libs";
+  SetExecType("c");
+  AppendArgs({"cc", "-I/usr/include", "main.c"});
   EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), args, env));
 
-  EXPECT_EQ(8u, arguments_nelems(args));
-  EXPECT_EQ(string_view("cc"), string_view(arguments_get(args, 0)));
-  EXPECT_EQ(string_view("-idirafter"), string_view(arguments_get(args, 1)));
-  EXPECT_EQ(string_view(target_libc_include),
-            string_view(arguments_get(args, 2)));
-  EXPECT_EQ(string_view("-Wl," CC_WRAPPER_USER_ARGS_BEGIN),
-            string_view(arguments_get(args, 3)));
-  EXPECT_EQ(string_view("-I/usr/include"), string_view(arguments_get(args, 4)));
-  EXPECT_EQ(string_view("main.c"), string_view(arguments_get(args, 5)));
-  EXPECT_EQ(string_view("-Wl," CC_WRAPPER_USER_ARGS_END),
-            string_view(arguments_get(args, 6)));
-  EXPECT_EQ(string("-B") + target_libc_static_libs,
-            string_view(arguments_get(args, 7)));
+  ExpectArgs({
+      "cc",
+      "-idirafter",
+      target_libc_include,
+      "-Wl," CC_WRAPPER_USER_ARGS_BEGIN,
+      "-I/usr/include",
+      "main.c",
+      "-Wl," CC_WRAPPER_USER_ARGS_END,
+      string("-B") + target_libc_static_libs,
+  });
 }
 
 TEST_F(ModCcTest, TestDebugNoRewrite) {
   SetExecType("c");
-  EXPECT_TRUE(arguments_insert(args, 0, "cc"));
-  EXPECT_TRUE(arguments_insert(args, 1, "-ggdb"));
-  EXPECT_TRUE(arguments_insert(args, 2, "-g"));
-  EXPECT_TRUE(arguments_insert(args, 3, "main.c"));
+  AppendArgs({"cc", "-ggdb", "-g", "main.c"});
   EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), args, env));
 
-  EXPECT_EQ(6u, arguments_nelems(args));
-  EXPECT_EQ(string_view("cc"), string_view(arguments_get(args, 0)));
-  EXPECT_EQ(string_view("-Wl," CC_WRAPPER_USER_ARGS_BEGIN),
-            string_view(arguments_get(args, 1)));
-  EXPECT_EQ(string_view("-ggdb"), string_view(arguments_get(args, 2)));
-  EXPECT_EQ(string_view("-g"), string_view(arguments_get(args, 3)));
-  EXPECT_EQ(string_view("main.c"), string_view(arguments_get(args, 4)));
-  EXPECT_EQ(string_view("-Wl," CC_WRAPPER_USER_ARGS_END),
-            string_view(arguments_get(args, 5)));
+  ExpectArgs({
+      "cc",
+      "-Wl," CC_WRAPPER_USER_ARGS_BEGIN,
+      "-ggdb",
+      "-g",
+      "main.c",
+      "-Wl," CC_WRAPPER_USER_ARGS_END,
+  });
 }
 
 TEST_F(ModCcTest, TestDebugRewrite) {
   SetExecType("c");
-  EXPECT_TRUE(arguments_insert(args, 0, "cc"));
-  EXPECT_TRUE(arguments_insert(args, 1, "-ggdb"));
-  EXPECT_TRUE(arguments_insert(args, 2, "-g"));
-  EXPECT_TRUE(arguments_insert(args, 3, "main.c"));
+  AppendArgs({"cc", "-ggdb", "-g", "main.c"});
   EXPECT_TRUE(environment_set(env, "CC_WRAPPER_FLAG_REWRITE", "1"));
   EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), args, env));
 
-  EXPECT_EQ(4u, arguments_nelems(args));
-  EXPECT_EQ(string_view("cc"), string_view(arguments_get(args, 0)));
-  EXPECT_EQ(string_view("-Wl," CC_WRAPPER_USER_ARGS_BEGIN),
-            string_view(arguments_get(args, 1)));
-  EXPECT_EQ(string_view("main.c"), string_view(arguments_get(args, 2)));
-  EXPECT_EQ(string_view("-Wl," CC_WRAPPER_USER_ARGS_END),
-            string_view(arguments_get(args, 3)));
+  ExpectArgs({
+      "cc",
+      "-Wl," CC_WRAPPER_USER_ARGS_BEGIN,
+      "main.c",
+      "-Wl," CC_WRAPPER_USER_ARGS_END,
+  });
 }
 
 }  // namespace
