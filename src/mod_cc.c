@@ -93,9 +93,12 @@ static bool add_libc_object_path(struct arguments *args)
 	return true;
 }
 
-static bool rewrite_if_linking(struct arguments *args)
+static bool rewrite_if_linking(const struct exec_info *exec_info,
+			       struct arguments *args)
 {
 	LOG_DEBUG("Checking if we could invoke the linker\n");
+	if (strcmp("cpp", exec_info->type) == 0)
+		return true;
 	for (size_t i = 0; i < arguments_nelems(args); ++i)
 		if (strcmp("-c", arguments_get(args, i)) == 0)
 			return true;
@@ -143,7 +146,7 @@ bool mod_cc_rewrite(const struct exec_info *exec_info, struct arguments *args,
 	if (!add_libc_include(args))
 		return false;
 
-	if (!rewrite_if_linking(args))
+	if (!rewrite_if_linking(exec_info, args))
 		return false;
 
 	if (!flag_rewrite(args, env))

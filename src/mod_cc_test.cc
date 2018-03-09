@@ -94,8 +94,25 @@ TEST_F(ModCcTest, TestLibcNoLink) {
   });
 }
 
-TEST_F(ModCcTest, TestLibcNostdinc) {
+TEST_F(ModCcTest, TestLibcCpp) {
+  target_libc_include = "/libc-include";
+  target_libc_static_libs = "/libc-libs";
   SetExecType("cpp");
+  AppendArgs({"cc", "-I/usr/include", "main.c"});
+  EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), args, env));
+
+  ExpectArgs({
+      "cc",
+      "-idirafter",
+      target_libc_include,
+      "-Wl," CC_WRAPPER_USER_ARGS_BEGIN,
+      "-I/usr/include",
+      "main.c",
+      "-Wl," CC_WRAPPER_USER_ARGS_END,
+  });
+}
+
+TEST_F(ModCcTest, TestLibcNostdinc) {
   target_libc_include = "/libc-include";
   SetExecType("cpp");
   AppendArgs({"cc", "-nostdinc", "-I/usr/include", "main.c"});
