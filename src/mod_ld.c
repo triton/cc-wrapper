@@ -22,12 +22,6 @@
 #include "mod_common.h"
 #include "mod_ld.h"
 
-struct ld_args {
-	struct arguments *args;
-	size_t user_args_start;
-	size_t user_args_end;
-};
-
 bool ld_args_init(struct arguments *args, struct ld_args *ld_args)
 {
 	ld_args->args = args;

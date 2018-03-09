@@ -18,6 +18,7 @@
 #define MOD_LD_H
 
 #include <stdbool.h>
+#include <stddef.h>
 
 #include "arguments.h"
 #include "environment.h"
@@ -26,6 +27,14 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+struct ld_args {
+	struct arguments *args;
+	size_t user_args_start;
+	size_t user_args_end;
+};
+
+bool ld_args_init(struct arguments *args, struct ld_args *ld_args);
 
 bool mod_ld_rewrite(const struct exec_info *exec_info, struct arguments *args,
 		    struct environment *env);
