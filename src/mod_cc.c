@@ -20,6 +20,7 @@
 #include "arguments.h"
 #include "execinfo.h"
 #include "mod_cc.h"
+#include "mod_common.h"
 
 static bool is_cc(const struct exec_info *exec_info)
 {
@@ -34,10 +35,10 @@ static bool is_cc(const struct exec_info *exec_info)
 
 static bool add_linker_user_wrapper(struct arguments *args)
 {
-	if (!arguments_insert(args, 1, "-Wl,--cc-wrapper-begin"))
+	if (!arguments_insert(args, 1, "-Wl," CC_WRAPPER_USER_ARGS_BEGIN))
 		return false;
 	if (!arguments_insert(args, arguments_nelems(args),
-			      "-Wl,--cc-wrapper-end"))
+			      "-Wl," CC_WRAPPER_USER_ARGS_END))
 		return false;
 	return true;
 }

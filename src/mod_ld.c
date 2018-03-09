@@ -19,6 +19,7 @@
 #include "arguments.h"
 #include "config.h"
 #include "log.h"
+#include "mod_common.h"
 #include "mod_ld.h"
 
 struct ld_args {
@@ -33,12 +34,14 @@ void ld_args_init(struct arguments *args, struct ld_args *ld_args)
 	ld_args->user_args_start = 0;
 	ld_args->user_args_end = arguments_nelems(args);
 	for (size_t i = 0; i < arguments_nelems(args); ++i) {
-		if (strcmp("--cc-wrapper-begin", arguments_get(args, i)) == 0) {
+		if (strcmp(CC_WRAPPER_USER_ARGS_BEGIN,
+			   arguments_get(args, i)) == 0) {
 			arguments_remove(args, i);
 			ld_args->user_args_start = i--;
 			continue;
 		}
-		if (strcmp("--cc-wrapper-end", arguments_get(args, i)) == 0) {
+		if (strcmp(CC_WRAPPER_USER_ARGS_END, arguments_get(args, i)) ==
+		    0) {
 			arguments_remove(args, i);
 			ld_args->user_args_end = i--;
 			continue;
