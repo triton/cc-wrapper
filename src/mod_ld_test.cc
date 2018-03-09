@@ -278,6 +278,39 @@ TEST_F(ModLdTest, TestRpathAdding) {
   });
 }
 
+TEST_F(ModLdTest, TestRpathDuplicate) {
+  SetExecType("ld");
+  AppendArgs({
+      "ld",
+      "-L/path1",
+      "-rpath",
+      "/path1",
+      "-rpath",
+      "/path1",
+      CC_WRAPPER_USER_ARGS_BEGIN,
+      "-L/path2",
+      "-rpath",
+      "/path3",
+      CC_WRAPPER_USER_ARGS_END,
+      "-L/path3",
+  });
+
+  EXPECT_TRUE(mod_ld_rewrite(&GetExecInfo(), args, env));
+
+  ExpectArgs({
+      "ld",
+      "-L/path1",
+      "-rpath",
+      "/path1",
+      "-rpath",
+      "/path1",
+      "-L/path2",
+      "-rpath",
+      "/path3",
+      "-L/path3",
+  });
+}
+
 TEST_F(ModLdTest, TestLibcPathAdding) {
   SetExecType("ld");
   AppendArgs({

@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
+#include <errno.h>
 #include <string.h>
 
 #include "arguments.h"
+#include "avl.h"
 #include "config.h"
 #include "log.h"
 #include "mod_common.h"
@@ -95,9 +97,35 @@ static bool replace_dl(struct ld_args *ld_args)
 	return true;
 }
 
+int rpath_node_compare(const void *root, const void *unplaced)
+{
+	const char *root_node = root, *unplaced_node = unplaced;
+	return strcmp(unplaced_node, root_node);
+}
+
 static bool rpath_all_cc_paths(struct ld_args *ld_args)
 {
+	bool ret = false;
 	LOG_DEBUG("Adding rpaths to all -L switches passed by gcc\n");
+	struct avl *rpath_set = avl_init(rpath_node_compare, NULL);
+	if (rpath_set == NULL)
+		goto out;
+
+	bool in_rpath = false;
+	for (size_t i = 0; i < arguments_nelems(ld_args->args); ++i) {
+		const char *arg = arguments_get(ld_args->args, i);
+		if (!in_rpath) {
+			if (strcmp("-rpath", arg) == 0)
+				in_rpath = true;
+			continue;
+		}
+		in_rpath = false;
+
+		int ret = avl_insert(rpath_set, (void *)arg, false);
+		if (ret != 0 && ret != EEXIST)
+			goto out;
+	}
+
 	for (size_t i = 0;; ++i) {
 		if (i == ld_args->user_args_start)
 			i = ld_args->user_args_end;
@@ -105,16 +133,25 @@ static bool rpath_all_cc_paths(struct ld_args *ld_args)
 			break;
 
 		const char *arg = arguments_get(ld_args->args, i);
-		if (strncmp("-L", arg, 2) == 0) {
-			LOG_DEBUG("Adding rpath for %s\n", arg + 2);
-			if (!ld_args_insert(ld_args, ++i, "-rpath"))
-				return false;
-			if (!ld_args_insert(ld_args, ++i, arg + 2))
-				return false;
-		}
+		if (strncmp("-L", arg, 2) != 0)
+			continue;
+		const char *path = arg + 2;
+
+		LOG_DEBUG("Might add rpath for %s\n", path);
+		if (avl_find(rpath_set, (void *)path) != NULL)
+			continue;
+
+		LOG_DEBUG("Adding rpath for %s\n", path);
+		if (!ld_args_insert(ld_args, ++i, "-rpath"))
+			goto out;
+		if (!ld_args_insert(ld_args, ++i, path))
+			goto out;
 	}
 
-	return true;
+	ret = true;
+out:
+	avl_free(rpath_set);
+	return ret;
 }
 
 static bool add_lib_path(struct ld_args *ld_args, const char *arg_path)
