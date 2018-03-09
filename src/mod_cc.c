@@ -16,12 +16,15 @@
 
 #include <stdbool.h>
 #include <string.h>
+#include <sys/types.h>
 
 #include "arguments.h"
 #include "config.h"
 #include "execinfo.h"
+#include "log.h"
 #include "mod_cc.h"
 #include "mod_common.h"
+#include "string-util.h"
 
 static bool is_cc(const struct exec_info *exec_info)
 {
@@ -59,6 +62,39 @@ static bool add_linker_user_wrapper(struct arguments *args)
 	return true;
 }
 
+static bool add_libc_object_path(struct arguments *args)
+{
+	if (target_libc_static_libs == NULL)
+		return true;
+
+	char *arg = string_printf("-B%s", target_libc_static_libs);
+	if (arg == NULL)
+		return false;
+
+	if (!arguments_insert(args, arguments_nelems(args), arg)) {
+		free(arg);
+		return false;
+	}
+
+	free(arg);
+	return true;
+}
+
+static bool rewrite_if_linking(struct arguments *args)
+{
+	LOG_DEBUG("Checking if we could invoke the linker\n");
+	for (size_t i = 0; i < arguments_nelems(args); ++i)
+		if (strcmp("-c", arguments_get(args, i)) == 0)
+			return true;
+
+	LOG_DEBUG("Linking is possible\n");
+
+	if (!add_libc_object_path(args))
+		return false;
+
+	return true;
+}
+
 bool mod_cc_rewrite(const struct exec_info *exec_info, struct arguments *args,
 		    struct environment *env)
 {
@@ -69,10 +105,16 @@ bool mod_cc_rewrite(const struct exec_info *exec_info, struct arguments *args,
 	if (arguments_nelems(args) <= 1)
 		return true;
 
+	/* This has to come before other argument rewrites to make sure we
+	 * tag the argument list correctly
+	 */
 	if (!add_linker_user_wrapper(args))
 		return false;
 
 	if (!add_libc_include(args))
+		return false;
+
+	if (!rewrite_if_linking(args))
 		return false;
 
 	(void)env;
