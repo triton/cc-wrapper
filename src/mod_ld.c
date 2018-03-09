@@ -21,6 +21,7 @@
 #include "log.h"
 #include "mod_common.h"
 #include "mod_ld.h"
+#include "string-util.h"
 
 bool ld_args_init(struct arguments *args, struct ld_args *ld_args)
 {
@@ -95,6 +96,42 @@ static bool replace_dl(struct ld_args *ld_args)
 	return true;
 }
 
+static bool add_libc_shared_path(struct ld_args *ld_args)
+{
+	if (target_libc_dynamic_libs == NULL)
+		return true;
+
+	char *arg = string_printf("-L%s", target_libc_dynamic_libs);
+	if (arg == NULL)
+		return false;
+
+	if (!ld_args_insert(ld_args, arguments_nelems(ld_args->args), arg)) {
+		free(arg);
+		return false;
+	}
+
+	free(arg);
+	return true;
+}
+
+static bool add_libc_static_path(struct ld_args *ld_args)
+{
+	if (target_libc_static_libs == NULL)
+		return true;
+
+	char *arg = string_printf("-L%s", target_libc_static_libs);
+	if (arg == NULL)
+		return false;
+
+	if (!ld_args_insert(ld_args, arguments_nelems(ld_args->args), arg)) {
+		free(arg);
+		return false;
+	}
+
+	free(arg);
+	return true;
+}
+
 bool mod_ld_rewrite(const struct exec_info *exec_info, struct arguments *args,
 		    struct environment *env)
 {
@@ -110,6 +147,11 @@ bool mod_ld_rewrite(const struct exec_info *exec_info, struct arguments *args,
 		return true;
 
 	if (!replace_dl(&ld_args))
+		return false;
+
+	if (!add_libc_shared_path(&ld_args))
+		return false;
+	if (!add_libc_static_path(&ld_args))
 		return false;
 
 	(void)env;
