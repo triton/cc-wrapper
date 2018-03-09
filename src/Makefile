@@ -64,6 +64,7 @@ TESTS = \
 	log \
 	mod_cc \
 	mod_common \
+	mod_ld \
 	path \
 	string-util
 
@@ -81,6 +82,9 @@ TEST_mod_cc_extra = \
 
 TEST_mod_common_extra = \
 	mod_common.c
+
+TEST_mod_ld_extra = \
+	mod_ld.c
 
 TEST_EXTRAS = $(foreach test,$(TESTS),$(TEST_$(test)_extra))
 
