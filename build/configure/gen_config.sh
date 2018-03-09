@@ -21,6 +21,9 @@
 # Please refer to build/compiler_exes.sh for the input environment
 # for running this script as it does the heavy lifting
 #   TARGET_DL: The location of the dynamic linker
+#   TARGET_LIBC_INCLUDE: The location of the libc headers
+#   TARGET_LIBC_DYNAMIC_LIBS: The location of the libc shared objects
+#   TARGET_LIBC_STATIC_LIBS: The location of the libc static and crt objects
 
 set -e
 set -o pipefail
@@ -66,4 +69,28 @@ if [ -n "$TARGET_DL" ]; then
   echo "const char *target_dl = \"$TARGET_DL\";"
 else
   echo "const char *target_dl = NULL;"
+fi
+
+echo "Using libc include: ${TARGET_LIBC_INCLUDE:-NONE}" >&2
+echo ''
+if [ -n "$TARGET_LIBC_INCLUDE" ]; then
+  echo "const char *target_libc_include = \"$TARGET_LIBC_INCLUDE\";"
+else
+  echo "const char *target_libc_include = NULL;"
+fi
+
+echo "Using libc libraries: ${TARGET_LIBC_DYNAMIC_LIBS:-NONE}" >&2
+echo ''
+if [ -n "$TARGET_LIBC_DYNAMIC_LIBS" ]; then
+  echo "const char *target_libc_dynamic_libs = \"$TARGET_LIBC_DYNAMIC_LIBS\";"
+else
+  echo "const char *target_libc_dynamic_libs = NULL;"
+fi
+
+echo "Using libc include: ${TARGET_LIBC_STATIC_LIBS:-NONE}" >&2
+echo ''
+if [ -n "$TARGET_LIBC_STATIC_LIBS" ]; then
+  echo "const char *target_libc_static_libs = \"$TARGET_LIBC_STATIC_LIBS\";"
+else
+  echo "const char *target_libc_static_libs = NULL;"
 fi

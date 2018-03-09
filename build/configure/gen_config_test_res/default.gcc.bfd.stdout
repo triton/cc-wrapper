@@ -59,3 +59,9 @@ const struct exec_info exec_infos[] = {
 };
 
 const char *target_dl = NULL;
+
+const char *target_libc_include = NULL;
+
+const char *target_libc_dynamic_libs = NULL;
+
+const char *target_libc_static_libs = NULL;

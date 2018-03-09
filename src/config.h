@@ -34,6 +34,23 @@ extern const struct exec_info exec_infos[];
  */
 extern const char *target_dl;
 
+/*
+ * The path to the include directory of the libc
+ */
+extern const char *target_libc_include;
+
+/*
+ * The path which contains the shared components of the libc
+ * like `libc.so` and `libm.so.1`
+ */
+extern const char *target_libc_dynamic_libs;
+
+/*
+ * The path which contains the static components of the libc
+ * like `crt0.o` and `libc.a`
+ */
+extern const char *target_libc_static_libs;
+
 #ifdef __cplusplus
 }  // extern "C"
 #endif
