@@ -29,6 +29,22 @@ using std::string_view;
 
 class ModCommonTest : public ::ModTest {};
 
+TEST_F(ModCommonTest, ShouldRewriteFlags) {
+  EXPECT_FALSE(should_rewrite_flags(env));
+
+  EXPECT_TRUE(environment_set(env, CC_WRAPPER_FLAG_REWRITE, ""));
+  EXPECT_FALSE(should_rewrite_flags(env));
+
+  EXPECT_TRUE(environment_set(env, CC_WRAPPER_FLAG_REWRITE, "0"));
+  EXPECT_FALSE(should_rewrite_flags(env));
+
+  EXPECT_TRUE(environment_set(env, CC_WRAPPER_FLAG_REWRITE, "yes"));
+  EXPECT_FALSE(should_rewrite_flags(env));
+
+  EXPECT_TRUE(environment_set(env, CC_WRAPPER_FLAG_REWRITE, "1"));
+  EXPECT_TRUE(should_rewrite_flags(env));
+}
+
 TEST_F(ModCommonTest, RewritePathEmpty) {
   EXPECT_TRUE(mod_common_rewrite(nullptr, nullptr, env));
 

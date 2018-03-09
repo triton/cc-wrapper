@@ -21,6 +21,13 @@
 #include "mod_common.h"
 #include "string-util.h"
 
+bool should_rewrite_flags(const struct environment *env)
+{
+	const char *env_flag_rewrite =
+	    environment_get(env, CC_WRAPPER_FLAG_REWRITE);
+	return env_flag_rewrite != NULL && strcmp("1", env_flag_rewrite) == 0;
+}
+
 static bool add_our_path(struct environment *env)
 {
 	char *path_new = NULL;

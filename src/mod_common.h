@@ -31,6 +31,7 @@ extern "C" {
 #define CC_WRAPPER_USER_ARGS_END "--cc-wrapper-end"
 
 #define CC_WRAPPER_FLAG_REWRITE "CC_WRAPPER_FLAG_REWRITE"
+bool should_rewrite_flags(const struct environment *env);
 
 bool mod_common_rewrite(const struct exec_info *exec_info,
 			struct arguments *args, struct environment *env);
