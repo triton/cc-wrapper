@@ -35,6 +35,7 @@ struct ld_args {
 };
 
 bool ld_args_init(struct arguments *args, struct ld_args *ld_args);
+bool ld_args_insert(struct ld_args *ld_args, size_t idx, const char *arg);
 
 bool mod_ld_rewrite(const struct exec_info *exec_info, struct arguments *args,
 		    struct environment *env);

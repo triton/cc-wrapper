@@ -53,6 +53,21 @@ bool ld_args_init(struct arguments *args, struct ld_args *ld_args)
 	return true;
 }
 
+bool ld_args_insert(struct ld_args *ld_args, size_t idx, const char *arg)
+{
+	if (idx > ld_args->user_args_start && idx < ld_args->user_args_end)
+		return false;
+
+	if (!arguments_insert(ld_args->args, idx, arg))
+		return false;
+
+	if (idx <= ld_args->user_args_start) {
+		++ld_args->user_args_start;
+		++ld_args->user_args_end;
+	}
+	return true;
+}
+
 static bool is_ld(const struct exec_info *exec_info)
 {
 	if (strcmp("ld", exec_info->type) == 0)
