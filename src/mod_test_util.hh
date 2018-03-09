@@ -17,6 +17,7 @@
 #pragma once
 
 #include <gtest/gtest.h>
+#include <map>
 #include <string_view>
 
 #include "arguments.h"
@@ -60,6 +61,12 @@ class ModTest : public ::testing::Test {
 
   const struct exec_info &GetExecInfo() {
     return exec_info;
+  }
+
+  void ExpectEnv(const std::map<std::string_view, std::string_view> &expected) {
+    EXPECT_EQ(expected.size(), environment_nelems(env));
+    for (auto [ k, v ] : expected)
+      EXPECT_EQ(v, std::string_view(environment_get(env, k.data())));
   }
 
  private:

@@ -32,8 +32,7 @@ class ModCommonTest : public ::ModTest {};
 TEST_F(ModCommonTest, RewritePathEmpty) {
   EXPECT_TRUE(mod_common_rewrite(nullptr, nullptr, env));
 
-  EXPECT_EQ(string_view(CC_WRAPPER_BIN),
-            string_view(environment_get(env, "PATH")));
+  ExpectEnv({{"PATH", CC_WRAPPER_BIN}});
 }
 
 TEST_F(ModCommonTest, RewritePathPopulated) {
@@ -41,9 +40,7 @@ TEST_F(ModCommonTest, RewritePathPopulated) {
   EXPECT_TRUE(environment_set(env, "PATH", orig_path));
   EXPECT_TRUE(mod_common_rewrite(nullptr, nullptr, env));
 
-  string expected(CC_WRAPPER_BIN ":");
-  expected += orig_path;
-  EXPECT_EQ(expected, string_view(environment_get(env, "PATH")));
+  ExpectEnv({{"PATH", string(CC_WRAPPER_BIN ":") + orig_path}});
 }
 
 }  // namespace
