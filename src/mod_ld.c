@@ -28,11 +28,11 @@ struct ld_args {
 	size_t user_args_end;
 };
 
-void ld_args_init(struct arguments *args, struct ld_args *ld_args)
+bool ld_args_init(struct arguments *args, struct ld_args *ld_args)
 {
 	ld_args->args = args;
 	ld_args->user_args_start = 0;
-	ld_args->user_args_end = arguments_nelems(args);
+	ld_args->user_args_end = 0;
 	for (size_t i = 0; i < arguments_nelems(args); ++i) {
 		if (strcmp(CC_WRAPPER_USER_ARGS_BEGIN,
 			   arguments_get(args, i)) == 0) {
@@ -48,8 +48,15 @@ void ld_args_init(struct arguments *args, struct ld_args *ld_args)
 		}
 	}
 
+	/* We need to validate and fix the end */
+	if (ld_args->user_args_end == 0)
+		ld_args->user_args_end = arguments_nelems(args);
+	if (ld_args->user_args_start > ld_args->user_args_end)
+		return false;
+
 	LOG_DEBUG("User args between: %lu and %lu\n", ld_args->user_args_start,
 		  ld_args->user_args_end);
+	return true;
 }
 
 static bool is_ld(const struct exec_info *exec_info)
@@ -85,12 +92,13 @@ bool mod_ld_rewrite(const struct exec_info *exec_info, struct arguments *args,
 	if (!is_ld(exec_info))
 		return true;
 
+	struct ld_args ld_args;
+	if (!ld_args_init(args, &ld_args))
+		return false;
+
 	/* We want to avoid adding arguments if there aren't any */
 	if (arguments_nelems(args) <= 1)
 		return true;
-
-	struct ld_args ld_args;
-	ld_args_init(args, &ld_args);
 
 	if (!replace_dl(&ld_args))
 		return false;
