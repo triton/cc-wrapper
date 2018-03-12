@@ -228,31 +228,6 @@ TEST_F(ModLdTest, TestDynamicLinker) {
   });
 }
 
-TEST_F(ModLdTest, TestNoRpathAdding) {
-  SetExecType("ld");
-  AppendArgs({
-      "ld",
-      "-L/path1",
-      CC_WRAPPER_USER_ARGS_BEGIN,
-      "-L/path2",
-      CC_WRAPPER_USER_ARGS_END,
-      "-L/path3",
-  });
-
-  EXPECT_TRUE(mod_ld_rewrite(&GetExecInfo(), args, env));
-
-  ExpectArgs({
-      "ld",
-      "-L/path1",
-      "-rpath",
-      "/path1",
-      "-L/path2",
-      "-L/path3",
-      "-rpath",
-      "/path3",
-  });
-}
-
 TEST_F(ModLdTest, TestRpathAdding) {
   SetExecType("ld");
   AppendArgs({
@@ -269,10 +244,12 @@ TEST_F(ModLdTest, TestRpathAdding) {
   ExpectArgs({
       "ld",
       "-L/path1",
-      "-rpath",
-      "/path1",
       "-L/path2",
       "-L/path3",
+      "-rpath",
+      "/path1",
+      "-rpath",
+      "/path2",
       "-rpath",
       "/path3",
   });
@@ -308,6 +285,8 @@ TEST_F(ModLdTest, TestRpathDuplicate) {
       "-rpath",
       "/path3",
       "-L/path3",
+      "-rpath",
+      "/path2",
   });
 }
 
@@ -332,9 +311,9 @@ TEST_F(ModLdTest, TestLibcPathAdding) {
       "-d2",
       "-d3",
       string("-L") + target_libc_dynamic_libs,
+      string("-L") + target_libc_static_libs,
       "-rpath",
       target_libc_dynamic_libs,
-      string("-L") + target_libc_static_libs,
       "-rpath",
       target_libc_static_libs,
   });
@@ -358,6 +337,8 @@ TEST_F(ModLdTest, TestUserArgsOnly) {
       "/no-such-dl",
       "-L/no-such-path",
       "-d3",
+      "-rpath",
+      "/no-such-path",
   });
 }
 

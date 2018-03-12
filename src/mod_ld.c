@@ -106,7 +106,7 @@ int rpath_node_compare(const void *root, const void *unplaced)
 static bool rpath_all_cc_paths(struct ld_args *ld_args)
 {
 	bool ret = false;
-	LOG_DEBUG("Adding rpaths to all -L switches passed by gcc\n");
+	LOG_DEBUG("Adding rpaths to all -L switches\n");
 	struct avl *rpath_set = avl_init(rpath_node_compare, NULL);
 	if (rpath_set == NULL)
 		goto out;
@@ -126,25 +126,22 @@ static bool rpath_all_cc_paths(struct ld_args *ld_args)
 			goto out;
 	}
 
-	for (size_t i = 0;; ++i) {
-		if (i == ld_args->user_args_start)
-			i = ld_args->user_args_end;
-		if (i >= arguments_nelems(ld_args->args))
-			break;
-
+	for (size_t i = 0; i < arguments_nelems(ld_args->args); ++i) {
 		const char *arg = arguments_get(ld_args->args, i);
 		if (strncmp("-L", arg, 2) != 0)
 			continue;
 		const char *path = arg + 2;
 
-		LOG_DEBUG("Might add rpath for %s\n", path);
+		LOG_TRACE("Checking if we already have rpath for %s\n", path);
 		if (avl_find(rpath_set, (void *)path) != NULL)
 			continue;
 
 		LOG_DEBUG("Adding rpath for %s\n", path);
-		if (!ld_args_insert(ld_args, ++i, "-rpath"))
+		if (!ld_args_insert(ld_args, arguments_nelems(ld_args->args),
+				    "-rpath"))
 			goto out;
-		if (!ld_args_insert(ld_args, ++i, path))
+		if (!ld_args_insert(ld_args, arguments_nelems(ld_args->args),
+				    path))
 			goto out;
 	}
 
