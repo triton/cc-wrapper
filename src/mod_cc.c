@@ -97,6 +97,16 @@ out:
 
 static bool add_libc(struct arguments *args)
 {
+	LOG_TRACE("Checking if we need libc paths\n");
+	for (size_t i = 0; i < arguments_nelems(args); ++i) {
+		const char *arg = arguments_get(args, i);
+		if (strcmp("-nodefaultlibs", arg) == 0)
+			return true;
+		if (strcmp("-nostdlib", arg) == 0)
+			return true;
+	}
+	LOG_TRACE("Adding libc paths\n");
+
 	if (!add_lib_path(args, 'L', target_libc_dynamic_libs))
 		return false;
 	if (!add_lib_path(args, 'B', target_libc_static_libs))
