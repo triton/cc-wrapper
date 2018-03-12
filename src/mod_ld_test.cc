@@ -26,8 +26,6 @@
 #include "string-util.h"
 
 const char *target_dl;
-const char *target_libc_dynamic_libs;
-const char *target_libc_static_libs;
 
 namespace {
 
@@ -40,8 +38,6 @@ class ModLdTest : public ::ModTest {
     ::ModTest::SetUp();
 
     target_dl = nullptr;
-    target_libc_dynamic_libs = nullptr;
-    target_libc_static_libs = nullptr;
   }
 };
 
@@ -287,35 +283,6 @@ TEST_F(ModLdTest, TestRpathDuplicate) {
       "-L/path3",
       "-rpath",
       "/path2",
-  });
-}
-
-TEST_F(ModLdTest, TestLibcPathAdding) {
-  SetExecType("ld");
-  AppendArgs({
-      "ld",
-      "-d1",
-      CC_WRAPPER_USER_ARGS_BEGIN,
-      "-d2",
-      CC_WRAPPER_USER_ARGS_END,
-      "-d3",
-  });
-  target_libc_dynamic_libs = "/path-dynamic";
-  target_libc_static_libs = "/path-static";
-
-  EXPECT_TRUE(mod_ld_rewrite(&GetExecInfo(), args, env));
-
-  ExpectArgs({
-      "ld",
-      "-d1",
-      "-d2",
-      "-d3",
-      string("-L") + target_libc_dynamic_libs,
-      string("-L") + target_libc_static_libs,
-      "-rpath",
-      target_libc_dynamic_libs,
-      "-rpath",
-      target_libc_static_libs,
   });
 }
 

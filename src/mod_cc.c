@@ -74,21 +74,33 @@ static bool remove_debug(struct arguments *args)
 	return true;
 }
 
-static bool add_libc_object_path(struct arguments *args)
+static bool add_lib_path(struct arguments *args, char flag,
+			 const char *arg_path)
 {
-	if (target_libc_static_libs == NULL)
+	if (arg_path == NULL)
 		return true;
 
-	char *arg = string_printf("-B%s", target_libc_static_libs);
+	bool ret = false;
+	char *arg = string_printf("-%c%s", flag, arg_path);
 	if (arg == NULL)
-		return false;
+		goto out;
 
-	if (!arguments_insert(args, arguments_nelems(args), arg)) {
-		free(arg);
-		return false;
-	}
+	LOG_DEBUG("Adding library path: %s\n", arg);
+	if (!arguments_insert(args, arguments_nelems(args), arg))
+		goto out;
 
+	ret = true;
+out:
 	free(arg);
+	return ret;
+}
+
+static bool add_libc(struct arguments *args)
+{
+	if (!add_lib_path(args, 'L', target_libc_dynamic_libs))
+		return false;
+	if (!add_lib_path(args, 'B', target_libc_static_libs))
+		return false;
 	return true;
 }
 
@@ -104,7 +116,7 @@ static bool rewrite_if_linking(const struct exec_info *exec_info,
 
 	LOG_DEBUG("Linking is possible\n");
 
-	if (!add_libc_object_path(args))
+	if (!add_libc(args))
 		return false;
 
 	return true;

@@ -25,6 +25,7 @@
 #include "string-util.h"
 
 const char *target_libc_include;
+const char *target_libc_dynamic_libs;
 const char *target_libc_static_libs;
 
 namespace {
@@ -38,6 +39,7 @@ class ModCcTest : public ::ModTest {
     ::ModTest::SetUp();
 
     target_libc_include = nullptr;
+    target_libc_dynamic_libs = nullptr;
     target_libc_static_libs = nullptr;
   }
 };
@@ -77,7 +79,8 @@ TEST_F(ModCcTest, TestNoLibc) {
 
 TEST_F(ModCcTest, TestLibcNoLink) {
   target_libc_include = "/libc-include";
-  target_libc_static_libs = "/libc-libs";
+  target_libc_dynamic_libs = "/libc-dynamic-libs";
+  target_libc_static_libs = "/libc-static-libs";
   SetExecType("c");
   AppendArgs({"cc", "-I/usr/include", "-c", "main.c"});
   EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), args, env));
@@ -96,7 +99,8 @@ TEST_F(ModCcTest, TestLibcNoLink) {
 
 TEST_F(ModCcTest, TestLibcCpp) {
   target_libc_include = "/libc-include";
-  target_libc_static_libs = "/libc-libs";
+  target_libc_dynamic_libs = "/libc-dynamic-libs";
+  target_libc_static_libs = "/libc-static-libs";
   SetExecType("cpp");
   AppendArgs({"cc", "-I/usr/include", "main.c"});
   EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), args, env));
@@ -130,7 +134,8 @@ TEST_F(ModCcTest, TestLibcNostdinc) {
 
 TEST_F(ModCcTest, TestLibc) {
   target_libc_include = "/libc-include";
-  target_libc_static_libs = "/libc-libs";
+  target_libc_dynamic_libs = "/libc-dynamic-libs";
+  target_libc_static_libs = "/libc-static-libs";
   SetExecType("c");
   AppendArgs({"cc", "-I/usr/include", "main.c"});
   EXPECT_TRUE(mod_cc_rewrite(&GetExecInfo(), args, env));
@@ -143,6 +148,7 @@ TEST_F(ModCcTest, TestLibc) {
       "-I/usr/include",
       "main.c",
       "-Wl," CC_WRAPPER_USER_ARGS_END,
+      string("-L") + target_libc_dynamic_libs,
       string("-B") + target_libc_static_libs,
   });
 }
