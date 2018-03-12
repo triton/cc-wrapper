@@ -15,6 +15,7 @@
  */
 
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -76,6 +77,26 @@ void execute(const struct exec_info *exec_info, const struct arguments *args,
 	       environment_array_copy(env));
 }
 
+bool should_print_config()
+{
+	const char *env = getenv("CC_WRAPPER_PRINT_CONFIG");
+	return env != NULL && strcmp("1", env) == 0;
+}
+
+void print_config(FILE *file)
+{
+	if (target_dl)
+		fprintf(file, "TARGET_DL=%s\n", target_dl);
+	if (target_libc_include)
+		fprintf(file, "TARGET_LIBC_INCLUDE=%s\n", target_libc_include);
+	if (target_libc_dynamic_libs)
+		fprintf(file, "TARGET_DYNAMIC_LIBS=%s\n",
+			target_libc_dynamic_libs);
+	if (target_libc_static_libs)
+		fprintf(file, "TARGET_STATIC_LIBS=%s\n",
+			target_libc_static_libs);
+}
+
 bool is_main_binary(const char *path)
 {
 	return strcmp(path_base(path), MAIN_BINARY) == 0;
@@ -89,6 +110,12 @@ int main(int argc, char *argv[])
 
 	set_log_level();
 
+	if (should_print_config()) {
+		print_config(stdout);
+		ret = EXIT_SUCCESS;
+		goto out;
+	}
+
 	/* Determine the name of our target executable*/
 	if (argc >= 1 && is_main_binary(argv[0])) {
 		argc -= 1;
@@ -100,6 +127,11 @@ int main(int argc, char *argv[])
 		goto out;
 	}
 	LOG_DEBUG("Using binary name: %s\n", argv[0]);
+
+	/* Print out our internal config */
+	LOG_INFO("Internal cc-wrapper configuration:\n");
+	if (LOG_LEVEL_INFO <= log_level)
+		print_config(stderr);
 
 	/* Get information about the executable we found */
 	const struct exec_info *exec_info = get_exec_info(exec_infos, argv[0]);
