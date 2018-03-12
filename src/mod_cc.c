@@ -64,10 +64,11 @@ static bool add_linker_user_wrapper(struct arguments *args)
 
 static bool remove_debug(struct arguments *args)
 {
-	LOG_DEBUG("Removing debug flags\n");
+	LOG_TRACE("Removing debug flags\n");
 	for (size_t i = 0; i < arguments_nelems(args); ++i) {
 		if (strncmp("-g", arguments_get(args, i), 2) != 0)
 			continue;
+		LOG_DEBUG("Removing: %s\n", arguments_get(args, i));
 		if (!arguments_remove(args, i--))
 			return false;
 	}
@@ -117,14 +118,14 @@ static bool add_libc(struct arguments *args)
 static bool rewrite_if_linking(const struct exec_info *exec_info,
 			       struct arguments *args)
 {
-	LOG_DEBUG("Checking if we could invoke the linker\n");
+	LOG_TRACE("Checking if we could invoke the linker\n");
 	if (strcmp("cpp", exec_info->type) == 0)
 		return true;
 	for (size_t i = 0; i < arguments_nelems(args); ++i)
 		if (strcmp("-c", arguments_get(args, i)) == 0)
 			return true;
 
-	LOG_DEBUG("Linking is possible\n");
+	LOG_TRACE("Linking is possible\n");
 
 	if (!add_libc(args))
 		return false;
@@ -134,10 +135,10 @@ static bool rewrite_if_linking(const struct exec_info *exec_info,
 
 static bool flag_rewrite(struct arguments *args, const struct environment *env)
 {
-	LOG_DEBUG("Checking if we should rewrite flags\n");
+	LOG_TRACE("Checking if we should rewrite flags\n");
 	if (!should_rewrite_flags(env))
 		return true;
-	LOG_DEBUG("Rewriting flags\n");
+	LOG_TRACE("Rewriting flags\n");
 
 	if (!remove_debug(args))
 		return false;

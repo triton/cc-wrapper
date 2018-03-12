@@ -83,7 +83,7 @@ static bool replace_dl(struct ld_args *ld_args)
 	if (target_dl == NULL)
 		return true;
 
-	LOG_DEBUG("Finding dynamic linker to replace with: %s\n", target_dl);
+	LOG_TRACE("Finding dynamic linker to replace with: %s\n", target_dl);
 	for (size_t i = 0; i < ld_args->user_args_start; ++i)
 		if (strcmp("-dynamic-linker",
 			   arguments_get(ld_args->args, i)) == 0) {
@@ -106,7 +106,7 @@ int rpath_node_compare(const void *root, const void *unplaced)
 static bool rpath_all_cc_paths(struct ld_args *ld_args)
 {
 	bool ret = false;
-	LOG_DEBUG("Adding rpaths to all -L switches\n");
+	LOG_TRACE("Adding rpaths to all -L switches\n");
 	struct avl *rpath_set = avl_init(rpath_node_compare, NULL);
 	if (rpath_set == NULL)
 		goto out;
