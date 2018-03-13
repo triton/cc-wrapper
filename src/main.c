@@ -36,6 +36,9 @@ extern char **environ;
 
 void set_log_level()
 {
+	/* By default we want to be mostly silent and not see info messages */
+	log_level = LOG_LEVEL_ERROR;
+
 	/* If a more specific log level is set we should use that instead */
 	const char *level_str = getenv("CC_WRAPPER_LOG_LEVEL");
 	if (level_str != NULL) {
