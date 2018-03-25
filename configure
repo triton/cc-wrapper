@@ -33,7 +33,7 @@ error() {
 trap error ERR INT
 
 echo -n "">"$makefile_inc"
-compiler_exes="$(build/configure/compiler_exes.sh 2>/dev/null | awk '{ print $1; }')"
+compiler_exes="$(build/configure/compiler_exes.sh | awk '{ print $1; }')"
 echo "INSTALL_EXES = $(echo $compiler_exes)">>"$makefile_inc"
 echo "PREFIX ?= ${PREFIX-/usr}" >>"$makefile_inc"
 if pkg-config --cflags gtest_main >/dev/null 2>&1; then
