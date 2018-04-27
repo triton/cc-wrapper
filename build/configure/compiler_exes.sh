@@ -98,17 +98,17 @@ clangSupportArch() {
 }
 
 canUseCompiler() {
-  local compiler="$1"
-
-  if echo "$TARGET_COMPILER" | grep -q "$compiler"; then
-    return 0
-  fi
+  compiler="$1"
 
   if [ -n "$TARGET_COMPILER" ]; then
-    return 1
+    if ! echo "$TARGET_COMPILER" | grep -q "$compiler"; then
+      return 1
+    fi
+    compiler="$TARGET_COMPILER"
   fi
 
   if [ -n "$TARGET_ARCH" ] && getFull "$TARGET_ARCH"-"$compiler" >/dev/null; then
+    target_prefix="${TARGET_ARCH}-"
     return 0
   fi
 
@@ -118,10 +118,16 @@ canUseCompiler() {
   fi
 
   if [ -z "$TARGET_ARCH" ]; then
+    target_prefix=""
     return 0
   fi
 
-  "${compiler}SupportArch" "$cc" "$TARGET_ARCH"
+  if "${compiler}SupportArch" "$cc" "$TARGET_ARCH"; then
+    target_prefix=""
+    return 0
+  fi
+
+  return 1
 }
 
 # Allow target path to be overriden from the PATH
@@ -131,12 +137,9 @@ else
   target_path="$TARGET_PATH"
 fi
 
-target_prefix="${TARGET_ARCH}${TARGET_ARCH:+-}"
-
 # Figure out which compiler we are using
 if canUseCompiler 'gcc'; then
-  compiler="gcc"
-  compiler_suffix="${TARGET_COMPILER:3}"
+  compiler_suffix="${compiler:3}"
   printTuple "$target_prefix"cpp"$compiler_suffix"     "$target_prefix"cpp"$compiler_suffix" "gcc" "cpp" 0 || \
     printTuple "$target_prefix"cpp"$compiler_suffix"     "$target_prefix"g++"$compiler_suffix" "gcc" "cpp" 0
   printTuple "$target_prefix"gcc"$compiler_suffix"     "$target_prefix"gcc"$compiler_suffix" "gcc" "c" 0
@@ -144,8 +147,7 @@ if canUseCompiler 'gcc'; then
   printTuple "$target_prefix"g++"$compiler_suffix"     "$target_prefix"g++"$compiler_suffix" "gcc" "c++" 0
   printTuple "$target_prefix"c++"$compiler_suffix"     "$target_prefix"g++"$compiler_suffix" "gcc" "c++" 0
 elif canUseCompiler 'clang'; then
-  compiler="clang"
-  compiler_suffix="${TARGET_COMPILER:5}"
+  compiler_suffix="${compiler:5}"
   if getFull "${target_prefix}clang${compiler_suffix}" >/dev/null; then
     clang_binary="${target_prefix}clang${compiler_suffix}"
   else
