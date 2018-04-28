@@ -34,18 +34,14 @@ bin_create_bfd() {
   local file="$1"
   local abs="$(bin_path "$file")"
 
-  bin_create "$file"
-  echo '[ "$1" = "-v" ] || exit 1' >>"$abs"
-  echo 'echo "GNU ld (GNU Binutils for Debian) 2.29.1"' >>"$abs"
+  cp fakes/ld.bfd "$abs"
 }
 
 bin_create_gold() {
   local file="$1"
   local abs="$(bin_path "$file")"
 
-  bin_create "$file"
-  echo '[ "$1" = "-v" ] || exit 1' >>"$abs"
-  echo 'echo "GNU gold (GNU Binutils for Debian 2.29.1) 1.14"' >>"$abs"
+  cp fakes/ld.gold "$abs"
 }
 
 # We should work with everything empty and use some sane defaults

@@ -28,28 +28,34 @@ test_banner() {
 
 bin_path() {
   local exe="$1"
+
   echo "$TMPDIR"/bin/"$exe"
 }
 
 bin_link_exe() {
   local exe="$1"
+
   ln -s "$(type -tP "$exe")" "$(bin_path "$exe")"
 }
 
 bin_link_local() {
   local target="$1"
   local exe="$2"
+
   ln -s "$target" "$(bin_path "$exe")"
 }
 
 bin_create() {
   local exe="$1"
-  echo "#!$(type -tP "bash")" >"$(bin_path "$exe")"
-  chmod +x "$(bin_path "$exe")"
+  local abs="$(bin_path "$exe")"
+
+  echo "#!$(type -tP "bash")" >"$abs"
+  chmod +x "$abs"
 }
 
 bin_unlink() {
   local exe="$1"
+
   rm "$(bin_path "$(basename "$exe")")"
 }
 
