@@ -87,6 +87,7 @@ gccSupportArch() {
   local cc="$1"
   local arch="$2"
 
+  target_prefix=""
   [ "$("$cc" -dumpmachine)" = "$arch" ]
 }
 
@@ -94,6 +95,7 @@ clangSupportArch() {
   local cc="$1"
   local arch="$2"
 
+  target_prefix=""
   echo "" | "$cc" -target "$arch" -x c -c -o - - >/dev/null 2>&1
 }
 
@@ -122,12 +124,7 @@ canUseCompiler() {
     return 0
   fi
 
-  if "${compiler}SupportArch" "$cc" "$TARGET_ARCH"; then
-    target_prefix=""
-    return 0
-  fi
-
-  return 1
+  "${compiler}SupportArch" "$cc" "$TARGET_ARCH"
 }
 
 # Allow target path to be overriden from the PATH
@@ -166,33 +163,57 @@ fi
 echo "Using compiler: $compiler" >&2
 
 # Figure out which linker we are using
-ld="$(getAbs ld)" || true
+ld="$(getAbs "$target_prefix""${TARGET_LINKER-ld}")" || true
 default_ld="$(basename "$ld")" || true
-if [ "$default_ld" = "ld.gold" ]; then
+if echo "$default_ld" | grep -q "ld.gold"; then
+  linker_suffix="${default_ld:$(( ${#target_prefix} + 7))}"
   linker="binutils"
-  printTuple ld.bfd  ld.bfd  bfd  ld 0 2>/dev/null || true
-  printTuple ld.gold ld.gold gold ld 1
-elif [ "$default_ld" = "ld.bfd" ]; then
+  printTuple "$target_prefix"ld.bfd"$linker_suffix"  "$target_prefix"ld.bfd"$linker_suffix"  bfd  ld 0 2>/dev/null || true
+  printTuple "$target_prefix"ld.gold"$linker_suffix" "$target_prefix"ld.gold"$linker_suffix" gold ld 1
+elif echo "$default_ld" | grep -q "ld.bfd"; then
+  linker_suffix="${default_ld:$(( ${#target_prefix} + 6))}"
   linker="binutils"
-  printTuple ld.bfd  ld.bfd  bfd  ld 1
-  printTuple ld.gold ld.gold gold ld 0 2>/dev/null || true
-elif [ "$default_ld" = "ld.lld" ] && [ "$compiler" = "clang" ]; then
+  printTuple "$target_prefix"ld.bfd"$linker_suffix"  "$target_prefix"ld.bfd"$linker_suffix"  bfd  ld 1
+  printTuple "$target_prefix"ld.gold"$linker_suffix" "$target_prefix"ld.gold"$linker_suffix" gold ld 0 2>/dev/null || true
+elif echo "$default_ld" | grep -q "ld.lld" && [ "${compiler:0:5}" = "clang" ]; then
+  linker_suffix="${default_ld:$(( ${#target_prefix} + 6))}"
   linker="lld"
-  printTuple ld.lld  ld.lld  lld  ld 1
-elif [ "$default_ld" = "lld" ] && [ "$compiler" = "clang" ]; then
+  if getFull "${target_prefix}ld.lld${linker_suffix}" >/dev/null; then
+    lld_binary="${target_prefix}ld.lld${linker_suffix}"
+  else
+    lld_binary="ld.lld${linker_suffix}"
+  fi
+  printTuple "$target_prefix"ld.lld"$linker_suffix"  "$lld_binary"  lld  ld 1
+elif [ "$default_ld" = "lld" ] && [ "${compiler:0:5}" = "clang" ]; then
+  linker_suffix="${default_ld:$(( ${#target_prefix} + 3))}"
   linker="lld"
-  printTuple ld.lld  ld.lld  lld  ld 1
+  if getFull "${target_prefix}lld${linker_suffix}" >/dev/null; then
+    lld_binary="${target_prefix}lld${linker_suffix}"
+  else
+    lld_binary="lld${linker_suffix}"
+  fi
+  printTuple "$target_prefix"ld.lld"$linker_suffix"  "$lld_binary"  lld  ld 1
 elif [ -n "$ld" ] && "$ld" -v | grep -q '^GNU gold'; then
+  linker_suffix="${default_ld:$(( ${#target_prefix} + 2))}"
   linker="binutils"
-  printTuple ld.bfd  ld.bfd  bfd  ld 0 2>/dev/null || true
-  printTuple ld.gold ld.gold gold ld 1 2>/dev/null || printTuple ld.gold ld gold ld 1
+  printTuple "$target_prefix"ld.bfd"$linker_suffix"  "$target_prefix"ld.bfd"$linker_suffix"  bfd  ld 0 2>/dev/null || true
+  printTuple "$target_prefix"ld.gold"$linker_suffix" "$target_prefix"ld.gold"$linker_suffix" gold ld 1 2>/dev/null || \
+    printTuple "$target_prefix"ld.gold"$linker_suffix" "$target_prefix"ld"$linker_suffix" gold ld 1
 elif [ -n "$ld" ] && "$ld" -v | grep -q '^GNU ld'; then
+  linker_suffix="${default_ld:$(( ${#target_prefix} + 2))}"
   linker="binutils"
-  printTuple ld.bfd  ld.bfd  bfd  ld 1 2>/dev/null || printTuple ld.bfd ld bfd ld 1
-  printTuple ld.gold ld.gold gold ld 0 2>/dev/null || true
+  printTuple "$target_prefix"ld.bfd"$linker_suffix"  "$target_prefix"ld.bfd"$linker_suffix"  bfd  ld 1 2>/dev/null || \
+    printTuple "$target_prefix"ld.bfd"$linker_suffix" "$target_prefix"ld"$linker_suffix" bfd ld 1
+  printTuple "$target_prefix"ld.gold"$linker_suffix" "$target_prefix"ld.gold"$linker_suffix" gold ld 0 2>/dev/null || true
 elif [ -n "$ld" ] && "$ld" -v | grep -q '^LLD' && [ "$compiler" = "clang" ]; then
+  linker_suffix="${default_ld:$(( ${#target_prefix} + 2))}"
   linker="lld"
-  printTuple ld.lld  ld.lld  lld  ld 1
+  if getFull "${target_prefix}ld.lld${linker_suffix}" >/dev/null; then
+    lld_binary="${target_prefix}ld.lld${linker_suffix}"
+  else
+    lld_binary="ld.lld${linker_suffix}"
+  fi
+  printTuple "$target_prefix"ld.lld"$linker_suffix"  "$lld_binary"  lld  ld 1
 else
   echo "Unsupported Linker" >&2
   exit 1

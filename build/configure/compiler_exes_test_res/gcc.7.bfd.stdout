@@ -1,0 +1,7 @@
+c++-7 @TMPDIR@/bin/g++-7 gcc c++ 0
+cc-7 @TMPDIR@/bin/gcc-7 gcc c 0
+cpp-7 @TMPDIR@/bin/cpp-7 gcc cpp 0
+g++-7 @TMPDIR@/bin/g++-7 gcc c++ 0
+gcc-7 @TMPDIR@/bin/gcc-7 gcc c 0
+ld.bfd @TMPDIR@/bin/ld.bfd bfd ld 1
+ld.gold @TMPDIR@/bin/ld.gold gold ld 0

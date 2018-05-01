@@ -1,0 +1,7 @@
+aarch64-linux-gnu-c++ @TMPDIR@/bin/aarch64-linux-gnu-g++ gcc c++ 0
+aarch64-linux-gnu-cc @TMPDIR@/bin/aarch64-linux-gnu-gcc gcc c 0
+aarch64-linux-gnu-cpp @TMPDIR@/bin/aarch64-linux-gnu-cpp gcc cpp 0
+aarch64-linux-gnu-g++ @TMPDIR@/bin/aarch64-linux-gnu-g++ gcc c++ 0
+aarch64-linux-gnu-gcc @TMPDIR@/bin/aarch64-linux-gnu-gcc gcc c 0
+aarch64-linux-gnu-ld.bfd @TMPDIR@/bin/aarch64-linux-gnu-ld.bfd bfd ld 1
+aarch64-linux-gnu-ld.gold @TMPDIR@/bin/aarch64-linux-gnu-ld.gold gold ld 0

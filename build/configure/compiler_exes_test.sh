@@ -65,9 +65,79 @@ fi
 
 test_banner "Default GCC"
 bin_create "g++"
+bin_create "clang"
 compiler_exes | sort >"$TMPDIR"/default.gcc.bfd.stdout
 diff "$TMPDIR"/res/default.gcc.bfd.stdout \
   "$TMPDIR"/default.gcc.bfd.stdout
+
+test_banner "Force Clang"
+TARGET_COMPILER="clang" compiler_exes | sort >"$TMPDIR"/force.clang.bfd.stdout
+diff "$TMPDIR"/res/default.clang.bfd.stdout \
+  "$TMPDIR"/force.clang.bfd.stdout
+
+test_banner "Forced Gold GCC"
+bin_unlink "ld"
+TARGET_LINKER="ld.gold" compiler_exes | sort >"$TMPDIR"/forced.gcc.gold.stdout
+diff "$TMPDIR"/res/default.gcc.gold.stdout \
+  "$TMPDIR"/forced.gcc.gold.stdout
+bin_link_local "ld.bfd" "ld"
+TARGET_LINKER="ld.gold" compiler_exes | sort >"$TMPDIR"/forced.gcc.gold.stdout
+diff "$TMPDIR"/res/default.gcc.gold.stdout \
+  "$TMPDIR"/forced.gcc.gold.stdout
+
+test_banner "Forced LLD GCC"
+if TARGET_LINKER="ld.lld" compiler_exes; then
+  echo "GCC + LLD should have failed"
+  exit 1
+fi
+if TARGET_LINKER="lld" compiler_exes; then
+  echo "GCC + LLD should have failed"
+  exit 1
+fi
+
+test_banner "GCC-7 Missing"
+if TARGET_COMPILER="gcc-7" compiler_exes; then
+  echo "Missing GCC-7 should have failed"
+  exit 1
+fi
+bin_create "gcc-7"
+if TARGET_COMPILER="gcc-7" compiler_exes; then
+  echo "Missing GCC-7 should have failed"
+  exit 1
+fi
+
+test_banner "GCC-7"
+bin_create "cpp-7"
+bin_create "g++-7"
+TARGET_COMPILER="gcc-7" compiler_exes | sort >"$TMPDIR"/gcc.7.bfd.stdout
+diff "$TMPDIR"/res/gcc.7.bfd.stdout \
+  "$TMPDIR"/gcc.7.bfd.stdout
+
+test_banner "Missing Cross GCC"
+if TARGET_ARCH="aarch64-linux-gnu" TARGET_COMPILER="gcc" compiler_exes; then
+  echo "Missing cross gcc should have failed"
+  exit 1
+fi
+
+test_banner "Missing Cross LD"
+if TARGET_ARCH="aarch64-linux-gnu" compiler_exes; then
+  echo "Missing cross ld should have failed"
+  exit 1
+fi
+
+test_banner "Cross (aarch64) GCC"
+bin_create "aarch64-linux-gnu-cpp"
+bin_create "aarch64-linux-gnu-gcc"
+bin_create "aarch64-linux-gnu-g++"
+bin_create "aarch64-linux-gnu-ld.bfd"
+bin_create "aarch64-linux-gnu-ld.gold"
+bin_link_local "aarch64-linux-gnu-ld.bfd" "aarch64-linux-gnu-ld"
+TARGET_ARCH="aarch64-linux-gnu" compiler_exes | sort >"$TMPDIR"/cross.gcc.bfd.stdout
+diff "$TMPDIR"/res/cross.gcc.bfd.stdout \
+  "$TMPDIR"/cross.gcc.bfd.stdout
+TARGET_ARCH="aarch64-linux-gnu" TARGET_LINKER="ld.gold" compiler_exes | sort >"$TMPDIR"/cross.gcc.gold.stdout
+diff "$TMPDIR"/res/cross.gcc.gold.stdout \
+  "$TMPDIR"/cross.gcc.gold.stdout
 
 test_banner "Default GCC Gold"
 bin_unlink "ld"
@@ -130,7 +200,6 @@ bin_unlink "ld"
 bin_unlink "g++"
 
 test_banner "Default Clang"
-bin_create "clang"
 bin_create "lld"
 bin_link_local "lld" "ld.lld"
 bin_create "ld.bfd"
