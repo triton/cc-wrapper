@@ -7,3 +7,15 @@
 [submodule "third_party/parallel-hashmap"]
 	path = third_party/parallel-hashmap
 	url = https://github.com/greg7mdp/parallel-hashmap
+[submodule "third_party/string-view-lite"]
+	path = third_party/string-view-lite
+	url = https://github.com/martinmoene/string-view-lite
+[submodule "third_party/optional-lite"]
+	path = third_party/optional-lite
+	url = https://github.com/martinmoene/optional-lite
+[submodule "third_party/span-lite"]
+	path = third_party/span-lite
+	url = https://github.com/martinmoene/span-lite
+[submodule "third_party/Catch2"]
+	path = third_party/Catch2
+	url = https://github.com/catchorg/Catch2

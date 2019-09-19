@@ -9,13 +9,20 @@
 /stamp-h1
 
 /cc-wrapper*.tar.*
+/src/bins.cpp
+/bins.txt
 
 Makefile
 Makefile.in
 
 /cc-wrapper
+/test/main
+/test/strings
+/test/util
 .libs
 .deps
 .dirstamp
 *.o
 *.a
+*.log
+*.trs

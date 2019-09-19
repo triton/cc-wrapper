@@ -36,20 +36,61 @@ else
 endif
 clean-local: code-coverage-clean
 
-export AM_CPPFLAGS = -Isrc -I$(srcdir)/src \
+tooldir = $(pkglibdir)/$(target_alias)/bin
+
+export AM_CPPFLAGS = -I. -Isrc -I$(srcdir)/src -DTOOLDIR="\"$(tooldir)\"" \
                      -I$(srcdir)/third_party/fmt/include \
                      -DFMT_HEADER_ONLY=1 -DFMT_STRING_ALIAS=1 \
+                     -I$(srcdir)/third_party/optional-lite/include \
                      -I$(srcdir)/third_party/parallel-hashmap \
                      -I$(srcdir)/third_party/re2 \
+                     -I$(srcdir)/third_party/span-lite/include \
+                     -I$(srcdir)/third_party/string-view-lite/include \
                      $(PTHREAD_CFLAGS) $(CODE_COVERAGE_CPPFLAGS)
 export AM_CFLAGS = $(PTHREAD_CFLAGS) $(CODE_COVERAGE_CFLAGS)
 export AM_CXXFLAGS = $(PTHREAD_CFLAGS) $(CODE_COVERAGE_CXXFLAGS)
 
-export COMMON_LIBS = $(PTHREAD_LIBS) $(CODE_COVERAGE_LIBS)
+export LDADD = $(PTHREAD_LIBS) $(CODE_COVERAGE_LIBS)
+
+CLEANFILES = src/bins.cpp
+.INTERMEDIATE: src/bins.cpp.tmp bins.txt.tmp
+src/bins.cpp bins.txt: $(srcdir)/scripts/generate-bins.sh
+	TARGET="$(target_alias)" TOOLDIRS="$(TOOLDIRS)" \
+		PREFERRED_COMPILER="$(PREFERRED_COMPILER)" \
+		PREFIX_MAP_FLAG_GCC="$(PREFIX_MAP_FLAG_GCC)" \
+		PREFIX_MAP_FLAG_CLANG="$(PREFIX_MAP_FLAG_CLANG)" \
+		$< src/bins.cpp.tmp bins.txt.tmp
+	mv src/bins.cpp.tmp src/bins.cpp
+	mv bins.txt.tmp bins.txt
+
+noinst_LIBRARIES = libccwrapper.a
+libccwrapper_a_SOURCES = src/gcc.cpp src/generic.cpp src/linker.cpp \
+                         src/main.cpp src/util.cpp
+libccwrapper_a_LIBADD = $(srcdir)/third_party/re2/obj/libre2.a
 
 bin_PROGRAMS = cc-wrapper
-cc_wrapper_SOURCES = src/main.cpp
-cc_wrapper_LDADD = $(COMMON_LIBS) $(srcdir)/third_party/re2/obj/libre2.a
+cc_wrapper_SOURCES = src/realmain.cpp
+nodist_cc_wrapper_SOURCES = src/bins.cpp
+cc_wrapper_LDADD = libccwrapper.a $(srcdir)/third_party/re2/obj/libre2.a
+
+TEST_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/third_party/Catch2/single_include
+check_PROGRAMS =
+TESTS = $(check_PROGRAMS)
+
+check_PROGRAMS += test/main
+test_main_SOURCES = test/main.cpp
+test_main_LDADD = libccwrapper.a $(srcdir)/third_party/re2/obj/libre2.a
+test_main_CPPFLAGS = $(TEST_CPPFLAGS)
+
+check_PROGRAMS += test/strings
+test_strings_SOURCES = test/strings.cpp
+test_strings_LDADD = libccwrapper.a $(srcdir)/third_party/re2/obj/libre2.a
+test_strings_CPPFLAGS = $(TEST_CPPFLAGS)
+
+check_PROGRAMS += test/util
+test_util_SOURCES = test/util.cpp
+test_util_LDADD = libccwrapper.a $(srcdir)/third_party/re2/obj/libre2.a
+test_util_CPPFLAGS = $(TEST_CPPFLAGS)
 
 $(srcdir)/third_party/re2/obj/libre2.a:
 	$(MAKE) -C $(srcdir)/third_party/re2 CXXFLAGS="$(CXXFLAGS)" obj/libre2.a
@@ -58,14 +99,28 @@ clean-local: clean-re
 clean-re:
 	$(MAKE) -C $(srcdir)/third_party/re2 clean
 
+install-exec-local: install-links
+.PHONY: install-links
+install-links: $(srcdir)/scripts/install-links.sh bins.txt
+	TARGET="$(target_alias)" TOOLDIR="$(tooldir)" BINDIR="$(bindir)" \
+		$< bins.txt
+
 BUILT_SOURCES = clang-format
 .PHONY: clang-format
 clang-format:
 	$(CLANG_FORMAT) -i $(filter-out $(MAINTAINERCLEANFILES),$(DIST_SOURCES)) $(HEADERS)
 
 EXTRA_DIST = LICENSE NOTICE README.md \
+             scripts/generate-bins.sh scripts/install-links.sh \
              third_party/fmt/include \
+             third_party/optional-lite/include \
              third_party/parallel-hashmap/parallel_hashmap \
              third_party/re2/Makefile \
              third_party/re2/re2 \
-             third_party/re2/util
+             third_party/re2/util \
+             third_party/span-lite/include \
+             third_party/string-view-lite/include
+
+noinst_HEADERS = src/bins.hpp src/fmt_sv.hpp src/gcc.hpp src/generic.hpp \
+                 src/linker.hpp src/main.hpp src/strings.hpp src/util.hpp \
+                 test/mock_exec.hpp
