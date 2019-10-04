@@ -5,6 +5,7 @@ AC_LANG([C++])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIRS([m4])
 AC_CONFIG_AUX_DIR([build-aux])
+AC_CANONICAL_TARGET
 AM_INIT_AUTOMAKE([nostdinc foreign subdir-objects -Wall -Wno-portability -Werror dist-xz tar-ustar])
 AM_MAINTAINER_MODE([enable])
 
@@ -181,9 +182,7 @@ AX_CODE_COVERAGE
 AS_IF([test "x$CODE_COVERAGE_ENABLED" = "xyes"], [
     AX_APPEND_COMPILE_FLAGS([-DHAVE_GCOV], [CODE_COVERAGE_CPPFLAGS])
 ])
-m4_ifdef([_AX_CODE_COVERAGE_RULES],
-    [AM_CONDITIONAL(AUTOCONF_CODE_COVERAGE_2019_01_06, [true])],
-    [AM_CONDITIONAL(AUTOCONF_CODE_COVERAGE_2019_01_06, [false])])
+m4_ifdef([_AX_CODE_COVERAGE_RULES], [AC_SUBST([CODE_COVERAGE_RULES], [])], [])
 AX_ADD_AM_MACRO_STATIC([])
 
 # Append -Werror after doing autoconf compiler checks

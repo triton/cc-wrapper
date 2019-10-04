@@ -29,11 +29,8 @@ CODE_COVERAGE_GENHTML_OPTIONS += --config-file $(abs_srcdir)/.lcovrc
 CODE_COVERAGE_GENHTML_OPTIONS += --prefix $(abs_srcdir) --prefix $(abs_builddir)
 export CODE_COVERAGE_GENHTML_OPTIONS
 
-if AUTOCONF_CODE_COVERAGE_2019_01_06
 include $(top_srcdir)/aminclude_static.am
-else
 @CODE_COVERAGE_RULES@
-endif
 clean-local: code-coverage-clean
 
 @VALGRIND_CHECK_RULES@
