@@ -35,9 +35,6 @@ AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory])
 AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [CFLAGS])
 AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [CXXFLAGS])
 
-# RE2 requires pthreads
-AX_PTHREAD
-
 AC_DEFUN([WRAPPER_WITH], [
     m4_define([escaped], m4_translit([$1], [-+.], [___]))
     m4_define([var], [with_]escaped())

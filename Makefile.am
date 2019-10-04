@@ -43,14 +43,13 @@ export AM_CPPFLAGS = -I. -Isrc -I$(srcdir)/src -DTOOLDIR="\"$(tooldir)\"" \
                      -DFMT_HEADER_ONLY=1 -DFMT_STRING_ALIAS=1 \
                      -I$(srcdir)/third_party/optional-lite/include \
                      -I$(srcdir)/third_party/parallel-hashmap \
-                     -I$(srcdir)/third_party/re2 \
                      -I$(srcdir)/third_party/span-lite/include \
                      -I$(srcdir)/third_party/string-view-lite/include \
-                     $(PTHREAD_CFLAGS) $(CODE_COVERAGE_CPPFLAGS)
-export AM_CFLAGS = $(PTHREAD_CFLAGS) $(CODE_COVERAGE_CFLAGS)
-export AM_CXXFLAGS = $(PTHREAD_CFLAGS) $(CODE_COVERAGE_CXXFLAGS)
+                     $(CODE_COVERAGE_CPPFLAGS)
+export AM_CFLAGS = $(CODE_COVERAGE_CFLAGS)
+export AM_CXXFLAGS = $(CODE_COVERAGE_CXXFLAGS)
 
-export LDADD = $(PTHREAD_LIBS) $(CODE_COVERAGE_LIBS)
+export LDADD = $(CODE_COVERAGE_LIBS)
 
 CLEANFILES = src/bins.cpp
 .INTERMEDIATE: src/bins.cpp.tmp bins.txt.tmp
@@ -67,12 +66,11 @@ noinst_LIBRARIES = libccwrapper.a
 libccwrapper_a_SOURCES = src/flags.cpp src/gcc.cpp src/generic.cpp \
                          src/linker.cpp src/main.cpp src/strings.cpp \
                          src/util.cpp
-libccwrapper_a_LIBADD = $(srcdir)/third_party/re2/obj/libre2.a
 
 bin_PROGRAMS = cc-wrapper
 cc_wrapper_SOURCES = src/realmain.cpp
 nodist_cc_wrapper_SOURCES = src/bins.cpp
-cc_wrapper_LDADD = libccwrapper.a $(srcdir)/third_party/re2/obj/libre2.a
+cc_wrapper_LDADD = libccwrapper.a
 
 TEST_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/third_party/Catch2/single_include
 check_PROGRAMS =
@@ -80,30 +78,23 @@ TESTS = $(check_PROGRAMS)
 
 check_PROGRAMS += test/flags
 test_flags_SOURCES = test/flags.cpp
-test_flags_LDADD = libccwrapper.a $(srcdir)/third_party/re2/obj/libre2.a
+test_flags_LDADD = libccwrapper.a
 test_flags_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/main
 test_main_SOURCES = test/main.cpp
-test_main_LDADD = libccwrapper.a $(srcdir)/third_party/re2/obj/libre2.a
+test_main_LDADD = libccwrapper.a
 test_main_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/strings
 test_strings_SOURCES = test/strings.cpp
-test_strings_LDADD = libccwrapper.a $(srcdir)/third_party/re2/obj/libre2.a
+test_strings_LDADD = libccwrapper.a
 test_strings_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/util
 test_util_SOURCES = test/util.cpp
-test_util_LDADD = libccwrapper.a $(srcdir)/third_party/re2/obj/libre2.a
+test_util_LDADD = libccwrapper.a
 test_util_CPPFLAGS = $(TEST_CPPFLAGS)
-
-$(srcdir)/third_party/re2/obj/libre2.a:
-	$(MAKE) -C $(srcdir)/third_party/re2 CXXFLAGS="$(CXXFLAGS)" obj/libre2.a
-clean-local: clean-re
-.PHONY: clean-re
-clean-re:
-	$(MAKE) -C $(srcdir)/third_party/re2 clean
 
 install-exec-local: install-links
 .PHONY: install-links
@@ -121,9 +112,6 @@ EXTRA_DIST = LICENSE NOTICE README.md \
              third_party/fmt/include \
              third_party/optional-lite/include \
              third_party/parallel-hashmap/parallel_hashmap \
-             third_party/re2/Makefile \
-             third_party/re2/re2 \
-             third_party/re2/util \
              third_party/span-lite/include \
              third_party/string-view-lite/include
 

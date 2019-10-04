@@ -1,6 +1,5 @@
 #include <nonstd/optional.hpp>
 #include <nonstd/string_view.hpp>
-#include <re2/re2.h>
 #include <vector>
 
 #include "config.h"
@@ -21,14 +20,6 @@ bool doHardenFlag(const char *flag) {
   // We harden by default
   static bool harden = util::getenv(CC_VAR("HARDEN")) != "";
   return harden;
-}
-
-template <typename... Args>
-bool fullMatch(nonstd::string_view data, nonstd::string_view regex,
-               Args &&... args) {
-  return RE2::FullMatch(re2::StringPiece(data.data(), data.size()),
-                        re2::StringPiece(regex.data(), regex.size()),
-                        std::forward<Args>(args)...);
 }
 
 static int ccMainInternal(const bins::Info &info,
@@ -98,8 +89,6 @@ static int ccMainInternal(const bins::Info &info,
     new_args.push_back("-flto");
   }
   for (const auto &arg : args) {
-    if (fortify_source && fullMatch(arg, "-[UD]_FORTIFY_SOURCE.*"))
-      continue;
     new_args.push_back(arg);
   }
   new_args.push_back("-B" TOOLDIR);
