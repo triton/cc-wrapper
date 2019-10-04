@@ -72,11 +72,11 @@ clang-format:
 	$(CLANG_FORMAT) -i $(filter-out $(MAINTAINERCLEANFILES),$(DIST_SOURCES)) $(HEADERS)
 
 noinst_LIBRARIES = libccwrapper.a
-libccwrapper_a_SOURCES = src/flags.cpp src/gcc.cpp src/gcc/args.cpp \
-                         src/gcc/harden.cpp src/gcc/harden_filter.cpp \
-                         src/gcc/path_filter.cpp src/generic.cpp \
-                         src/linker.cpp src/main.cpp src/path.cpp \
-                         src/strings.cpp src/util.cpp
+libccwrapper_a_SOURCES = src/env.cpp src/flags.cpp src/gcc.cpp \
+                         src/gcc/args.cpp src/gcc/harden.cpp \
+                         src/gcc/harden_filter.cpp src/gcc/path_filter.cpp \
+                         src/generic.cpp src/linker.cpp src/main.cpp \
+                         src/path.cpp src/strings.cpp src/util.cpp
 
 bin_PROGRAMS = cc-wrapper
 cc_wrapper_SOURCES = src/realmain.cpp
@@ -149,7 +149,7 @@ EXTRA_DIST = LICENSE NOTICE README.md \
              third_party/span-lite/include \
              third_party/string-view-lite/include
 
-noinst_HEADERS = src/bins.hpp src/flags.hpp src/fmt_sv.hpp src/gcc.hpp \
-                 src/gcc/args.hpp src/gcc/harden.hpp src/gcc/path.hpp \
-                 src/generic.hpp src/linker.hpp src/main.hpp src/path.hpp \
-                 src/strings.hpp src/util.hpp test/mock_exec.hpp
+noinst_HEADERS = src/bins.hpp src/env.hpp src/flags.hpp src/fmt_sv.hpp \
+                 src/gcc.hpp src/gcc/args.hpp src/gcc/harden.hpp \
+                 src/gcc/path.hpp src/generic.hpp src/linker.hpp src/main.hpp \
+                 src/path.hpp src/strings.hpp src/util.hpp test/mock_exec.hpp

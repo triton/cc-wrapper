@@ -3,15 +3,15 @@
 #include <parallel_hashmap/phmap.h>
 #include <vector>
 
+#include "env.hpp"
 #include "gcc/path.hpp"
-#include "util.hpp"
 
 namespace cc_wrapper {
 namespace gcc {
 namespace path {
 
 TEST_CASE("Filter Arguments", "[appendGood]") {
-  util::detail::enforcingPurity() = true;
+  env::detail::enforcingPurity() = true;
   const std::vector<nonstd::string_view> expected = {
       "-I/usr/include",
       "-I/build/include",

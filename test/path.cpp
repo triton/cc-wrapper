@@ -2,14 +2,14 @@
 #include <catch2/catch.hpp>
 #include <vector>
 
+#include "env.hpp"
 #include "path.hpp"
-#include "util.hpp"
 
 namespace cc_wrapper {
 namespace path {
 
 TEST_CASE("Impure", "[isValid]") {
-  util::detail::enforcingPurity() = false;
+  env::detail::enforcingPurity() = false;
   CHECK(isValid("./local/file", {}));
   CHECK(isValid("local", {}));
   CHECK(!isValid("/no-such-path", {}));
@@ -18,7 +18,7 @@ TEST_CASE("Impure", "[isValid]") {
 }
 
 TEST_CASE("Pure", "[isValid]") {
-  util::detail::enforcingPurity() = true;
+  env::detail::enforcingPurity() = true;
   CHECK(isValid("./local/file", {}));
   CHECK(isValid("local", {}));
   CHECK(!isValid("/no-such-path", {}));

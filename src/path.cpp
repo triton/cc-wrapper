@@ -1,6 +1,6 @@
 #include "path.hpp"
+#include "env.hpp"
 #include "strings.hpp"
-#include "util.hpp"
 
 namespace cc_wrapper {
 namespace path {
@@ -11,7 +11,7 @@ bool isValid(nonstd::string_view path,
     return true;
   if (strings::startsWith(path, "/no-such-path"))
     return false;
-  if (!util::isEnforcingPurity())
+  if (!env::isEnforcingPurity())
     return true;
   for (const auto &prefix : pure_prefixes)
     if (strings::startsWith(path, prefix))

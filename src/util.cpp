@@ -4,7 +4,8 @@
 #include <memory>
 #include <unistd.h>
 
-#include "config.h"
+#include "env.hpp"
+#include "flags.hpp"
 #include "strings.hpp"
 #include "util.hpp"
 
@@ -25,11 +26,6 @@ nonstd::string_view removeTrailing(nonstd::string_view path) {
   while (path.size() > 1 && path[path.size() - 1] == '/')
     path.remove_suffix(1);
   return path;
-}
-
-bool &enforcingPurity() {
-  static bool val = getenv(VAR_PREFIX "_ENFORCE_PURITY") == "1";
-  return val;
 }
 
 }  // namespace detail
@@ -62,7 +58,7 @@ nonstd::string_view basename(nonstd::string_view path) {
 }
 
 static void execv(const char *path, char *argv[]) {
-  if (isDebug()) {
+  if (env::isDebug()) {
     fmt::print(stderr, "cc-wrapper: Exec arguments to `{}`:\n", path);
     for (char **arg = argv; *arg != nullptr; ++arg)
       fmt::print(stderr, "cc-wrapper:   {}\n", *arg);
@@ -93,13 +89,6 @@ void exec(nonstd::string_view bin,
   }
   execv(str.get(), argv.get());
 }
-
-bool isDebug() {
-  static bool val = getenv(VAR_PREFIX "_DEBUG") == "1";
-  return val;
-}
-
-bool isEnforcingPurity() { return detail::enforcingPurity(); }
 
 }  // namespace util
 }  // namespace cc_wrapper

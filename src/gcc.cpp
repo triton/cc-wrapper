@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "config.h"
+#include "env.hpp"
 #include "flags.hpp"
 #include "gcc.hpp"
 #include "gcc/args.hpp"
@@ -60,29 +61,11 @@ static int ccMainInternal(const bins::Info &info,
   std::vector<nonstd::string_view> final_args;
   if (state.linking)
     final_args.push_back("-Wl,-g");
-  if (util::isEnforcingPurity())
+  if (env::isEnforcingPurity())
     final_args.push_back("-nostdinc");
   harden::appendFlags(final_args, harden_env, state);
   phmap::flat_hash_set<nonstd::string_view> saved_includes;
-  {
-    std::vector<nonstd::string_view> pure_prefixes;
-    flags::appendFromString(pure_prefixes, PURE_PREFIXES);
-    nonstd::string_view pure_vars = PURE_PREFIX_ENV_VARS
-#ifdef BUILD_DIR_ENV_VAR
-        " " BUILD_DIR_ENV_VAR
-#endif
-        ;
-    while (!pure_vars.empty()) {
-      auto var = strings::split(pure_vars, ' ');
-      if (!var.empty()) {
-        auto val = util::getenv(var);
-        if (val)
-          pure_prefixes.push_back(*val);
-      }
-    }
-    pure_prefixes.push_back(util::getenv("TMPDIR").value_or("/tmp"));
-    path::appendGood(final_args, new_args, pure_prefixes, saved_includes);
-  }
+  path::appendGood(final_args, new_args, env::purePrefixes(), saved_includes);
 #ifdef BUILD_DIR_ENV_VAR
   {
     auto val = util::getenv(BUILD_DIR_ENV_VAR);

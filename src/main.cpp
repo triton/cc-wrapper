@@ -5,6 +5,7 @@
 #include <nonstd/string_view.hpp>
 
 #include "bins.hpp"
+#include "env.hpp"
 #include "fmt_sv.hpp"
 #include "gcc.hpp"
 #include "generic.hpp"
@@ -41,7 +42,7 @@ int main(int argc, char *argv[]) {
       args[iargs++] = argv[i];
     nonstd::span<const nonstd::string_view> args_view(args.get(), nargs);
 
-    if (util::isDebug()) {
+    if (env::isDebug()) {
       fmt::print(stderr, "cc-wrapper: Original arguments to `{}`:\n", bin_name);
       for (const auto &arg : args_view)
         fmt::print(stderr, "cc-wrapper:   {}\n", arg);

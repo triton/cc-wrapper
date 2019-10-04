@@ -9,7 +9,6 @@ namespace detail {
 
 char *append(char *out, nonstd::string_view str);
 nonstd::string_view removeTrailing(nonstd::string_view path);
-bool &enforcingPurity();
 
 }  // namespace detail
 
@@ -19,9 +18,6 @@ nonstd::string_view basename(nonstd::string_view path);
 
 void exec(nonstd::string_view bin,
           nonstd::span<const nonstd::string_view> args);
-
-bool isDebug();
-bool isEnforcingPurity();
 
 }  // namespace util
 }  // namespace cc_wrapper
