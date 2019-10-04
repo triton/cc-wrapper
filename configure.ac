@@ -6,6 +6,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIRS([m4])
 AC_CONFIG_AUX_DIR([build-aux])
 AM_INIT_AUTOMAKE([nostdinc foreign subdir-objects -Wall -Wno-portability -Werror dist-xz tar-ustar])
+AM_MAINTAINER_MODE([enable])
 
 # Make sure the default CFLAGS of `-O2 -g` don't override CODE_COVERAGE_CFLAGS
 # It is important that this comes before AC_PROG_C{C,XX}, as we are attempting
@@ -41,6 +42,13 @@ AX_PTHREAD
 # explicitly or not at all
 AC_ARG_ENABLE([tests], AC_HELP_STRING([--disable-tests],
                                       [Build test cases]))
+
+AS_IF([test "x$enable_maintainer_mode" != "xno"], [
+    AC_CHECK_PROGS([CLANG_FORMAT], [clang-format], [@true])
+], [
+    CLANG_FORMAT=@true
+])
+AC_SUBST([CLANG_FORMAT], [$CLANG_FORMAT])
 
 # Check for valgrind
 AS_IF([test "x$enable_tests" = "xno"], [enable_valgrind=no])

@@ -58,8 +58,14 @@ clean-local: clean-re
 clean-re:
 	$(MAKE) -C $(srcdir)/third_party/re2 clean
 
-noinst_HEADERS = third_party/fmt/include \
-                 third_party/parallel-hashmap/parallel_hashmap \
-                 third_party/re2/re2 \
-                 third_party/re2/util
-EXTRA_DIST = LICENSE NOTICE README.md third_party/re2/Makefile
+BUILT_SOURCES = clang-format
+.PHONY: clang-format
+clang-format:
+	$(CLANG_FORMAT) -i $(filter-out $(MAINTAINERCLEANFILES),$(DIST_SOURCES)) $(HEADERS)
+
+EXTRA_DIST = LICENSE NOTICE README.md \
+             third_party/fmt/include \
+             third_party/parallel-hashmap/parallel_hashmap \
+             third_party/re2/Makefile \
+             third_party/re2/re2 \
+             third_party/re2/util
