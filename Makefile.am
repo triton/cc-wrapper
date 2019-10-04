@@ -36,6 +36,8 @@ else
 endif
 clean-local: code-coverage-clean
 
+@VALGRIND_CHECK_RULES@
+
 tooldir = $(pkglibdir)/$(target_alias)/bin
 
 export AM_CPPFLAGS = -I. -Isrc -I$(srcdir)/src -DTOOLDIR="\"$(tooldir)\"" \
