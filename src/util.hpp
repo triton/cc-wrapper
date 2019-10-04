@@ -12,7 +12,7 @@ nonstd::string_view removeTrailing(nonstd::string_view path);
 
 }  // namespace detail
 
-nonstd::optional<nonstd::string_view> getenv(const char *var);
+nonstd::optional<nonstd::string_view> getenv(nonstd::string_view var);
 nonstd::string_view dirname(nonstd::string_view path);
 nonstd::string_view basename(nonstd::string_view path);
 

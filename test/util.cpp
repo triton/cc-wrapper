@@ -46,6 +46,12 @@ TEST_CASE("Valid env", "[getenv]") {
   setenv("TESTVAR", "test1", 1);
   CHECK(::getenv("TESTVAR") != nullptr);
   CHECK(getenv("TESTVAR") == "test1");
+  unsetenv("TESTVAR1");
+  CHECK(::getenv("TESTVAR1") == nullptr);
+  CHECK(!getenv("TESTVAR1"));
+  unsetenv("TESTVA");
+  CHECK(::getenv("TESTVA") == nullptr);
+  CHECK(!getenv("TESTVA"));
 }
 
 TEST_CASE("Empty env", "[getenv]") {

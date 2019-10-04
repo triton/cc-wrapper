@@ -5,7 +5,10 @@
 #include <unistd.h>
 
 #include "config.h"
+#include "strings.hpp"
 #include "util.hpp"
+
+extern char **environ;
 
 namespace cc_wrapper {
 namespace util {
@@ -26,11 +29,13 @@ nonstd::string_view removeTrailing(nonstd::string_view path) {
 
 }  // namespace detail
 
-nonstd::optional<nonstd::string_view> getenv(const char *var) {
-  const char *env = std::getenv(var);
-  if (env == nullptr)
-    return nonstd::nullopt;
-  return env;
+nonstd::optional<nonstd::string_view> getenv(nonstd::string_view var) {
+  for (const char *const *env = environ; *env != nullptr; env++) {
+    nonstd::string_view val = *env;
+    if (var == strings::split(val, '='))
+      return val;
+  }
+  return nonstd::nullopt;
 }
 
 nonstd::string_view dirname(nonstd::string_view path) {

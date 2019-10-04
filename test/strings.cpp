@@ -47,5 +47,27 @@ TEST_CASE("Strings cat", "[cat]") {
   CHECK(cat(s2, std::string(sv2), "gone") == "thathiworldgone");
 }
 
+TEST_CASE("Split empty", "[split]") {
+  nonstd::string_view s = "";
+  CHECK(split(s, ' ') == "");
+  CHECK(s.empty());
+}
+
+TEST_CASE("Split nosep", "[split]") {
+  nonstd::string_view s = "abcd";
+  CHECK(split(s, ' ') == "abcd");
+  CHECK(s.empty());
+}
+
+TEST_CASE("Split repeated", "[split]") {
+  nonstd::string_view s = "abcd  efgh";
+  CHECK(split(s, ' ') == "abcd");
+  CHECK(s == " efgh");
+  CHECK(split(s, ' ') == "");
+  CHECK(s == "efgh");
+  CHECK(split(s, ' ') == "efgh");
+  CHECK(s.empty());
+}
+
 }  // namespace strings
 }  // namespace cc_wrapper

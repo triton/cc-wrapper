@@ -47,5 +47,7 @@ inline std::string cat(std::string &&in, const Strs &... strs) {
   return ret;
 }
 
+nonstd::string_view split(nonstd::string_view &str, char sep);
+
 }  // namespace strings
 }  // namespace cc_wrapper

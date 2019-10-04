@@ -65,7 +65,7 @@ src/bins.cpp bins.txt: $(srcdir)/scripts/generate-bins.sh
 
 noinst_LIBRARIES = libccwrapper.a
 libccwrapper_a_SOURCES = src/gcc.cpp src/generic.cpp src/linker.cpp \
-                         src/main.cpp src/util.cpp
+                         src/main.cpp src/strings.cpp src/util.cpp
 libccwrapper_a_LIBADD = $(srcdir)/third_party/re2/obj/libre2.a
 
 bin_PROGRAMS = cc-wrapper
