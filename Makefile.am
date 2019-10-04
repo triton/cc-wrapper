@@ -64,8 +64,9 @@ src/bins.cpp bins.txt: $(srcdir)/scripts/generate-bins.sh
 	mv bins.txt.tmp bins.txt
 
 noinst_LIBRARIES = libccwrapper.a
-libccwrapper_a_SOURCES = src/gcc.cpp src/generic.cpp src/linker.cpp \
-                         src/main.cpp src/strings.cpp src/util.cpp
+libccwrapper_a_SOURCES = src/flags.cpp src/gcc.cpp src/generic.cpp \
+                         src/linker.cpp src/main.cpp src/strings.cpp \
+                         src/util.cpp
 libccwrapper_a_LIBADD = $(srcdir)/third_party/re2/obj/libre2.a
 
 bin_PROGRAMS = cc-wrapper
@@ -76,6 +77,11 @@ cc_wrapper_LDADD = libccwrapper.a $(srcdir)/third_party/re2/obj/libre2.a
 TEST_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/third_party/Catch2/single_include
 check_PROGRAMS =
 TESTS = $(check_PROGRAMS)
+
+check_PROGRAMS += test/flags
+test_flags_SOURCES = test/flags.cpp
+test_flags_LDADD = libccwrapper.a $(srcdir)/third_party/re2/obj/libre2.a
+test_flags_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/main
 test_main_SOURCES = test/main.cpp
@@ -121,6 +127,6 @@ EXTRA_DIST = LICENSE NOTICE README.md \
              third_party/span-lite/include \
              third_party/string-view-lite/include
 
-noinst_HEADERS = src/bins.hpp src/fmt_sv.hpp src/gcc.hpp src/generic.hpp \
-                 src/linker.hpp src/main.hpp src/strings.hpp src/util.hpp \
-                 test/mock_exec.hpp
+noinst_HEADERS = src/bins.hpp src/flags.hpp src/fmt_sv.hpp src/gcc.hpp \
+                 src/generic.hpp src/linker.hpp src/main.hpp src/strings.hpp \
+                 src/util.hpp test/mock_exec.hpp

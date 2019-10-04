@@ -16,6 +16,7 @@ Makefile
 Makefile.in
 
 /cc-wrapper
+/test/flags
 /test/main
 /test/strings
 /test/util
