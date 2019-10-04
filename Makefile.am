@@ -62,6 +62,14 @@ src/bins.cpp bins.txt: $(srcdir)/scripts/generate-bins.sh
 	mv src/bins.cpp.tmp src/bins.cpp
 	mv bins.txt.tmp bins.txt
 
+%.cpp: %.cpp.rl
+	$(RAGEL) -G2 -C -o $@ $<
+
+BUILT_SOURCES = clang-format
+.PHONY: clang-format
+clang-format:
+	$(CLANG_FORMAT) -i $(filter-out $(MAINTAINERCLEANFILES),$(DIST_SOURCES)) $(HEADERS)
+
 noinst_LIBRARIES = libccwrapper.a
 libccwrapper_a_SOURCES = src/flags.cpp src/gcc.cpp src/generic.cpp \
                          src/linker.cpp src/main.cpp src/strings.cpp \
@@ -102,10 +110,6 @@ install-links: $(srcdir)/scripts/install-links.sh bins.txt
 	TARGET="$(target_alias)" TOOLDIR="$(tooldir)" BINDIR="$(bindir)" \
 		$< bins.txt
 
-BUILT_SOURCES = clang-format
-.PHONY: clang-format
-clang-format:
-	$(CLANG_FORMAT) -i $(filter-out $(MAINTAINERCLEANFILES),$(DIST_SOURCES)) $(HEADERS)
 
 EXTRA_DIST = LICENSE NOTICE README.md \
              scripts/generate-bins.sh scripts/install-links.sh \

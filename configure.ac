@@ -117,6 +117,12 @@ AS_IF([test "x$with_var_prefix" = "xno"], [
 ])
 AC_DEFINE_UNQUOTED([VAR_PREFIX], ["$with_var_prefix"], [VAR Prefix])
 
+AC_CHECK_PROGS([RAGEL], [ragel])
+AS_IF([test "x$enable_maintainer_mode" = "xyes" && test "x$RAGEL" = "x"], [
+    AC_MSG_FAILURE("Ragel is required but could not be found")
+])
+AC_SUBST([RAGEL], [$RAGEL])
+
 AS_IF([test "x$enable_maintainer_mode" != "xno"], [
     AC_CHECK_PROGS([CLANG_FORMAT], [clang-format], [@true])
 ], [
