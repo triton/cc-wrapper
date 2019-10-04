@@ -74,9 +74,9 @@ clang-format:
 noinst_LIBRARIES = libccwrapper.a
 libccwrapper_a_SOURCES = src/flags.cpp src/gcc.cpp src/gcc/args.cpp \
                          src/gcc/harden.cpp src/gcc/harden_filter.cpp \
-                         src/gcc/path.cpp src/gcc/path_filter.cpp \
-                         src/generic.cpp src/linker.cpp \
-                         src/main.cpp src/strings.cpp src/util.cpp
+                         src/gcc/path_filter.cpp src/generic.cpp \
+                         src/linker.cpp src/main.cpp src/path.cpp \
+                         src/strings.cpp src/util.cpp
 
 bin_PROGRAMS = cc-wrapper
 cc_wrapper_SOURCES = src/realmain.cpp
@@ -117,6 +117,11 @@ test_linker_SOURCES = test/linker.cpp
 test_linker_LDADD = libccwrapper.a
 test_linker_CPPFLAGS = $(TEST_CPPFLAGS)
 
+check_PROGRAMS += test/path
+test_path_SOURCES = test/path.cpp
+test_path_LDADD = libccwrapper.a
+test_path_CPPFLAGS = $(TEST_CPPFLAGS)
+
 check_PROGRAMS += test/strings
 test_strings_SOURCES = test/strings.cpp
 test_strings_LDADD = libccwrapper.a
@@ -146,5 +151,5 @@ EXTRA_DIST = LICENSE NOTICE README.md \
 
 noinst_HEADERS = src/bins.hpp src/flags.hpp src/fmt_sv.hpp src/gcc.hpp \
                  src/gcc/args.hpp src/gcc/harden.hpp src/gcc/path.hpp \
-                 src/generic.hpp src/linker.hpp src/main.hpp src/strings.hpp \
-                 src/util.hpp test/mock_exec.hpp
+                 src/generic.hpp src/linker.hpp src/main.hpp src/path.hpp \
+                 src/strings.hpp src/util.hpp test/mock_exec.hpp

@@ -10,28 +10,6 @@ namespace cc_wrapper {
 namespace gcc {
 namespace path {
 
-TEST_CASE("Impure", "[isValid]") {
-  util::detail::enforcingPurity() = false;
-  CHECK(isValid("./local/file", {}));
-  CHECK(isValid("local", {}));
-  CHECK(!isValid("/no-such-path", {}));
-  CHECK(!isValid("/no-such-path/file", {}));
-  CHECK(isValid("/usr/bin/bash", {}));
-}
-
-TEST_CASE("Pure", "[isValid]") {
-  util::detail::enforcingPurity() = true;
-  CHECK(isValid("./local/file", {}));
-  CHECK(isValid("local", {}));
-  CHECK(!isValid("/no-such-path", {}));
-  CHECK(!isValid("/no-such-path/file", {}));
-  CHECK(!isValid("/usr/bin/bash", {}));
-  const std::vector<nonstd::string_view> prefixes = {"/usr", "/build"};
-  CHECK(isValid("/usr/bin/bash", prefixes));
-  CHECK(isValid("/build/bash", prefixes));
-  CHECK(!isValid("/tmp/bash", prefixes));
-}
-
 TEST_CASE("Filter Arguments", "[appendGood]") {
   util::detail::enforcingPurity() = true;
   const std::vector<nonstd::string_view> expected = {

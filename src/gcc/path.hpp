@@ -8,8 +8,6 @@ namespace cc_wrapper {
 namespace gcc {
 namespace path {
 
-bool isValid(nonstd::string_view path,
-             nonstd::span<const nonstd::string_view> pure_prefixes);
 void appendGood(std::vector<nonstd::string_view> &new_args,
                 nonstd::span<const nonstd::string_view> old_args,
                 nonstd::span<const nonstd::string_view> pure_prefixes,

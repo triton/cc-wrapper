@@ -2,7 +2,8 @@
 #include <nonstd/string_view.hpp>
 #include <parallel_hashmap/phmap.h>
 
-#include "gcc/path.hpp"
+#include "path.hpp"
+#include "../path.hpp"
 
 namespace cc_wrapper {
 namespace gcc {
@@ -29,7 +30,7 @@ void appendGood(std::vector<nonstd::string_view> &new_args,
   bool is_include;
   for (const auto &arg : old_args) {
     if (open_flag) {
-      if (isValid(arg, pure_prefixes)) {
+      if (cc_wrapper::path::isValid(arg, pure_prefixes)) {
         new_args.push_back(*open_flag);
         new_args.push_back(arg);
         if (is_include)
@@ -56,7 +57,7 @@ void appendGood(std::vector<nonstd::string_view> &new_args,
       continue;
     }
     nonstd::string_view path(p, pe - p);
-    if (isValid(path, pure_prefixes)) {
+    if (cc_wrapper::path::isValid(path, pure_prefixes)) {
       new_args.push_back(arg);
       if (is_include)
         saved_includes.insert(path);

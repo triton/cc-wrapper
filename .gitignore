@@ -25,6 +25,7 @@ Makefile.in
 /test/gcc/path
 /test/main
 /test/linker
+/test/path
 /test/strings
 /test/util
 .libs

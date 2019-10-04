@@ -1,9 +1,8 @@
-#include "gcc/path.hpp"
+#include "path.hpp"
 #include "strings.hpp"
 #include "util.hpp"
 
 namespace cc_wrapper {
-namespace gcc {
 namespace path {
 
 bool isValid(nonstd::string_view path,
@@ -21,5 +20,4 @@ bool isValid(nonstd::string_view path,
 }
 
 }  // namespace path
-}  // namespace gcc
 }  // namespace cc_wrapper
