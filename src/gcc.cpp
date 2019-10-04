@@ -41,15 +41,21 @@ static int ccMainInternal(const bins::Info &info,
     if (harden::isValidFlag(arg, harden_env))
       new_args.push_back(arg);
   new_args.push_back("-B" TOOLDIR);
+  flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS");
+  if (cxx)
+    flags::appendFromVar(new_args, VAR_PREFIX "_CXXFLAGS");
   if (state.stdinc) {
     flags::appendFromString(new_args, WRAPPER_CFLAGS);
     if (cxx && state.stdincxx)
       flags::appendFromString(new_args, WRAPPER_CXXFLAGS);
   }
   if (state.linking) {
+    flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS_LINK");
     flags::appendFromString(new_args, WRAPPER_CFLAGS_LINK);
-    if (cxx)
+    if (cxx) {
+      flags::appendFromVar(new_args, VAR_PREFIX "_CXXFLAGS_LINK");
       flags::appendFromString(new_args, WRAPPER_CXXFLAGS_LINK);
+    }
   }
 
   return generic::main(info, new_args);
