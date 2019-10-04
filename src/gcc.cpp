@@ -1,5 +1,6 @@
 #include <nonstd/optional.hpp>
 #include <nonstd/string_view.hpp>
+#include <parallel_hashmap/phmap.h>
 #include <vector>
 
 #include "config.h"
@@ -62,6 +63,7 @@ static int ccMainInternal(const bins::Info &info,
   if (util::isEnforcingPurity())
     final_args.push_back("-nostdinc");
   harden::appendFlags(final_args, harden_env, state);
+  phmap::flat_hash_set<nonstd::string_view> saved_includes;
   {
     std::vector<nonstd::string_view> pure_prefixes;
     flags::appendFromString(pure_prefixes, PURE_PREFIXES);
@@ -79,8 +81,22 @@ static int ccMainInternal(const bins::Info &info,
       }
     }
     pure_prefixes.push_back(util::getenv("TMPDIR").value_or("/tmp"));
-    path::appendGood(final_args, new_args, pure_prefixes);
+    path::appendGood(final_args, new_args, pure_prefixes, saved_includes);
   }
+#ifdef BUILD_DIR_ENV_VAR
+  {
+    auto val = util::getenv(BUILD_DIR_ENV_VAR);
+    if (val)
+      saved_includes.insert(*val);
+  }
+#endif
+  std::vector<std::string> generated_flags;
+  if (info.prefix_map_flag)
+    for (const auto &include : saved_includes)
+      generated_flags.push_back(strings::cat("-f", *info.prefix_map_flag, "=",
+                                             include, "=/no-such-path"));
+  for (const auto &flag : generated_flags)
+    final_args.push_back(flag);
 
   return generic::main(info, final_args);
 }

@@ -1,5 +1,6 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
+#include <parallel_hashmap/phmap.h>
 #include <vector>
 
 #include "gcc/path.hpp"
@@ -45,6 +46,11 @@ TEST_CASE("Filter Arguments", "[appendGood]") {
       "/usr/zoink",
       "-isystemm/usr/include",
   };
+  phmap::flat_hash_set<nonstd::string_view> expected_saved_includes = {
+      "/build/include",
+      "/build/include2",
+      "m/usr/include",
+  };
   const std::vector<nonstd::string_view> prefixes = {
       "/build",
   };
@@ -74,8 +80,10 @@ TEST_CASE("Filter Arguments", "[appendGood]") {
   std::vector<nonstd::string_view> output = {
       "-I/usr/include",
   };
-  appendGood(output, input, prefixes);
+  phmap::flat_hash_set<nonstd::string_view> saved_includes;
+  appendGood(output, input, prefixes, saved_includes);
   CHECK(expected == output);
+  CHECK(expected_saved_includes == saved_includes);
 }
 
 }  // namespace path
