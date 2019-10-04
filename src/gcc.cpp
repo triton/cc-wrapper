@@ -19,14 +19,21 @@
 namespace cc_wrapper {
 namespace gcc {
 
-bool doHardenFlag(const char *flag) {
-  nonstd::optional<nonstd::string_view> val = util::getenv(flag);
-  if (val)
-    return *val == "1";
-  // We harden by default
+namespace detail {
+
+bool &isHardening() {
   static bool harden = util::getenv(CC_VAR("HARDEN")) != "";
   return harden;
 }
+
+bool doHardenFlag(nonstd::string_view flag) {
+  nonstd::optional<nonstd::string_view> val = util::getenv(flag);
+  if (val)
+    return *val == "1";
+  return isHardening();
+}
+
+}  // namespace detail
 
 static int ccMainInternal(const bins::Info &info,
                           nonstd::span<const nonstd::string_view> args,
