@@ -6,6 +6,7 @@
 #include "flags.hpp"
 #include "gcc.hpp"
 #include "gcc/args.hpp"
+#include "gcc/harden.hpp"
 #include "generic.hpp"
 #include "util.hpp"
 
@@ -27,6 +28,7 @@ static int ccMainInternal(const bins::Info &info,
                           nonstd::span<const nonstd::string_view> args,
                           bool cxx) {
   const auto state = args::parseState(args);
+  const auto harden_env = harden::getEnv();
 
   // Generate an unsanitized args list
   std::vector<nonstd::string_view> new_args;
@@ -34,36 +36,10 @@ static int ccMainInternal(const bins::Info &info,
     new_args.push_back("-Wl,-g");
   if (util::isEnforcingPurity())
     new_args.push_back("-nostdinc");
-  const bool position_independent = doHardenFlag(CC_VAR("PI"));
-  if (position_independent) {
-    new_args.push_back("-fPIC");
-    if (state.linking && !state.produceShlib)
-      new_args.push_back("-pie");
-  }
-  const bool no_strict_overflow = doHardenFlag(CC_VAR("NO_STRICT_OVERFLOW"));
-  if (no_strict_overflow) {
-    new_args.push_back("-fno-strict-overflow");
-  }
-  const bool fortify_source = doHardenFlag(CC_VAR("FORTIFY_SOURCE"));
-  if (fortify_source) {
-    new_args.push_back("-D_FORTIFY_SOURCE=2");
-  }
-  const bool stack_protector = doHardenFlag(CC_VAR("STACK_PROTECTOR"));
-  if (stack_protector) {
-    new_args.push_back("-fstack-protector-strong");
-  }
-  // TODO: -fstack-clash-protection
-  const bool optimize = doHardenFlag(CC_VAR("OPTIMIZE"));
-  if (optimize) {
-    new_args.push_back("-O2");
-  }
-  const bool lto = doHardenFlag(CC_VAR("LTO"));
-  if (lto) {
-    new_args.push_back("-flto");
-  }
-  for (const auto &arg : args) {
-    new_args.push_back(arg);
-  }
+  harden::appendFlags(new_args, harden_env, state);
+  for (const auto &arg : args)
+    if (harden::isValidFlag(arg, harden_env))
+      new_args.push_back(arg);
   new_args.push_back("-B" TOOLDIR);
   if (state.stdinc) {
     flags::appendFromString(new_args, WRAPPER_CFLAGS);

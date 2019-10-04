@@ -11,6 +11,7 @@
 /cc-wrapper*.tar.*
 /src/bins.cpp
 /src/gcc/args.cpp
+/src/gcc/harden_filter.cpp
 /bins.txt
 
 Makefile
@@ -19,6 +20,7 @@ Makefile.in
 /cc-wrapper
 /test/flags
 /test/gcc/args
+/test/gcc/harden
 /test/main
 /test/strings
 /test/util

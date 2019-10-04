@@ -62,7 +62,7 @@ src/bins.cpp bins.txt: $(srcdir)/scripts/generate-bins.sh
 	mv src/bins.cpp.tmp src/bins.cpp
 	mv bins.txt.tmp bins.txt
 
-MAINTAINERCLEANFILES = src/gcc/args.cpp
+MAINTAINERCLEANFILES = src/gcc/args.cpp src/gcc/harden_filter.cpp
 %.cpp: %.cpp.rl
 	$(RAGEL) -G2 -C -o $@ $<
 
@@ -72,11 +72,11 @@ clang-format:
 	$(CLANG_FORMAT) -i $(filter-out $(MAINTAINERCLEANFILES),$(DIST_SOURCES)) $(HEADERS)
 
 noinst_LIBRARIES = libccwrapper.a libccwrapper_gen.a
-libccwrapper_a_SOURCES = src/flags.cpp src/gcc.cpp src/generic.cpp \
-                         src/linker.cpp src/main.cpp src/strings.cpp \
-                         src/util.cpp
+libccwrapper_a_SOURCES = src/flags.cpp src/gcc.cpp src/gcc/harden.cpp \
+                         src/generic.cpp src/linker.cpp src/main.cpp \
+                         src/strings.cpp src/util.cpp
 libccwrapper_a_LIBADD = libccwrapper_gen.a
-libccwrapper_gen_a_SOURCES = src/gcc/args.cpp
+libccwrapper_gen_a_SOURCES = src/gcc/args.cpp src/gcc/harden_filter.cpp
 libccwrapper_gen_a_CPPFLAGS = $(AM_CPPFLAGS) -Wno-implicit-fallthrough
 
 bin_PROGRAMS = cc-wrapper
@@ -97,6 +97,11 @@ check_PROGRAMS += test/gcc/args
 test_gcc_args_SOURCES = test/gcc/args.cpp
 test_gcc_args_LDADD = libccwrapper.a libccwrapper_gen.a
 test_gcc_args_CPPFLAGS = $(TEST_CPPFLAGS)
+
+check_PROGRAMS += test/gcc/harden
+test_gcc_harden_SOURCES = test/gcc/harden.cpp
+test_gcc_harden_LDADD = libccwrapper.a libccwrapper_gen.a
+test_gcc_harden_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/main
 test_main_SOURCES = test/main.cpp
@@ -121,7 +126,7 @@ install-links: $(srcdir)/scripts/install-links.sh bins.txt
 
 
 EXTRA_DIST = LICENSE NOTICE README.md \
-             src/gcc/args.cpp.rl \
+             src/gcc/args.cpp.rl src/gcc/harden_filter.cpp.rl \
              scripts/generate-bins.sh scripts/install-links.sh \
              third_party/fmt/include \
              third_party/optional-lite/include \
@@ -130,5 +135,6 @@ EXTRA_DIST = LICENSE NOTICE README.md \
              third_party/string-view-lite/include
 
 noinst_HEADERS = src/bins.hpp src/flags.hpp src/fmt_sv.hpp src/gcc.hpp \
-                 src/gcc/args.hpp src/generic.hpp src/linker.hpp src/main.hpp \
-                 src/strings.hpp src/util.hpp test/mock_exec.hpp
+                 src/gcc/args.hpp src/gcc/harden.hpp src/generic.hpp \
+                 src/linker.hpp src/main.hpp src/strings.hpp src/util.hpp \
+                 test/mock_exec.hpp
