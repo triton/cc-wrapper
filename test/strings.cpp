@@ -47,6 +47,12 @@ TEST_CASE("Strings cat", "[cat]") {
   CHECK(cat(s2, std::string(sv2), "gone") == "thathiworldgone");
 }
 
+TEST_CASE("Strings prefix", "[startsWith]") {
+  CHECK(startsWith("abcd", "abc"));
+  CHECK(startsWith("abc", "abc"));
+  CHECK(!startsWith("ab", "abc"));
+}
+
 TEST_CASE("Split empty", "[split]") {
   nonstd::string_view s = "";
   CHECK(split(s, ' ') == "");

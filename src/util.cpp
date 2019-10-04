@@ -27,6 +27,11 @@ nonstd::string_view removeTrailing(nonstd::string_view path) {
   return path;
 }
 
+bool &enforcingPurity() {
+  static bool val = getenv(VAR_PREFIX "_ENFORCE_PURITY") == "1";
+  return val;
+}
+
 }  // namespace detail
 
 nonstd::optional<nonstd::string_view> getenv(nonstd::string_view var) {
@@ -94,10 +99,7 @@ bool isDebug() {
   return val;
 }
 
-bool isEnforcingPurity() {
-  static bool val = getenv(VAR_PREFIX "_ENFORCE_PURITY") == "1";
-  return val;
-}
+bool isEnforcingPurity() { return detail::enforcingPurity(); }
 
 }  // namespace util
 }  // namespace cc_wrapper

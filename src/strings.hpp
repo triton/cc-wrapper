@@ -47,6 +47,10 @@ inline std::string cat(std::string &&in, const Strs &... strs) {
   return ret;
 }
 
+inline bool startsWith(nonstd::string_view str, nonstd::string_view prefix) {
+  return str.substr(0, prefix.size()) == prefix;
+}
+
 nonstd::string_view split(nonstd::string_view &str, char sep);
 
 }  // namespace strings

@@ -117,6 +117,37 @@ AS_IF([test "x$with_var_prefix" = "xno"], [
 ])
 AC_DEFINE_UNQUOTED([VAR_PREFIX], ["$with_var_prefix"], [VAR Prefix])
 
+AC_ARG_WITH([build-dir-env-var], AC_HELP_STRING([--with-build-dir-env-var=<var>], [Environment variable containing the top level build directory]))
+AS_IF([test "x$with_build_dir_env_var" = "xyes"], [
+    AC_MSG_FAILURE("Build dir env var needs to be specified")
+])
+AS_IF([test "x$with_build_dir_env_var" = "xno"], [
+    with_build_dir_env_var=
+])
+AS_IF([test "x$with_build_dir_env_var" != "x"], [
+    AC_DEFINE_UNQUOTED([BUILD_DIR_ENV_VAR], ["$with_build_dir_env_var"], [Build dir ENV var])
+])
+
+AC_ARG_WITH([pure-prefixes], AC_HELP_STRING([--with-pure-prefixes=<prefixes>], [Prefixes that qualify in the pure whitelist]))
+AS_IF([test "x$with_pure_prefixes" = "xyes"], [
+    AC_MSG_FAILURE("Pure prefixes needs to be specified")
+])
+AS_IF([test "x$with_pure_prefixes" = "xno"], [
+    with_pure_prefixes=
+])
+with_pure_prefixes=`echo "$with_pure_prefixes" | sed 's,:, ,'`
+AC_DEFINE_UNQUOTED([PURE_PREFIXES], ["$with_pure_prefixes"], [Pure Prefixes])
+
+AC_ARG_WITH([pure-prefix-env-vars], AC_HELP_STRING([--with-pure-prefix-env-vars=<vars>], []))
+AS_IF([test "x$with_pure_prefix_env_vars" = "xyes"], [
+    AC_MSG_FAILURE("Pure prefix env vars needs to be specified")
+])
+AS_IF([test "x$with_pure_prefix_env_vars" = "xno"], [
+    with_pure_prefix_env_vars=
+])
+with_pure_prefix_env_vars=`echo "$with_pure_prefix_env_vars" | sed 's,:, ,'`
+AC_DEFINE_UNQUOTED([PURE_PREFIX_ENV_VARS], ["$with_pure_prefix_env_vars"], [Pure Prefix Environment Variables])
+
 AC_CHECK_PROGS([RAGEL], [ragel])
 AS_IF([test "x$enable_maintainer_mode" = "xyes" && test "x$RAGEL" = "x"], [
     AC_MSG_FAILURE("Ragel is required but could not be found")

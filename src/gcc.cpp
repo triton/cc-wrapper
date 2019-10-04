@@ -7,7 +7,9 @@
 #include "gcc.hpp"
 #include "gcc/args.hpp"
 #include "gcc/harden.hpp"
+#include "gcc/path.hpp"
 #include "generic.hpp"
+#include "strings.hpp"
 #include "util.hpp"
 
 #define CC_VAR(name) (VAR_PREFIX "_CC_" name)
@@ -32,11 +34,6 @@ static int ccMainInternal(const bins::Info &info,
 
   // Generate an unsanitized args list
   std::vector<nonstd::string_view> new_args;
-  if (state.linking)
-    new_args.push_back("-Wl,-g");
-  if (util::isEnforcingPurity())
-    new_args.push_back("-nostdinc");
-  harden::appendFlags(new_args, harden_env, state);
   for (const auto &arg : args)
     if (harden::isValidFlag(arg, harden_env))
       new_args.push_back(arg);
@@ -58,7 +55,34 @@ static int ccMainInternal(const bins::Info &info,
     }
   }
 
-  return generic::main(info, new_args);
+  // Sanitize the final argument list for paths
+  std::vector<nonstd::string_view> final_args;
+  if (state.linking)
+    final_args.push_back("-Wl,-g");
+  if (util::isEnforcingPurity())
+    final_args.push_back("-nostdinc");
+  harden::appendFlags(final_args, harden_env, state);
+  {
+    std::vector<nonstd::string_view> pure_prefixes;
+    flags::appendFromString(pure_prefixes, PURE_PREFIXES);
+    nonstd::string_view pure_vars = PURE_PREFIX_ENV_VARS
+#ifdef BUILD_DIR_ENV_VAR
+        " " BUILD_DIR_ENV_VAR
+#endif
+        ;
+    while (!pure_vars.empty()) {
+      auto var = strings::split(pure_vars, ' ');
+      if (!var.empty()) {
+        auto val = util::getenv(var);
+        if (val)
+          pure_prefixes.push_back(*val);
+      }
+    }
+    pure_prefixes.push_back(util::getenv("TMPDIR").value_or("/tmp"));
+    path::appendGood(final_args, new_args, pure_prefixes);
+  }
+
+  return generic::main(info, final_args);
 }
 
 int ccMain(const bins::Info &info,

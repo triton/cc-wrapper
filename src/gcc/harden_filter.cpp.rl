@@ -41,6 +41,6 @@ bool isValidFlag(nonstd::string_view arg, const Env &env) {
   return true;
 }
 
-}  // namespace cc_wrapper
+}  // namespace harden
 }  // namespace gcc
 }  // namespace cc_wrapper

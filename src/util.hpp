@@ -9,6 +9,7 @@ namespace detail {
 
 char *append(char *out, nonstd::string_view str);
 nonstd::string_view removeTrailing(nonstd::string_view path);
+bool &enforcingPurity();
 
 }  // namespace detail
 

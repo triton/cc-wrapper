@@ -42,6 +42,6 @@ State parseState(nonstd::span<const nonstd::string_view> args) {
   return state;
 }
 
+}  // namespace args
 }  // namespace gcc
-}  // namespace cc_wrapper
 }  // namespace cc_wrapper
