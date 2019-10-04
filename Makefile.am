@@ -62,7 +62,7 @@ src/bins.cpp bins.txt: $(srcdir)/scripts/generate-bins.sh
 	mv bins.txt.tmp bins.txt
 
 MAINTAINERCLEANFILES = src/gcc/args.cpp src/gcc/harden_filter.cpp \
-                       src/gcc/path_filter.cpp
+                       src/gcc/path_filter.cpp src/linker/path_filter.cpp
 %.cpp: %.cpp.rl
 	$(RAGEL) -G2 -C -o $@ $<
 
@@ -75,8 +75,9 @@ noinst_LIBRARIES = libccwrapper.a
 libccwrapper_a_SOURCES = src/env.cpp src/flags.cpp src/gcc.cpp \
                          src/gcc/args.cpp src/gcc/harden.cpp \
                          src/gcc/harden_filter.cpp src/gcc/path_filter.cpp \
-                         src/generic.cpp src/linker.cpp src/main.cpp \
-                         src/path.cpp src/strings.cpp src/util.cpp
+                         src/generic.cpp src/linker.cpp \
+                         src/linker/path_filter.cpp src/main.cpp src/path.cpp \
+                         src/strings.cpp src/util.cpp
 
 bin_PROGRAMS = cc-wrapper
 cc_wrapper_SOURCES = src/realmain.cpp
@@ -117,6 +118,11 @@ test_linker_test_SOURCES = test/linker.cpp
 test_linker_test_LDADD = libccwrapper.a
 test_linker_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
+check_PROGRAMS += test/linker/path_test
+test_linker_path_test_SOURCES = test/linker/path.cpp
+test_linker_path_test_LDADD = libccwrapper.a
+test_linker_path_test_CPPFLAGS = $(TEST_CPPFLAGS)
+
 check_PROGRAMS += test/path_test
 test_path_test_SOURCES = test/path.cpp
 test_path_test_LDADD = libccwrapper.a
@@ -141,7 +147,7 @@ install-links: $(srcdir)/scripts/install-links.sh bins.txt
 
 EXTRA_DIST = LICENSE NOTICE README.md \
              src/gcc/args.cpp.rl src/gcc/harden_filter.cpp.rl \
-             src/gcc/path_filter.cpp.rl \
+             src/gcc/path_filter.cpp.rl src/linker/path_filter.cpp.rl \
              scripts/generate-bins.sh scripts/install-links.sh \
              third_party/fmt/include \
              third_party/optional-lite/include \
@@ -151,5 +157,6 @@ EXTRA_DIST = LICENSE NOTICE README.md \
 
 noinst_HEADERS = src/bins.hpp src/env.hpp src/flags.hpp src/fmt_sv.hpp \
                  src/gcc.hpp src/gcc/args.hpp src/gcc/harden.hpp \
-                 src/gcc/path.hpp src/generic.hpp src/linker.hpp src/main.hpp \
-                 src/path.hpp src/strings.hpp src/util.hpp test/mock_exec.hpp
+                 src/gcc/path.hpp src/generic.hpp src/linker.hpp \
+                 src/linker/path.hpp src/main.hpp src/path.hpp src/strings.hpp \
+                 src/util.hpp test/mock_exec.hpp

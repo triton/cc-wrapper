@@ -2,9 +2,11 @@
 #include <vector>
 
 #include "config.h"
+#include "env.hpp"
 #include "flags.hpp"
 #include "generic.hpp"
 #include "linker.hpp"
+#include "linker/path.hpp"
 
 namespace cc_wrapper {
 namespace linker {
@@ -58,7 +60,10 @@ int main(const bins::Info &info, nonstd::span<const nonstd::string_view> args) {
     flags::appendFromVar(new_args, VAR_PREFIX "_LDFLAGS_DYNAMIC");
     flags::appendFromString(new_args, WRAPPER_LDFLAGS_DYNAMIC);
   }
-  return generic::main(info, new_args);
+
+  std::vector<nonstd::string_view> filtered_args;
+  path::appendGood(filtered_args, new_args, env::purePrefixes());
+  return generic::main(info, filtered_args);
 }
 
 }  // namespace linker
