@@ -24,6 +24,7 @@ Makefile.in
 /test/gcc/harden
 /test/gcc/path
 /test/main
+/test/linker
 /test/strings
 /test/util
 .libs

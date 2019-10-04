@@ -112,6 +112,11 @@ test_main_SOURCES = test/main.cpp
 test_main_LDADD = libccwrapper.a
 test_main_CPPFLAGS = $(TEST_CPPFLAGS)
 
+check_PROGRAMS += test/linker
+test_linker_SOURCES = test/linker.cpp
+test_linker_LDADD = libccwrapper.a
+test_linker_CPPFLAGS = $(TEST_CPPFLAGS)
+
 check_PROGRAMS += test/strings
 test_strings_SOURCES = test/strings.cpp
 test_strings_LDADD = libccwrapper.a
