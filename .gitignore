@@ -10,6 +10,7 @@
 
 /cc-wrapper*.tar.*
 /src/bins.cpp
+/src/gcc/args.cpp
 /bins.txt
 
 Makefile
@@ -17,6 +18,7 @@ Makefile.in
 
 /cc-wrapper
 /test/flags
+/test/gcc/args
 /test/main
 /test/strings
 /test/util

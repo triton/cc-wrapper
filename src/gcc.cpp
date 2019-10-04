@@ -5,6 +5,7 @@
 #include "config.h"
 #include "flags.hpp"
 #include "gcc.hpp"
+#include "gcc/args.hpp"
 #include "generic.hpp"
 #include "util.hpp"
 
@@ -25,46 +26,18 @@ bool doHardenFlag(const char *flag) {
 static int ccMainInternal(const bins::Info &info,
                           nonstd::span<const nonstd::string_view> args,
                           bool cxx) {
-  // Vaguely determine how the compiler will process the given command
-  bool linking = true;
-  bool produceShlib = false;
-  bool stdinc = true;
-  bool stdincxx = true;
-  bool flagOnly = true;
-  for (const auto &arg : args) {
-    if (arg == "-c")
-      linking = false;
-    else if (arg == "-E")
-      linking = false;
-    else if (arg == "-S")
-      linking = false;
-    else if (arg == "-M")
-      linking = false;
-    else if (arg == "-MM")
-      linking = false;
-    else if (arg == "-shared")
-      produceShlib = true;
-    else if (arg == "-nostdinc")
-      stdinc = false;
-    else if (arg == "-nostdincxx")
-      stdincxx = false;
-    else if (!arg.empty() && arg[0] != '-')
-      flagOnly = false;
-  }
-  // If we have no file arguments we won't call the linker
-  if (flagOnly)
-    linking = false;
+  const auto state = args::parseState(args);
 
   // Generate an unsanitized args list
   std::vector<nonstd::string_view> new_args;
-  if (linking)
+  if (state.linking)
     new_args.push_back("-Wl,-g");
   if (util::isEnforcingPurity())
     new_args.push_back("-nostdinc");
   const bool position_independent = doHardenFlag(CC_VAR("PI"));
   if (position_independent) {
     new_args.push_back("-fPIC");
-    if (linking && !produceShlib)
+    if (state.linking && !state.produceShlib)
       new_args.push_back("-pie");
   }
   const bool no_strict_overflow = doHardenFlag(CC_VAR("NO_STRICT_OVERFLOW"));
@@ -92,12 +65,12 @@ static int ccMainInternal(const bins::Info &info,
     new_args.push_back(arg);
   }
   new_args.push_back("-B" TOOLDIR);
-  if (stdinc) {
+  if (state.stdinc) {
     flags::appendFromString(new_args, WRAPPER_CFLAGS);
-    if (cxx && stdincxx)
+    if (cxx && state.stdincxx)
       flags::appendFromString(new_args, WRAPPER_CXXFLAGS);
   }
-  if (linking) {
+  if (state.linking) {
     flags::appendFromString(new_args, WRAPPER_CFLAGS_LINK);
     if (cxx)
       flags::appendFromString(new_args, WRAPPER_CXXFLAGS_LINK);

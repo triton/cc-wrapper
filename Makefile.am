@@ -62,6 +62,7 @@ src/bins.cpp bins.txt: $(srcdir)/scripts/generate-bins.sh
 	mv src/bins.cpp.tmp src/bins.cpp
 	mv bins.txt.tmp bins.txt
 
+MAINTAINERCLEANFILES = src/gcc/args.cpp
 %.cpp: %.cpp.rl
 	$(RAGEL) -G2 -C -o $@ $<
 
@@ -70,15 +71,18 @@ BUILT_SOURCES = clang-format
 clang-format:
 	$(CLANG_FORMAT) -i $(filter-out $(MAINTAINERCLEANFILES),$(DIST_SOURCES)) $(HEADERS)
 
-noinst_LIBRARIES = libccwrapper.a
+noinst_LIBRARIES = libccwrapper.a libccwrapper_gen.a
 libccwrapper_a_SOURCES = src/flags.cpp src/gcc.cpp src/generic.cpp \
                          src/linker.cpp src/main.cpp src/strings.cpp \
                          src/util.cpp
+libccwrapper_a_LIBADD = libccwrapper_gen.a
+libccwrapper_gen_a_SOURCES = src/gcc/args.cpp
+libccwrapper_gen_a_CPPFLAGS = $(AM_CPPFLAGS) -Wno-implicit-fallthrough
 
 bin_PROGRAMS = cc-wrapper
 cc_wrapper_SOURCES = src/realmain.cpp
 nodist_cc_wrapper_SOURCES = src/bins.cpp
-cc_wrapper_LDADD = libccwrapper.a
+cc_wrapper_LDADD = libccwrapper.a libccwrapper_gen.a
 
 TEST_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/third_party/Catch2/single_include
 check_PROGRAMS =
@@ -86,22 +90,27 @@ TESTS = $(check_PROGRAMS)
 
 check_PROGRAMS += test/flags
 test_flags_SOURCES = test/flags.cpp
-test_flags_LDADD = libccwrapper.a
+test_flags_LDADD = libccwrapper.a libccwrapper_gen.a
 test_flags_CPPFLAGS = $(TEST_CPPFLAGS)
+
+check_PROGRAMS += test/gcc/args
+test_gcc_args_SOURCES = test/gcc/args.cpp
+test_gcc_args_LDADD = libccwrapper.a libccwrapper_gen.a
+test_gcc_args_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/main
 test_main_SOURCES = test/main.cpp
-test_main_LDADD = libccwrapper.a
+test_main_LDADD = libccwrapper.a libccwrapper_gen.a
 test_main_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/strings
 test_strings_SOURCES = test/strings.cpp
-test_strings_LDADD = libccwrapper.a
+test_strings_LDADD = libccwrapper.a libccwrapper_gen.a
 test_strings_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/util
 test_util_SOURCES = test/util.cpp
-test_util_LDADD = libccwrapper.a
+test_util_LDADD = libccwrapper.a libccwrapper_gen.a
 test_util_CPPFLAGS = $(TEST_CPPFLAGS)
 
 install-exec-local: install-links
@@ -112,6 +121,7 @@ install-links: $(srcdir)/scripts/install-links.sh bins.txt
 
 
 EXTRA_DIST = LICENSE NOTICE README.md \
+             src/gcc/args.cpp.rl \
              scripts/generate-bins.sh scripts/install-links.sh \
              third_party/fmt/include \
              third_party/optional-lite/include \
@@ -120,5 +130,5 @@ EXTRA_DIST = LICENSE NOTICE README.md \
              third_party/string-view-lite/include
 
 noinst_HEADERS = src/bins.hpp src/flags.hpp src/fmt_sv.hpp src/gcc.hpp \
-                 src/generic.hpp src/linker.hpp src/main.hpp src/strings.hpp \
-                 src/util.hpp test/mock_exec.hpp
+                 src/gcc/args.hpp src/generic.hpp src/linker.hpp src/main.hpp \
+                 src/strings.hpp src/util.hpp test/mock_exec.hpp
