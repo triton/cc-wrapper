@@ -87,50 +87,50 @@ TEST_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/third_party/Catch2/single_include
 check_PROGRAMS =
 TESTS = $(check_PROGRAMS)
 
-check_PROGRAMS += test/flags
-test_flags_SOURCES = test/flags.cpp
-test_flags_LDADD = libccwrapper.a
-test_flags_CPPFLAGS = $(TEST_CPPFLAGS)
+check_PROGRAMS += test/flags_test
+test_flags_test_SOURCES = test/flags.cpp
+test_flags_test_LDADD = libccwrapper.a
+test_flags_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
-check_PROGRAMS += test/gcc/args
-test_gcc_args_SOURCES = test/gcc/args.cpp
-test_gcc_args_LDADD = libccwrapper.a
-test_gcc_args_CPPFLAGS = $(TEST_CPPFLAGS)
+check_PROGRAMS += test/gcc/args_test
+test_gcc_args_test_SOURCES = test/gcc/args.cpp
+test_gcc_args_test_LDADD = libccwrapper.a
+test_gcc_args_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
-check_PROGRAMS += test/gcc/harden
-test_gcc_harden_SOURCES = test/gcc/harden.cpp
-test_gcc_harden_LDADD = libccwrapper.a
-test_gcc_harden_CPPFLAGS = $(TEST_CPPFLAGS)
+check_PROGRAMS += test/gcc/harden_test
+test_gcc_harden_test_SOURCES = test/gcc/harden.cpp
+test_gcc_harden_test_LDADD = libccwrapper.a
+test_gcc_harden_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
-check_PROGRAMS += test/gcc/path
-test_gcc_path_SOURCES = test/gcc/path.cpp
-test_gcc_path_LDADD = libccwrapper.a
-test_gcc_path_CPPFLAGS = $(TEST_CPPFLAGS)
+check_PROGRAMS += test/gcc/path_test
+test_gcc_path_test_SOURCES = test/gcc/path.cpp
+test_gcc_path_test_LDADD = libccwrapper.a
+test_gcc_path_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
-check_PROGRAMS += test/main
-test_main_SOURCES = test/main.cpp
-test_main_LDADD = libccwrapper.a
-test_main_CPPFLAGS = $(TEST_CPPFLAGS)
+check_PROGRAMS += test/main_test
+test_main_test_SOURCES = test/main.cpp
+test_main_test_LDADD = libccwrapper.a
+test_main_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
-check_PROGRAMS += test/linker
-test_linker_SOURCES = test/linker.cpp
-test_linker_LDADD = libccwrapper.a
-test_linker_CPPFLAGS = $(TEST_CPPFLAGS)
+check_PROGRAMS += test/linker_test
+test_linker_test_SOURCES = test/linker.cpp
+test_linker_test_LDADD = libccwrapper.a
+test_linker_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
-check_PROGRAMS += test/path
-test_path_SOURCES = test/path.cpp
-test_path_LDADD = libccwrapper.a
-test_path_CPPFLAGS = $(TEST_CPPFLAGS)
+check_PROGRAMS += test/path_test
+test_path_test_SOURCES = test/path.cpp
+test_path_test_LDADD = libccwrapper.a
+test_path_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
-check_PROGRAMS += test/strings
-test_strings_SOURCES = test/strings.cpp
-test_strings_LDADD = libccwrapper.a
-test_strings_CPPFLAGS = $(TEST_CPPFLAGS)
+check_PROGRAMS += test/strings_test
+test_strings_test_SOURCES = test/strings.cpp
+test_strings_test_LDADD = libccwrapper.a
+test_strings_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
-check_PROGRAMS += test/util
-test_util_SOURCES = test/util.cpp
-test_util_LDADD = libccwrapper.a
-test_util_CPPFLAGS = $(TEST_CPPFLAGS)
+check_PROGRAMS += test/util_test
+test_util_test_SOURCES = test/util.cpp
+test_util_test_LDADD = libccwrapper.a
+test_util_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 install-exec-local: install-links
 .PHONY: install-links
