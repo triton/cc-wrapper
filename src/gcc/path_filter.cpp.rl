@@ -2,8 +2,8 @@
 #include <nonstd/string_view.hpp>
 #include <parallel_hashmap/phmap.h>
 
-#include "path.hpp"
 #include "../path.hpp"
+#include "path.hpp"
 
 namespace cc_wrapper {
 namespace gcc {
@@ -13,9 +13,12 @@ namespace path {
 %%{
   machine filter;
 
+  action open { open_flag = arg; }
+  action path { path = nonstd::string_view(p, pe-p); fbreak; }
+
   includes = ( 'isystem' | 'idirafter' | 'I' ) @{ is_include = true; };
   libs = [LB];
-  main := '-' ( includes | libs ) @{ is_flag = true; fbreak; };
+  main := '-' ( includes | libs ) %/open any* >path;
 
   write data;
 }%%
@@ -26,7 +29,7 @@ void appendGood(std::vector<nonstd::string_view> &new_args,
                 nonstd::span<const nonstd::string_view> pure_prefixes,
                 phmap::flat_hash_set<nonstd::string_view> &saved_includes) {
   int cs;
-  nonstd::optional<nonstd::string_view> open_flag = nonstd::nullopt;
+  nonstd::optional<nonstd::string_view> open_flag;
   bool is_include;
   for (const auto &arg : old_args) {
     if (open_flag) {
@@ -42,26 +45,20 @@ void appendGood(std::vector<nonstd::string_view> &new_args,
 
     const char *p = arg.data();
     const char *pe = p + arg.size();
-    bool is_flag = false;
+    const char *eof = pe;
+    nonstd::optional<nonstd::string_view> path;
     is_include = false;
     // clang-format off
     %% write init;
     %% write exec;
     // clang-format on
-    if (!is_flag) {
-      new_args.push_back(arg);
+    if (open_flag)
       continue;
-    }
-    if (p == pe) {
-      open_flag = arg;
+    if (path && !cc_wrapper::path::isValid(*path, pure_prefixes))
       continue;
-    }
-    nonstd::string_view path(p, pe - p);
-    if (cc_wrapper::path::isValid(path, pure_prefixes)) {
-      new_args.push_back(arg);
-      if (is_include)
-        saved_includes.insert(path);
-    }
+    new_args.push_back(arg);
+    if (path && is_include)
+      saved_includes.insert(*path);
   }
 }
 
