@@ -62,7 +62,10 @@ src/bins.cpp bins.txt: $(srcdir)/scripts/generate-bins.sh
 	mv bins.txt.tmp bins.txt
 
 MAINTAINERCLEANFILES = src/gcc/args.cpp src/gcc/harden_filter.cpp \
-                       src/gcc/path_filter.cpp src/linker/path_filter.cpp
+                       src/gcc/path_filter.cpp src/linker/args_dyld.cpp \
+                       src/linker/args_dynamic.cpp \
+                       src/linker/compiler_filter.cpp \
+                       src/linker/harden_filter.cpp src/linker/path_filter.cpp
 %.cpp: %.cpp.rl
 	$(RAGEL) -G2 -C -o $@ $<
 
@@ -76,6 +79,9 @@ libccwrapper_a_SOURCES = src/env.cpp src/flags.cpp src/gcc.cpp \
                          src/gcc/args.cpp src/gcc/harden.cpp \
                          src/gcc/harden_filter.cpp src/gcc/path_filter.cpp \
                          src/generic.cpp src/linker.cpp \
+                         src/linker/args_dyld.cpp src/linker/args_dynamic.cpp \
+                         src/linker/compiler_filter.cpp \
+                         src/linker/harden.cpp src/linker/harden_filter.cpp \
                          src/linker/path_filter.cpp src/main.cpp src/path.cpp \
                          src/strings.cpp src/util.cpp
 
@@ -113,10 +119,15 @@ test_main_test_SOURCES = test/main.cpp
 test_main_test_LDADD = libccwrapper.a
 test_main_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
-check_PROGRAMS += test/linker_test
-test_linker_test_SOURCES = test/linker.cpp
-test_linker_test_LDADD = libccwrapper.a
-test_linker_test_CPPFLAGS = $(TEST_CPPFLAGS)
+check_PROGRAMS += test/linker/args_test
+test_linker_args_test_SOURCES = test/linker/args.cpp
+test_linker_args_test_LDADD = libccwrapper.a
+test_linker_args_test_CPPFLAGS = $(TEST_CPPFLAGS)
+
+check_PROGRAMS += test/linker/compiler_test
+test_linker_compiler_test_SOURCES = test/linker/compiler.cpp
+test_linker_compiler_test_LDADD = libccwrapper.a
+test_linker_compiler_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/linker/path_test
 test_linker_path_test_SOURCES = test/linker/path.cpp
@@ -147,7 +158,9 @@ install-links: $(srcdir)/scripts/install-links.sh bins.txt
 
 EXTRA_DIST = LICENSE NOTICE README.md \
              src/gcc/args.cpp.rl src/gcc/harden_filter.cpp.rl \
-             src/gcc/path_filter.cpp.rl src/linker/path_filter.cpp.rl \
+             src/gcc/path_filter.cpp.rl src/linker/args_dyld.cpp.rl \
+             src/linker/args_dynamic.cpp.rl src/linker/harden_filter.cpp.rl \
+             src/linker/path_filter.cpp.rl \
              scripts/generate-bins.sh scripts/install-links.sh \
              third_party/fmt/include \
              third_party/optional-lite/include \
@@ -158,5 +171,6 @@ EXTRA_DIST = LICENSE NOTICE README.md \
 noinst_HEADERS = src/bins.hpp src/env.hpp src/flags.hpp src/fmt_sv.hpp \
                  src/gcc.hpp src/gcc/args.hpp src/gcc/harden.hpp \
                  src/gcc/path.hpp src/generic.hpp src/linker.hpp \
-                 src/linker/path.hpp src/main.hpp src/path.hpp src/strings.hpp \
-                 src/util.hpp test/mock_exec.hpp
+                 src/linker/args.hpp src/linker/compiler.hpp \
+                 src/linker/harden.hpp src/linker/path.hpp src/main.hpp \
+                 src/path.hpp src/strings.hpp src/util.hpp test/mock_exec.hpp
