@@ -8,26 +8,26 @@
 namespace cc_wrapper {
 namespace path {
 
-TEST_CASE("Impure", "[isValid]") {
+TEST_CASE("Impure", "[isPure]") {
   env::detail::enforcingPurity() = false;
-  CHECK(isValid("./local/file", {}));
-  CHECK(isValid("local", {}));
-  CHECK(!isValid("/no-such-path", {}));
-  CHECK(!isValid("/no-such-path/file", {}));
-  CHECK(isValid("/usr/bin/bash", {}));
+  CHECK(isPure("./local/file", {}));
+  CHECK(isPure("local", {}));
+  CHECK(!isPure("/no-such-path", {}));
+  CHECK(!isPure("/no-such-path/file", {}));
+  CHECK(isPure("/usr/bin/bash", {}));
 }
 
-TEST_CASE("Pure", "[isValid]") {
+TEST_CASE("Pure", "[isPure]") {
   env::detail::enforcingPurity() = true;
-  CHECK(isValid("./local/file", {}));
-  CHECK(isValid("local", {}));
-  CHECK(!isValid("/no-such-path", {}));
-  CHECK(!isValid("/no-such-path/file", {}));
-  CHECK(!isValid("/usr/bin/bash", {}));
+  CHECK(isPure("./local/file", {}));
+  CHECK(isPure("local", {}));
+  CHECK(!isPure("/no-such-path", {}));
+  CHECK(!isPure("/no-such-path/file", {}));
+  CHECK(!isPure("/usr/bin/bash", {}));
   const std::vector<nonstd::string_view> prefixes = {"/usr", "/build"};
-  CHECK(isValid("/usr/bin/bash", prefixes));
-  CHECK(isValid("/build/bash", prefixes));
-  CHECK(!isValid("/tmp/bash", prefixes));
+  CHECK(isPure("/usr/bin/bash", prefixes));
+  CHECK(isPure("/build/bash", prefixes));
+  CHECK(!isPure("/tmp/bash", prefixes));
 }
 
 }  // namespace path

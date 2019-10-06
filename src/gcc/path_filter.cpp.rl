@@ -33,7 +33,7 @@ void appendGood(std::vector<nonstd::string_view> &new_args,
   bool is_include;
   for (const auto &arg : old_args) {
     if (open_flag) {
-      if (cc_wrapper::path::isValid(arg, pure_prefixes)) {
+      if (cc_wrapper::path::isPure(arg, pure_prefixes)) {
         new_args.push_back(*open_flag);
         new_args.push_back(arg);
         if (is_include)
@@ -54,7 +54,7 @@ void appendGood(std::vector<nonstd::string_view> &new_args,
     // clang-format on
     if (open_flag)
       continue;
-    if (path && !cc_wrapper::path::isValid(*path, pure_prefixes))
+    if (path && !cc_wrapper::path::isPure(*path, pure_prefixes))
       continue;
     new_args.push_back(arg);
     if (path && is_include)

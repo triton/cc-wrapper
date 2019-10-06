@@ -5,8 +5,8 @@
 namespace cc_wrapper {
 namespace path {
 
-bool isValid(nonstd::string_view path,
-             nonstd::span<const nonstd::string_view> pure_prefixes) {
+bool isPure(nonstd::string_view path,
+            nonstd::span<const nonstd::string_view> pure_prefixes) {
   if (path.empty() || path[0] != '/')
     return true;
   if (strings::startsWith(path, "/no-such-path"))
