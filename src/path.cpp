@@ -5,6 +5,9 @@
 namespace cc_wrapper {
 namespace path {
 
+PurityError::PurityError(nonstd::string_view path)
+    : std::runtime_error(strings::cat("impure path detected: ", path)) {}
+
 bool isPure(nonstd::string_view path,
             nonstd::span<const nonstd::string_view> pure_prefixes) {
   if (path.empty() || path[0] != '/')
