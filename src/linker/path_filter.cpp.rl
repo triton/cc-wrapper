@@ -5,9 +5,6 @@
 #include "../path.hpp"
 #include "path.hpp"
 
-#include "fmt_sv.hpp"
-#include <fmt/format.h>
-
 namespace cc_wrapper {
 namespace linker {
 namespace path {
@@ -57,8 +54,6 @@ void appendGood(std::vector<nonstd::string_view> &new_args,
     %% write init;
     %% write exec;
     // clang-format on
-    fmt::print(stderr, "arg={} open_flag={} path={} check={}\n", arg,
-               open_flag.value_or("none"), path.value_or("none"), check);
     if (open_flag)
       continue;
     if (path && check && !cc_wrapper::path::isValid(*path, pure_prefixes))
