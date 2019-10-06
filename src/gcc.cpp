@@ -46,7 +46,6 @@ static int ccMainInternal(const bins::Info &info,
   for (const auto &arg : args)
     if (harden::isValidFlag(arg, harden_env))
       new_args.push_back(arg);
-  new_args.push_back("-B" TOOLDIR);
   flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS");
   if (cxx)
     flags::appendFromVar(new_args, VAR_PREFIX "_CXXFLAGS");
@@ -70,6 +69,7 @@ static int ccMainInternal(const bins::Info &info,
     final_args.push_back("-Wl,-g");
   if (env::isEnforcingPurity())
     final_args.push_back("-nostdinc");
+  final_args.push_back("-B" TOOLDIR);
   harden::appendFlags(final_args, harden_env, state);
   phmap::flat_hash_set<nonstd::string_view> saved_includes;
   path::appendGood(final_args, new_args, env::purePrefixes(), saved_includes);
