@@ -100,6 +100,11 @@ test_flags_test_SOURCES = test/flags.cpp
 test_flags_test_LDADD = libccwrapper.a
 test_flags_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
+check_PROGRAMS += test/graph_test
+test_graph_test_SOURCES = test/graph.cpp
+test_graph_test_LDADD = libccwrapper.a
+test_graph_test_CPPFLAGS = $(TEST_CPPFLAGS)
+
 check_PROGRAMS += test/gcc/args_test
 test_gcc_args_test_SOURCES = test/gcc/args.cpp
 test_gcc_args_test_LDADD = libccwrapper.a
@@ -171,7 +176,7 @@ EXTRA_DIST = LICENSE NOTICE README.md \
 
 noinst_HEADERS = src/bins.hpp src/env.hpp src/flags.hpp src/fmt_sv.hpp \
                  src/gcc.hpp src/gcc/args.hpp src/gcc/harden.hpp \
-                 src/gcc/path.hpp src/generic.hpp src/linker.hpp \
+                 src/gcc/path.hpp src/generic.hpp src/graph.hpp src/linker.hpp \
                  src/linker/args.hpp src/linker/compiler.hpp \
                  src/linker/harden.hpp src/linker/path.hpp src/main.hpp \
                  src/path.hpp src/strings.hpp src/util.hpp test/mock_exec.hpp

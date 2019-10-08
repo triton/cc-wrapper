@@ -27,6 +27,7 @@ Makefile.in
 /test/gcc/args_test
 /test/gcc/harden_test
 /test/gcc/path_test
+/test/graph_test
 /test/main_test
 /test/linker/args_test
 /test/linker/compiler_test
