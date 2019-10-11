@@ -23,6 +23,7 @@ Makefile
 Makefile.in
 
 /cc-wrapper*
+/test/file_test
 /test/flags_test
 /test/gcc/args_test
 /test/gcc/harden_test
