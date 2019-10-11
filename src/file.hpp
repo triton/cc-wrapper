@@ -1,8 +1,12 @@
 #pragma once
+#include <nonstd/optional.hpp>
 #include <nonstd/span.hpp>
+#include <string>
 
 namespace cc_wrapper {
 namespace file {
+
+nonstd::optional<std::string> readlink(const char *path);
 
 nonstd::span<char> read(int fd, nonstd::span<char> buf);
 void lseek(int fd, off_t offset, int whence);

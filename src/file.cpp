@@ -1,4 +1,5 @@
 #include <fcntl.h>
+#include <sys/stat.h>
 #include <system_error>
 #include <unistd.h>
 
@@ -6,6 +7,21 @@
 
 namespace cc_wrapper {
 namespace file {
+
+nonstd::optional<std::string> readlink(const char *path) {
+  struct stat buf;
+  if (::lstat(path, &buf) < 0)
+    throw std::system_error(errno, std::generic_category(), "lstat");
+  if ((buf.st_mode & S_IFMT) != S_IFLNK)
+    return nonstd::nullopt;
+  std::string ret(buf.st_size, '\0');
+  ssize_t r = ::readlink(path, &ret[0], ret.size());
+  if (r < 0)
+    throw std::system_error(errno, std::generic_category(), "readlink");
+  if (static_cast<size_t>(r) != ret.size())
+    throw std::runtime_error("Bad readlink data");
+  return ret;
+}
 
 Fd::Fd(const char *path, int flags) : Fd(open(path, flags)) {}
 

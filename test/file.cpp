@@ -4,11 +4,26 @@
 #include <fcntl.h>
 #include <nonstd/string_view.hpp>
 #include <sys/mman.h>
+#include <unistd.h>
 
 #include "file.hpp"
 
 namespace cc_wrapper {
 namespace file {
+
+TEST_CASE("Readlink works", "[readlink]") {
+  CHECK_THROWS_AS(readlink("/no-such-path/cc-wrapper"), std::system_error);
+  constexpr char link[] = "test-file-link";
+  constexpr char text[] = "test-file-text";
+  unlink(link);
+  unlink(text);
+  CHECK(symlink("data", link) == 0);
+  Fd(text, O_RDWR | O_CREAT);
+  CHECK(readlink(text) == nonstd::nullopt);
+  CHECK(readlink(link) == "data");
+  unlink(link);
+  unlink(text);
+}
 
 TEST_CASE("Open file descriptor handles errors", "[open]") {
   CHECK_THROWS_AS(Fd("/no-such-path/cc-wrapper", O_RDONLY), std::system_error);
