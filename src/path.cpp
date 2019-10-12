@@ -23,5 +23,11 @@ bool isPure(nonstd::string_view path,
   return false;
 }
 
+std::string canonicalize(nonstd::string_view path) {
+  auto ret = path.to_string();
+  canonicalizeInPlace(ret);
+  return ret;
+}
+
 }  // namespace path
 }  // namespace cc_wrapper

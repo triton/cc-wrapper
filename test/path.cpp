@@ -30,5 +30,37 @@ TEST_CASE("Pure", "[isPure]") {
   CHECK(!isPure("/tmp/bash", prefixes));
 }
 
+TEST_CASE("Canonicalize Path", "[canonicalize]") {
+  CHECK(canonicalize("/") == "/");
+  CHECK(canonicalize(".") == ".");
+  CHECK(canonicalize("..") == "..");
+  CHECK(canonicalize("abc") == "abc");
+  CHECK(canonicalize("/abc") == "/abc");
+
+  CHECK(canonicalize("///") == "/");
+  CHECK(canonicalize("//././") == "/");
+  CHECK(canonicalize("/../..") == "/");
+
+  CHECK(canonicalize("") == ".");
+  CHECK(canonicalize("./") == ".");
+  CHECK(canonicalize("./.") == ".");
+
+  CHECK(canonicalize("./..") == "..");
+  CHECK(canonicalize("../..") == "../..");
+
+  CHECK(canonicalize("./abc") == "abc");
+  CHECK(canonicalize("./abc/def") == "abc/def");
+  CHECK(canonicalize("./abc/..") == ".");
+
+  CHECK(canonicalize("/abc/./.././lib") == "/lib");
+  CHECK(canonicalize("../abc/../lib") == "../lib");
+  CHECK(canonicalize("abc/..") == ".");
+  CHECK(canonicalize("abc/../") == ".");
+  CHECK(canonicalize("abc/def/../..") == ".");
+  CHECK(canonicalize("abc/../def/..") == ".");
+  CHECK(canonicalize("lib/abc/../def/..") == "lib");
+  CHECK(canonicalize("lib/abc/../def/../z") == "lib/z");
+}
+
 }  // namespace path
 }  // namespace cc_wrapper

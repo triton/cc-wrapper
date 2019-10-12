@@ -17,6 +17,7 @@
 /src/linker/compiler_filter.cpp
 /src/linker/harden_filter.cpp
 /src/linker/path_filter.cpp
+/src/path_canonicalize.cpp
 /bins.txt
 
 Makefile

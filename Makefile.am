@@ -66,7 +66,8 @@ MAINTAINERCLEANFILES = src/gcc/args.cpp src/gcc/harden_filter.cpp \
                        src/gcc/path_filter.cpp src/linker/args_dyld.cpp \
                        src/linker/args_dynamic.cpp \
                        src/linker/compiler_filter.cpp \
-                       src/linker/harden_filter.cpp src/linker/path_filter.cpp
+                       src/linker/harden_filter.cpp src/linker/path_filter.cpp \
+                       src/path_canonicalize.cpp
 %.cpp: %.cpp.rl
 	$(RAGEL) -G2 -C -o $@ $<
 
@@ -84,7 +85,7 @@ libccwrapper_a_SOURCES = src/env.cpp src/file.cpp src/flags.cpp src/gcc.cpp \
                          src/linker/compiler_filter.cpp \
                          src/linker/harden.cpp src/linker/harden_filter.cpp \
                          src/linker/path_filter.cpp src/main.cpp src/path.cpp \
-                         src/strings.cpp src/util.cpp
+                         src/path_canonicalize.cpp src/strings.cpp src/util.cpp
 
 bin_PROGRAMS = cc-wrapper
 cc_wrapper_SOURCES = src/realmain.cpp
@@ -171,7 +172,7 @@ EXTRA_DIST = LICENSE NOTICE README.md \
              src/gcc/args.cpp.rl src/gcc/harden_filter.cpp.rl \
              src/gcc/path_filter.cpp.rl src/linker/args_dyld.cpp.rl \
              src/linker/args_dynamic.cpp.rl src/linker/harden_filter.cpp.rl \
-             src/linker/path_filter.cpp.rl \
+             src/linker/path_filter.cpp.rl src/path_canonicalize.cpp.rl \
              scripts/generate-bins.sh scripts/install-links.sh \
              third_party/fmt/include \
              third_party/optional-lite/include \
