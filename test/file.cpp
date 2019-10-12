@@ -2,7 +2,6 @@
 #include <array>
 #include <catch2/catch.hpp>
 #include <fcntl.h>
-#include <nonstd/string_view.hpp>
 #include <sys/mman.h>
 #include <unistd.h>
 
@@ -35,18 +34,19 @@ TEST_CASE("Open file descriptor works", "[open]") {
     Fd fd("/dev/null", O_RDONLY);
     fdn = fd;
     CHECK(fcntl(fd, F_GETFD) != -1);
+    std::array<char, 1> buf;
+    CHECK(fd.read(buf).empty());
   }
   CHECK(fcntl(fdn, F_GETFD) == -1);
   CHECK(errno == EBADF);
 }
 
-TEST_CASE("Read file descriptor", "[read]") {
-  nonstd::string_view data = "hi";
-  nonstd::span<const char> expected = data;
+TEST_CASE("File descriptor basic ops", "[readwrite]") {
+  nonstd::span<const char> expected = "hi";
   Fd fd(memfd_create("test", 0));
   std::array<char, 4> buf;
   CHECK(fd.read(buf).size() == 0);
-  CHECK(write(fd, data.data(), data.size()) == data.size());
+  fd.write(expected);
   CHECK(fd.read(buf).size() == 0);
   fd.lseek(0, SEEK_SET);
   CHECK(fd.read(buf) == expected);

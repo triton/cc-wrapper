@@ -39,6 +39,14 @@ nonstd::span<char> read(int fd, nonstd::span<char> buf) {
   return buf.subspan(0, r);
 }
 
+void write(int fd, nonstd::span<const char> data) {
+  ssize_t r = ::write(fd, data.data(), data.size());
+  if (r < 0)
+    throw std::system_error(errno, std::generic_category(), "write");
+  if (static_cast<size_t>(r) != data.size())
+    throw std::runtime_error("write truncated");
+}
+
 void lseek(int fd, off_t offset, int whence) {
   if (::lseek(fd, offset, whence) < 0)
     throw std::system_error(errno, std::generic_category(), "lseek");
