@@ -1,8 +1,11 @@
+#include <fcntl.h>
 #include <nonstd/string_view.hpp>
+#include <string>
 #include <vector>
 
 #include "config.h"
 #include "env.hpp"
+#include "file.hpp"
 #include "flags.hpp"
 #include "generic.hpp"
 #include "linker.hpp"
@@ -10,6 +13,8 @@
 #include "linker/compiler.hpp"
 #include "linker/harden.hpp"
 #include "linker/path.hpp"
+#include "linker/script.hpp"
+#include "linker/state.hpp"
 
 namespace cc_wrapper {
 namespace linker {
@@ -29,14 +34,27 @@ int main(const bins::Info &info, nonstd::span<const nonstd::string_view> args) {
   }
   flags::appendFromVar(combined_args, VAR_PREFIX "_LDFLAGS");
   flags::appendFromString(combined_args, WRAPPER_LDFLAGS);
-  if (args::isDynamicLinking(initial_args)) {
+  const bool dynamic = args::isDynamicLinking(initial_args);
+  if (dynamic) {
     flags::appendFromVar(combined_args, VAR_PREFIX "_LDFLAGS_DYNAMIC");
     flags::appendFromString(combined_args, WRAPPER_LDFLAGS_DYNAMIC);
   }
 
   std::vector<nonstd::string_view> filtered_args;
   path::appendGood(filtered_args, combined_args, env::purePrefixes());
-  return generic::main(info, filtered_args);
+
+  std::vector<nonstd::string_view> final_args;
+  state::Libs libs;
+  if (dynamic) {
+    args::parseLibs(libs, filtered_args);
+    for (const auto &rpath : libs.resolveRequiredRPaths()) {
+      final_args.push_back("-rpath");
+      final_args.push_back(rpath);
+    }
+  }
+  for (auto arg : filtered_args)
+    final_args.push_back(arg);
+  return generic::main(info, final_args);
 }
 
 }  // namespace linker

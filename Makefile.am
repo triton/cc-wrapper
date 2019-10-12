@@ -64,10 +64,10 @@ src/bins.cpp bins.txt: $(srcdir)/scripts/generate-bins.sh
 
 MAINTAINERCLEANFILES = src/gcc/args.cpp src/gcc/harden_filter.cpp \
                        src/gcc/path_filter.cpp src/linker/args_dyld.cpp \
-                       src/linker/args_dynamic.cpp \
+                       src/linker/args_dynamic.cpp src/linker/args_libs.cpp \
                        src/linker/compiler_filter.cpp \
                        src/linker/harden_filter.cpp src/linker/path_filter.cpp \
-                       src/path_canonicalize.cpp
+                       src/linker/script_libs.cpp src/path_canonicalize.cpp
 %.cpp: %.cpp.rl
 	$(RAGEL) -G2 -C -o $@ $<
 
@@ -82,17 +82,21 @@ libccwrapper_a_SOURCES = src/env.cpp src/file.cpp src/flags.cpp src/gcc.cpp \
                          src/gcc/harden_filter.cpp src/gcc/path_filter.cpp \
                          src/generic.cpp src/linker.cpp \
                          src/linker/args_dyld.cpp src/linker/args_dynamic.cpp \
+                         src/linker/args_libs.cpp \
                          src/linker/compiler_filter.cpp \
                          src/linker/harden.cpp src/linker/harden_filter.cpp \
-                         src/linker/path_filter.cpp src/main.cpp src/path.cpp \
-                         src/path_canonicalize.cpp src/strings.cpp src/util.cpp
+                         src/linker/path_filter.cpp src/linker/script_libs.cpp \
+                         src/linker/state.cpp src/linker/script.cpp \
+                         src/main.cpp src/path.cpp src/path_canonicalize.cpp \
+                         src/strings.cpp src/util.cpp
 
 bin_PROGRAMS = cc-wrapper
 cc_wrapper_SOURCES = src/realmain.cpp
 nodist_cc_wrapper_SOURCES = src/bins.cpp
 cc_wrapper_LDADD = libccwrapper.a
 
-TEST_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/third_party/Catch2/single_include
+TEST_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/third_party/Catch2/single_include \
+                -DSRCDIR=\"$(abs_srcdir)\"
 check_PROGRAMS =
 TESTS = $(check_PROGRAMS)
 
@@ -151,6 +155,16 @@ test_linker_path_test_SOURCES = test/linker/path.cpp
 test_linker_path_test_LDADD = libccwrapper.a
 test_linker_path_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
+check_PROGRAMS += test/linker/script_test
+test_linker_script_test_SOURCES = test/linker/script.cpp
+test_linker_script_test_LDADD = libccwrapper.a
+test_linker_script_test_CPPFLAGS = $(TEST_CPPFLAGS)
+
+check_PROGRAMS += test/linker/state_test
+test_linker_state_test_SOURCES = test/linker/state.cpp
+test_linker_state_test_LDADD = libccwrapper.a
+test_linker_state_test_CPPFLAGS = $(TEST_CPPFLAGS)
+
 check_PROGRAMS += test/path_test
 test_path_test_SOURCES = test/path.cpp
 test_path_test_LDADD = libccwrapper.a
@@ -176,8 +190,9 @@ install-links: $(srcdir)/scripts/install-links.sh bins.txt
 EXTRA_DIST = LICENSE NOTICE README.md \
              src/gcc/args.cpp.rl src/gcc/harden_filter.cpp.rl \
              src/gcc/path_filter.cpp.rl src/linker/args_dyld.cpp.rl \
-             src/linker/args_dynamic.cpp.rl src/linker/harden_filter.cpp.rl \
-             src/linker/path_filter.cpp.rl src/path_canonicalize.cpp.rl \
+             src/linker/args_dynamic.cpp.rl src/linker/args_libs.cpp.rl \
+             src/linker/harden_filter.cpp.rl src/linker/path_filter.cpp.rl \
+             src/path_canonicalize.cpp.rl src/linker/script_libs.cpp.rl \
              scripts/generate-bins.sh scripts/install-links.sh \
              third_party/fmt/include \
              third_party/optional-lite/include \
@@ -190,5 +205,7 @@ noinst_HEADERS = src/bins.hpp src/env.hpp src/file.hpp src/flags.hpp \
                  src/gcc/harden.hpp src/gcc/path.hpp src/generic.hpp \
                  src/graph.hpp src/linker.hpp src/linker/args.hpp \
                  src/linker/compiler.hpp src/linker/harden.hpp \
-                 src/linker/path.hpp src/main.hpp src/path.hpp src/strings.hpp \
-                 src/util.hpp test/mock_exec.hpp
+                 src/linker/path.hpp src/linker/script.hpp \
+                 src/linker/state.hpp src/main.hpp src/path.hpp \
+                 src/strings.hpp src/util.hpp \
+                 test/mock_exec.hpp

@@ -14,9 +14,11 @@
 /src/gcc/path_filter.cpp
 /src/linker/args_dyld.cpp
 /src/linker/args_dynamic.cpp
+/src/linker/args_libs.cpp
 /src/linker/compiler_filter.cpp
 /src/linker/harden_filter.cpp
 /src/linker/path_filter.cpp
+/src/linker/script_libs.cpp
 /src/path_canonicalize.cpp
 /bins.txt
 
@@ -35,6 +37,8 @@ Makefile.in
 /test/linker/compiler_test
 /test/linker/harden_test
 /test/linker/path_test
+/test/linker/script_test
+/test/linker/state_test
 /test/path_test
 /test/strings_test
 /test/util_test

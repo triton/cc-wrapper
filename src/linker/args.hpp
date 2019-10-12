@@ -2,10 +2,13 @@
 #include <nonstd/span.hpp>
 #include <nonstd/string_view.hpp>
 
+#include "linker/state.hpp"
+
 namespace cc_wrapper {
 namespace linker {
 namespace args {
 
+void parseLibs(state::Libs &libs, nonstd::span<const nonstd::string_view> args);
 bool hasDynamicLinker(nonstd::span<const nonstd::string_view> args);
 bool isDynamicLinking(nonstd::span<const nonstd::string_view> args);
 
