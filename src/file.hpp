@@ -7,6 +7,7 @@ namespace cc_wrapper {
 namespace file {
 
 nonstd::optional<std::string> readlink(const char *path);
+nonstd::optional<std::string> readlinkCanonicalized(const char *path);
 
 nonstd::span<char> read(int fd, nonstd::span<char> buf);
 void write(int fd, nonstd::span<const char> data);

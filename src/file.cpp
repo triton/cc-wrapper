@@ -4,6 +4,9 @@
 #include <unistd.h>
 
 #include "file.hpp"
+#include "path.hpp"
+#include "strings.hpp"
+#include "util.hpp"
 
 namespace cc_wrapper {
 namespace file {
@@ -20,6 +23,18 @@ nonstd::optional<std::string> readlink(const char *path) {
     throw std::system_error(errno, std::generic_category(), "readlink");
   if (static_cast<size_t>(r) != ret.size())
     throw std::runtime_error("Bad readlink data");
+  return ret;
+}
+
+nonstd::optional<std::string> readlinkCanonicalized(const char *path) {
+  auto ret = readlink(path);
+  if (ret) {
+    if (ret->empty())
+      *ret = ".";
+    else if ((*ret)[0] != '/')
+      *ret = strings::cat(util::dirname(path), "/", *ret);
+    path::canonicalizeInPlace(*ret);
+  }
   return ret;
 }
 
