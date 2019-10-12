@@ -42,6 +42,7 @@ export AM_CPPFLAGS = -I. -Isrc -I$(srcdir)/src -DTOOLDIR="\"$(tooldir)\"" \
                      -DFMT_HEADER_ONLY=1 -DFMT_STRING_ALIAS=1 \
                      -I$(srcdir)/third_party/optional-lite/include \
                      -I$(srcdir)/third_party/parallel-hashmap \
+                     -Dspan_CONFIG_INDEX_TYPE=std::size_t \
                      -I$(srcdir)/third_party/span-lite/include \
                      -I$(srcdir)/third_party/string-view-lite/include \
                      -Wno-implicit-fallthrough $(CODE_COVERAGE_CPPFLAGS)

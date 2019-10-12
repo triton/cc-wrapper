@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 
     const auto &info = bins::getInfoMap().at(bin_name);
 
-    ssize_t nargs = info.extra_args.size() + argc;
+    size_t nargs = info.extra_args.size() + argc;
     std::unique_ptr<nonstd::string_view[]> args(new nonstd::string_view[nargs]);
     size_t iargs = 0;
     for (const auto &arg : info.extra_args)
