@@ -9,7 +9,8 @@ replaceLink() {
 }
 
 mkdir -p "$BINDIR" "$TOOLDIR"
+cc_wrapper="$BINDIR"/$TARGET${TARGET:+-}cc-wrapper
 for tool in $(cat "$1"); do
-  replaceLink "$BINDIR"/cc-wrapper "$BINDIR"/"$TARGET${TARGET:+-}$tool"
-  replaceLink "$BINDIR"/cc-wrapper "$TOOLDIR"/"$tool"
+  replaceLink "$cc_wrapper" "$BINDIR"/"$TARGET${TARGET:+-}$tool"
+  replaceLink "$cc_wrapper" "$TOOLDIR"/"$tool"
 done
