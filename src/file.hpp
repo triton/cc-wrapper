@@ -6,6 +6,7 @@
 namespace cc_wrapper {
 namespace file {
 
+bool exists(const char *path);
 nonstd::optional<std::string> readlink(const char *path);
 nonstd::optional<std::string> readlinkCanonicalized(const char *path);
 

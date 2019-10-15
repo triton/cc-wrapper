@@ -11,6 +11,15 @@
 namespace cc_wrapper {
 namespace file {
 
+TEST_CASE("Exists", "[exists]") {
+  constexpr char text[] = "test-file-text";
+  unlink(text);
+  CHECK(!exists(text));
+  Fd(text, O_RDWR | O_CREAT);
+  CHECK(exists(text));
+  unlink(text);
+}
+
 TEST_CASE("Readlink works", "[readlink]") {
   CHECK_THROWS_AS(readlink("/no-such-path/cc-wrapper"), std::system_error);
   constexpr char dir[] = "test-dir";
