@@ -8,7 +8,6 @@
 /m4
 /stamp-h1
 
-/cc-wrapper*.tar.*
 /src/bins.cpp
 /src/gcc/args.cpp
 /src/gcc/harden_filter.cpp
@@ -23,7 +22,7 @@
 Makefile
 Makefile.in
 
-/cc-wrapper
+/cc-wrapper*
 /test/flags_test
 /test/gcc/args_test
 /test/gcc/harden_test
@@ -42,3 +41,5 @@ Makefile.in
 *.a
 *.log
 *.trs
+*.gcda
+*.gcno
