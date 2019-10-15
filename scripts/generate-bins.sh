@@ -88,7 +88,7 @@ for dir in $TOOLDIRS; do
       [ "$TARGET${TARGET:+-}$tool" = "$file" ] && valid="$tool"
     done
     [ -n "$valid" ] || continue
-    adir="$(dirname "$(readlink -f "$dir/$file")")"
+    afile="$(readlink -f "$dir/$file")"
     t="$(get_type "$valid")"
     f="$(get_prefix_map_flag "$valid")"
     for s in "$valid" $(get_syms "$valid"); do
@@ -103,9 +103,9 @@ for dir in $TOOLDIRS; do
       linked_tools="$linked_tools $s"
       args="$(get_extra_args "$s")"
       if [ -n "$TARGET" ]; then
-        echo "{\"$TARGET-$s\", { \"$TARGET-$s\", Type::$t, \"$adir/$file\". $args, $f }}," >&3
+        echo "{\"$TARGET-$s\", { \"$TARGET-$s\", Type::$t, \"$afile\", $args, $f }}," >&3
       fi
-      echo "{\"$s\", { \"$s\", Type::$t, \"$adir/$file\", $args, $f }}," >&3
+      echo "{\"$s\", { \"$s\", Type::$t, \"$afile\", $args, $f }}," >&3
       echo "$s" >&4
     done
   done
