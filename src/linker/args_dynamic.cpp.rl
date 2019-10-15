@@ -8,7 +8,9 @@ namespace args {
 %%{
   machine dyld;
 
-  main := '-' 'B'? 'shared' %/{ return true; };
+  shared = 'shared' %/{ return true; };
+  static = 'static' %/{ is_shared = false; };
+  main := '-' ( shared | static );
 
   write data;
 }%%
@@ -16,6 +18,7 @@ namespace args {
 
 bool isDynamicLinking(nonstd::span<const nonstd::string_view> args) {
   int cs;
+  bool is_shared = true;
   for (const auto &arg : args) {
     const char *p = arg.data();
     const char *pe = p + arg.size();
@@ -25,7 +28,7 @@ bool isDynamicLinking(nonstd::span<const nonstd::string_view> args) {
     %% write exec;
     // clang-format on
   }
-  return false;
+  return is_shared;
 }
 
 }  // namespace args

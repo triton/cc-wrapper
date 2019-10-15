@@ -28,14 +28,13 @@ TEST_CASE("hasDynamicLinker", "[hasDynamicLinker]") {
 }
 
 TEST_CASE("isDynamicLinking", "[isDynamicLinking]") {
-  CHECK(!isDynamicLinking(std::vector<nonstd::string_view>{}));
-  CHECK(!isDynamicLinking(std::vector<nonstd::string_view>{""}));
+  CHECK(isDynamicLinking(std::vector<nonstd::string_view>{}));
+  CHECK(isDynamicLinking(std::vector<nonstd::string_view>{""}));
   CHECK(!isDynamicLinking(std::vector<nonstd::string_view>{"-static"}));
-  CHECK(!isDynamicLinking(std::vector<nonstd::string_view>{"-sharedd"}));
-  CHECK(
-      isDynamicLinking(std::vector<nonstd::string_view>{"-shared", "-static"}));
+  CHECK(isDynamicLinking(std::vector<nonstd::string_view>{"-staticc"}));
+  CHECK(isDynamicLinking(std::vector<nonstd::string_view>{"-sharedd"}));
   CHECK(isDynamicLinking(
-      std::vector<nonstd::string_view>{"-static", "-Bshared"}));
+      std::vector<nonstd::string_view>{"-static", "-shared", "-static"}));
 }
 
 }  // namespace args
