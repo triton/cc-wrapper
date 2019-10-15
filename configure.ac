@@ -74,7 +74,7 @@ AC_DEFUN([PREFIX_MAP_FLAG], [
                 [The flag to pass to $1 for setting the prefix map]),
                 [],
                 [with_prefix_map_flag_$1=auto])
-    AS_IF([test "x$with_preferred_compiler" = "xno" || test "$with_preferred_compiler" = "x$1"], [
+    AS_IF([test "x$with_preferred_compiler" = "xno" || test "x$with_preferred_compiler" = "x$1"], [
         AS_IF([test "x$with_prefix_map_flag_$1" = "xyes"], [
             AC_MSG_FAILURE("Please specify --with-prefix-map-flag-$1=<flag>")
         ])
