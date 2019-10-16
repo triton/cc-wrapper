@@ -65,6 +65,8 @@ src/bins.cpp bins.txt: $(srcdir)/scripts/generate-bins.sh
 MAINTAINERCLEANFILES = src/gcc/args.cpp src/gcc/harden_filter.cpp \
                        src/gcc/path_filter.cpp src/linker/args_dyld.cpp \
                        src/linker/args_dynamic.cpp src/linker/args_libs.cpp \
+                       src/linker/args_linking.cpp \
+                       src/linker/args_filter_linking.cpp \
                        src/linker/compiler_filter.cpp \
                        src/linker/harden_filter.cpp src/linker/path_filter.cpp \
                        src/linker/script_libs.cpp src/path_canonicalize.cpp
@@ -82,7 +84,8 @@ libccwrapper_a_SOURCES = src/env.cpp src/file.cpp src/flags.cpp src/gcc.cpp \
                          src/gcc/harden_filter.cpp src/gcc/path_filter.cpp \
                          src/generic.cpp src/linker.cpp \
                          src/linker/args_dyld.cpp src/linker/args_dynamic.cpp \
-                         src/linker/args_libs.cpp \
+                         src/linker/args_libs.cpp src/linker/args_linking.cpp \
+                         src/linker/args_filter_linking.cpp \
                          src/linker/compiler_filter.cpp \
                          src/linker/harden.cpp src/linker/harden_filter.cpp \
                          src/linker/path_filter.cpp src/linker/script_libs.cpp \
@@ -191,8 +194,11 @@ EXTRA_DIST = LICENSE NOTICE README.md \
              src/gcc/args.cpp.rl src/gcc/harden_filter.cpp.rl \
              src/gcc/path_filter.cpp.rl src/linker/args_dyld.cpp.rl \
              src/linker/args_dynamic.cpp.rl src/linker/args_libs.cpp.rl \
-             src/linker/harden_filter.cpp.rl src/linker/path_filter.cpp.rl \
-             src/path_canonicalize.cpp.rl src/linker/script_libs.cpp.rl \
+             src/linker/args_linking.cpp.rl \
+             src/linker/args_filter_linking.cpp.rl \
+             src/linker/harden_filter.cpp.rl \
+             src/linker/path_filter.cpp.rl src/path_canonicalize.cpp.rl \
+             src/linker/script_libs.cpp.rl \
              scripts/generate-bins.sh scripts/install-links.sh \
              third_party/fmt/include \
              third_party/optional-lite/include \

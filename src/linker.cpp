@@ -52,8 +52,11 @@ int main(const bins::Info &info, nonstd::span<const nonstd::string_view> args) {
       final_args.push_back(rpath);
     }
   }
-  for (auto arg : filtered_args)
-    final_args.push_back(arg);
+  if (!args::isLinking(args))
+    args::filterLinking(final_args, filtered_args);
+  else
+    for (auto arg : filtered_args)
+      final_args.push_back(arg);
   return generic::main(info, final_args);
 }
 
