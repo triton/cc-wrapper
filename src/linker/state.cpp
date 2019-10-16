@@ -47,6 +47,14 @@ std::vector<nonstd::string_view> Libs::resolveRequiredRPaths() {
       if (env::isDebug()) {
         fmt::print(stderr, "cc-wrapper: Parsing script `{}`\n", *lib);
       }
+      // Linker scripts are odd in that scripts in the sysroot are treated as
+      // special by bfd, and all relative paths are relative to the script
+      // directory. For scripts relative to the build directory, paths are
+      // assumed to be relative to the current working directory. gold comments
+      // suggest they conform to this, but also check the directory of relative
+      // scripts when searching for inputs. However, unpatched gold won't search
+      // the current working directory for relative scripts due to a possible
+      // bug.
       auto cwd = path::isAbsolute(*lib) ? util::dirname(*lib) : ".";
       script::parseLibs(*this, fd, cwd);
       continue;
