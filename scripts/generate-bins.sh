@@ -20,9 +20,9 @@ cpp -E
 
 types="
 clang GCC_COMPILER
-clang++ GCC_COMPILER
+clang++ GXX_COMPILER
 gcc GCC_COMPILER
-g++ GCC_COMPILER
+g++ GXX_COMPILER
 ld LINKER
 ld.bfd LINKER
 ld.gold LINKER
