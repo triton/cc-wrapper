@@ -141,6 +141,11 @@ test_linker_compiler_test_SOURCES = test/linker/compiler.cpp
 test_linker_compiler_test_LDADD = libccwrapper.a
 test_linker_compiler_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
+check_PROGRAMS += test/linker/harden_test
+test_linker_harden_test_SOURCES = test/linker/harden.cpp
+test_linker_harden_test_LDADD = libccwrapper.a
+test_linker_harden_test_CPPFLAGS = $(TEST_CPPFLAGS)
+
 check_PROGRAMS += test/linker/path_test
 test_linker_path_test_SOURCES = test/linker/path.cpp
 test_linker_path_test_LDADD = libccwrapper.a

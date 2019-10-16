@@ -33,6 +33,7 @@ Makefile.in
 /test/main_test
 /test/linker/args_test
 /test/linker/compiler_test
+/test/linker/harden_test
 /test/linker/path_test
 /test/path_test
 /test/strings_test
