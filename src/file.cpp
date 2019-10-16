@@ -41,7 +41,7 @@ nonstd::optional<std::string> readlinkCanonicalized(const char *path) {
   if (ret) {
     if (ret->empty())
       *ret = ".";
-    else if ((*ret)[0] != '/')
+    else if (!path::isAbsolute(*ret))
       *ret = strings::cat(util::dirname(path), "/", *ret);
     path::canonicalizeInPlace(*ret);
   }

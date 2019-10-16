@@ -23,6 +23,10 @@ bool isPure(nonstd::string_view path,
   return false;
 }
 
+bool isAbsolute(nonstd::string_view path) {
+  return !path.empty() && path[0] == '/';
+}
+
 std::string canonicalize(nonstd::string_view path) {
   auto ret = path.to_string();
   canonicalizeInPlace(ret);

@@ -15,6 +15,7 @@ public:
 bool isPure(nonstd::string_view path,
             nonstd::span<const nonstd::string_view> pure_prefixes);
 
+bool isAbsolute(nonstd::string_view path);
 std::string canonicalize(nonstd::string_view path);
 void canonicalizeInPlace(std::string &path);
 

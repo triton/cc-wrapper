@@ -30,6 +30,13 @@ TEST_CASE("Pure", "[isPure]") {
   CHECK(!isPure("/tmp/bash", prefixes));
 }
 
+TEST_CASE("Absolute", "[isAbsolute]") {
+  CHECK(!isAbsolute(""));
+  CHECK(isAbsolute("/no-such-path/hi"));
+  CHECK(!isAbsolute("./local"));
+  CHECK(!isAbsolute("local"));
+}
+
 TEST_CASE("Canonicalize Path", "[canonicalize]") {
   CHECK(canonicalize("/") == "/");
   CHECK(canonicalize(".") == ".");
