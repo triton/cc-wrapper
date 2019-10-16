@@ -46,21 +46,23 @@ static int ccMainInternal(const bins::Info &info,
   for (const auto &arg : args)
     if (harden::isValidFlag(arg, harden_env))
       new_args.push_back(arg);
-  flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS");
+  // It's critical that c++ flags happen before c flags as they
+  // often have include paths that need to be ordered before c ones
   if (cxx)
     flags::appendFromVar(new_args, VAR_PREFIX "_CXXFLAGS");
+  flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS");
   if (state.stdinc) {
-    flags::appendFromString(new_args, WRAPPER_CFLAGS);
     if (cxx && state.stdincxx)
       flags::appendFromString(new_args, WRAPPER_CXXFLAGS);
+    flags::appendFromString(new_args, WRAPPER_CFLAGS);
   }
   if (state.linking) {
-    flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS_LINK");
-    flags::appendFromString(new_args, WRAPPER_CFLAGS_LINK);
     if (cxx) {
       flags::appendFromVar(new_args, VAR_PREFIX "_CXXFLAGS_LINK");
       flags::appendFromString(new_args, WRAPPER_CXXFLAGS_LINK);
     }
+    flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS_LINK");
+    flags::appendFromString(new_args, WRAPPER_CFLAGS_LINK);
   }
 
   // Sanitize the final argument list for paths
