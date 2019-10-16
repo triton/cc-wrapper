@@ -27,5 +27,21 @@ TEST_CASE("Append padded multi string", "[appendFromString]") {
   CHECK(flags == expected);
 }
 
+TEST_CASE("Append flags from missing env var", "[appendFromVar]") {
+  const std::vector<nonstd::string_view> expected = {"hi"};
+  std::vector<nonstd::string_view> flags = {"hi"};
+  unsetenv("VAR");
+  appendFromVar(flags, "VAR");
+  CHECK(flags == expected);
+}
+
+TEST_CASE("Append flags from env var", "[appendFromVar]") {
+  const std::vector<nonstd::string_view> expected = {"hi", "str", "third"};
+  std::vector<nonstd::string_view> flags = {"hi"};
+  setenv("VAR", " str   third", 1);
+  appendFromVar(flags, "VAR");
+  CHECK(flags == expected);
+}
+
 }  // namespace flags
 }  // namespace cc_wrapper
