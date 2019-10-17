@@ -6,7 +6,7 @@ set -u
 valid_tools="as ar lld ld ld.bfd ld.gold ld.lld
              nm objdump objcopy ranlib readelf strip"
 if [ "$PREFERRED_COMPILER" = 'no' -o "$PREFERRED_COMPILER" = 'gcc' ]; then
-  valid_tools="$valid_tools gcc g++"
+  valid_tools="$valid_tools gcc g++ gcc-ar gcc-nm gcc-ranlib"
 fi
 if [ "$PREFERRED_COMPILER" = 'no' -o "$PREFERRED_COMPILER" = 'clang' ]; then
   valid_tools="$valid_tools clang clang++"
@@ -23,6 +23,9 @@ clang GCC_COMPILER
 clang++ GXX_COMPILER
 gcc GCC_COMPILER
 g++ GXX_COMPILER
+gcc-ar GCC_WRAPPER
+gcc-nm GCC_WRAPPER
+gcc-ranlib GCC_WRAPPER
 ld LINKER
 ld.bfd LINKER
 ld.gold LINKER

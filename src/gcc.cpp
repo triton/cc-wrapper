@@ -105,5 +105,14 @@ int cxxMain(const bins::Info &info,
   return ccMainInternal(info, args, true);
 }
 
+int wrapperMain(const bins::Info &info,
+                nonstd::span<const nonstd::string_view> args) {
+  std::vector<nonstd::string_view> final_args;
+  final_args.push_back("-B" TOOLDIR);
+  for (const auto arg : args)
+    final_args.push_back(arg);
+  return generic::main(info, final_args);
+}
+
 }  // namespace gcc
 }  // namespace cc_wrapper

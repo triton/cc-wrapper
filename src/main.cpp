@@ -55,6 +55,8 @@ int main(int argc, char *argv[]) {
       return gcc::ccMain(info, args_view);
     case bins::Type::GXX_COMPILER:
       return gcc::cxxMain(info, args_view);
+    case bins::Type::GCC_WRAPPER:
+      return gcc::wrapperMain(info, args_view);
     case bins::Type::LINKER:
       return linker::main(info, args_view);
     case bins::Type::GENERIC:

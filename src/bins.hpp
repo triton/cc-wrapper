@@ -8,7 +8,7 @@
 namespace cc_wrapper {
 namespace bins {
 
-enum class Type { GENERIC, GCC_COMPILER, GXX_COMPILER, LINKER };
+enum class Type { GENERIC, GCC_COMPILER, GXX_COMPILER, GCC_WRAPPER, LINKER };
 
 using Name = nonstd::string_view;
 using Path = nonstd::string_view;
