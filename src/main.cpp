@@ -10,6 +10,7 @@
 #include "gcc.hpp"
 #include "generic.hpp"
 #include "linker.hpp"
+#include "strings.hpp"
 #include "util.hpp"
 
 namespace cc_wrapper {
@@ -23,7 +24,7 @@ nonstd::string_view getBinName(const char *arg) {
 int main(int argc, char *argv[]) {
   try {
     auto bin_name = getBinName(argv[0]);
-    if (bin_name == "cc-wrapper") {
+    if (strings::endsWith(bin_name, "cc-wrapper")) {
       argc--;
       argv++;
       bin_name = getBinName(argv[0]);

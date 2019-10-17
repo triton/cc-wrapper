@@ -75,5 +75,13 @@ TEST_CASE("Split repeated", "[split]") {
   CHECK(s.empty());
 }
 
+TEST_CASE("Ends With", "[endsWith]") {
+  CHECK(!endsWith("", "abc"));
+  CHECK(!endsWith("ab", "abc"));
+  CHECK(endsWith("abc", "abc"));
+  CHECK(!endsWith("abcc", "abc"));
+  CHECK(endsWith("aabc", "abc"));
+}
+
 }  // namespace strings
 }  // namespace cc_wrapper

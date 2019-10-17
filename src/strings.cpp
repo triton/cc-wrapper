@@ -13,5 +13,11 @@ nonstd::string_view split(nonstd::string_view &str, char sep) {
   return first;
 }
 
+bool endsWith(nonstd::string_view str, nonstd::string_view suffix) {
+  if (str.size() < suffix.size())
+    return false;
+  return str.substr(str.size() - suffix.size(), suffix.size()) == suffix;
+}
+
 }  // namespace strings
 }  // namespace cc_wrapper

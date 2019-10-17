@@ -52,6 +52,7 @@ inline bool startsWith(nonstd::string_view str, nonstd::string_view prefix) {
 }
 
 nonstd::string_view split(nonstd::string_view &str, char sep);
+bool endsWith(nonstd::string_view str, nonstd::string_view suffix);
 
 }  // namespace strings
 }  // namespace cc_wrapper
