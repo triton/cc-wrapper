@@ -11,6 +11,7 @@
 #include "gcc/harden.hpp"
 #include "gcc/path.hpp"
 #include "generic.hpp"
+#include "path.hpp"
 #include "strings.hpp"
 #include "util.hpp"
 
@@ -85,8 +86,9 @@ static int ccMainInternal(const bins::Info &info,
   std::vector<std::string> generated_flags;
   if (info.prefix_map_flag)
     for (const auto &include : saved_includes)
-      generated_flags.push_back(strings::cat("-f", *info.prefix_map_flag, "=",
-                                             include, "=/no-such-path"));
+      if (cc_wrapper::path::isAbsolute(include))
+        generated_flags.push_back(strings::cat("-f", *info.prefix_map_flag, "=",
+                                               include, "=/no-such-path"));
   for (const auto &flag : generated_flags)
     final_args.push_back(flag);
 
