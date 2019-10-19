@@ -4,7 +4,7 @@
 
 std::string gpath;
 std::vector<std::string> gargv;
-int execv(const char *path, char *const argv[]) {
+extern "C" int execv(const char *path, char *const argv[]) {
   gpath = path;
   gargv.clear();
   for (; argv[0] != nullptr; ++argv)
