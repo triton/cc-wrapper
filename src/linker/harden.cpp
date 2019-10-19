@@ -27,6 +27,7 @@ Env getEnv() {
   env.no_exec_stack = getEnvVar(LD_VAR("NO_EXEC_STACK"));
   env.relro = getEnvVar(LD_VAR("RELRO"));
   env.bind_now = getEnvVar(LD_VAR("BIND_NOW"));
+  env.add_rpath = util::getenv(LD_VAR("ADD_RPATH")).value_or("1") == "1";
   return env;
 }
 

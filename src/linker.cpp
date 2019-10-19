@@ -27,11 +27,10 @@ int main(const bins::Info &info, nonstd::span<const nonstd::string_view> args) {
   std::vector<nonstd::string_view> initial_args;
   compiler::filterFlags(initial_args, args,
                         args::hasDynamicLinker(combined_args));
-  {
-    const auto harden_env = harden::getEnv();
-    harden::appendFlags(combined_args, harden_env);
-    harden::filterFlags(combined_args, initial_args, harden_env);
-  }
+  const auto harden_env = harden::getEnv();
+  harden::appendFlags(combined_args, harden_env);
+  harden::filterFlags(combined_args, initial_args, harden_env);
+
   flags::appendFromVar(combined_args, VAR_PREFIX "_LDFLAGS");
   flags::appendFromString(combined_args, WRAPPER_LDFLAGS);
   const bool dynamic = args::isDynamicLinking(initial_args);
@@ -45,7 +44,7 @@ int main(const bins::Info &info, nonstd::span<const nonstd::string_view> args) {
 
   std::vector<nonstd::string_view> final_args;
   state::Libs libs;
-  if (dynamic) {
+  if (dynamic && harden_env.add_rpath) {
     args::parseLibs(libs, filtered_args);
     for (const auto &rpath : libs.resolveRequiredRPaths()) {
       final_args.push_back("-rpath");

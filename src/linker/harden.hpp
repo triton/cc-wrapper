@@ -12,6 +12,7 @@ struct Env {
   bool no_exec_stack;
   bool relro;
   bool bind_now;
+  bool add_rpath;
 };
 
 Env getEnv();
