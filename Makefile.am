@@ -103,84 +103,88 @@ TEST_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/third_party/Catch2/single_include \
 check_PROGRAMS =
 TESTS = $(check_PROGRAMS)
 
+check_LIBRARIES = libcatch.a
+libcatch_a_SOURCES = test/catch_main.cpp
+libcatch_a_CPPFLAGS = $(TEST_CPPFLAGS)
+
 check_PROGRAMS += test/file_test
 test_file_test_SOURCES = test/file.cpp
-test_file_test_LDADD = libccwrapper.a
+test_file_test_LDADD = libccwrapper.a libcatch.a
 test_file_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/flags_test
 test_flags_test_SOURCES = test/flags.cpp
-test_flags_test_LDADD = libccwrapper.a
+test_flags_test_LDADD = libccwrapper.a libcatch.a
 test_flags_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/graph_test
 test_graph_test_SOURCES = test/graph.cpp
-test_graph_test_LDADD = libccwrapper.a
+test_graph_test_LDADD = libccwrapper.a libcatch.a
 test_graph_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/gcc/args_test
 test_gcc_args_test_SOURCES = test/gcc/args.cpp
-test_gcc_args_test_LDADD = libccwrapper.a
+test_gcc_args_test_LDADD = libccwrapper.a libcatch.a
 test_gcc_args_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/gcc/harden_test
 test_gcc_harden_test_SOURCES = test/gcc/harden.cpp
-test_gcc_harden_test_LDADD = libccwrapper.a
+test_gcc_harden_test_LDADD = libccwrapper.a libcatch.a
 test_gcc_harden_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/gcc/path_test
 test_gcc_path_test_SOURCES = test/gcc/path.cpp
-test_gcc_path_test_LDADD = libccwrapper.a
+test_gcc_path_test_LDADD = libccwrapper.a libcatch.a
 test_gcc_path_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/main_test
 test_main_test_SOURCES = test/main.cpp
-test_main_test_LDADD = libccwrapper.a
+test_main_test_LDADD = libccwrapper.a libcatch.a
 test_main_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/linker/args_test
 test_linker_args_test_SOURCES = test/linker/args.cpp
-test_linker_args_test_LDADD = libccwrapper.a
+test_linker_args_test_LDADD = libccwrapper.a libcatch.a
 test_linker_args_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/linker/compiler_test
 test_linker_compiler_test_SOURCES = test/linker/compiler.cpp
-test_linker_compiler_test_LDADD = libccwrapper.a
+test_linker_compiler_test_LDADD = libccwrapper.a libcatch.a
 test_linker_compiler_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/linker/harden_test
 test_linker_harden_test_SOURCES = test/linker/harden.cpp
-test_linker_harden_test_LDADD = libccwrapper.a
+test_linker_harden_test_LDADD = libccwrapper.a libcatch.a
 test_linker_harden_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/linker/path_test
 test_linker_path_test_SOURCES = test/linker/path.cpp
-test_linker_path_test_LDADD = libccwrapper.a
+test_linker_path_test_LDADD = libccwrapper.a libcatch.a
 test_linker_path_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/linker/script_test
 test_linker_script_test_SOURCES = test/linker/script.cpp
-test_linker_script_test_LDADD = libccwrapper.a
+test_linker_script_test_LDADD = libccwrapper.a libcatch.a
 test_linker_script_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/linker/state_test
 test_linker_state_test_SOURCES = test/linker/state.cpp
-test_linker_state_test_LDADD = libccwrapper.a
+test_linker_state_test_LDADD = libccwrapper.a libcatch.a
 test_linker_state_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/path_test
 test_path_test_SOURCES = test/path.cpp
-test_path_test_LDADD = libccwrapper.a
+test_path_test_LDADD = libccwrapper.a libcatch.a
 test_path_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/strings_test
 test_strings_test_SOURCES = test/strings.cpp
-test_strings_test_LDADD = libccwrapper.a
+test_strings_test_LDADD = libccwrapper.a libcatch.a
 test_strings_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 check_PROGRAMS += test/util_test
 test_util_test_SOURCES = test/util.cpp
-test_util_test_LDADD = libccwrapper.a
+test_util_test_LDADD = libccwrapper.a libcatch.a
 test_util_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
 install-exec-local: install-links
