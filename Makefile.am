@@ -39,7 +39,7 @@ tooldir = $(pkglibdir)/$(target_alias)/bin
 
 export AM_CPPFLAGS = -I. -Isrc -I$(srcdir)/src -DTOOLDIR="\"$(tooldir)\"" \
                      -I$(srcdir)/third_party/fmt/include \
-                     -DFMT_HEADER_ONLY=1 -DFMT_STRING_ALIAS=1 \
+                     -DFMT_STRING_ALIAS=1 \
                      -I$(srcdir)/third_party/optional-lite/include \
                      -I$(srcdir)/third_party/parallel-hashmap \
                      -Dspan_CONFIG_INDEX_TYPE=std::size_t \
@@ -79,8 +79,8 @@ clang-format:
 	$(CLANG_FORMAT) -i $(filter-out $(MAINTAINERCLEANFILES),$(DIST_SOURCES)) $(HEADERS)
 
 noinst_LIBRARIES = libccwrapper.a
-libccwrapper_a_SOURCES = src/env.cpp src/file.cpp src/flags.cpp src/gcc.cpp \
-                         src/gcc/args.cpp src/gcc/harden.cpp \
+libccwrapper_a_SOURCES = src/env.cpp src/file.cpp src/flags.cpp src/fmt.cpp \
+                         src/gcc.cpp src/gcc/args.cpp src/gcc/harden.cpp \
                          src/gcc/harden_filter.cpp src/gcc/path_filter.cpp \
                          src/generic.cpp src/linker.cpp \
                          src/linker/args_dyld.cpp src/linker/args_dynamic.cpp \
@@ -200,7 +200,7 @@ EXTRA_DIST = LICENSE NOTICE README.md \
              src/linker/path_filter.cpp.rl src/path_canonicalize.cpp.rl \
              src/linker/script_libs.cpp.rl \
              scripts/generate-bins.sh scripts/install-links.sh \
-             third_party/fmt/include \
+             third_party/fmt/include third_party/fmt/src \
              third_party/optional-lite/include \
              third_party/parallel-hashmap/parallel_hashmap \
              third_party/span-lite/include \
