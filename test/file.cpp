@@ -21,10 +21,10 @@ TEST_CASE("Exists", "[exists]") {
 
 TEST_CASE("Readlink works", "[readlink]") {
   CHECK_THROWS_AS(readlink("/no-such-path/cc-wrapper"), std::system_error);
-  constexpr char dir[] = "test-dir";
-  constexpr char link[] = "test-dir/test-file-link";
+  constexpr char dir[] = "test-file-dir";
+  constexpr char link[] = "test-file-dir/test-file-link";
   constexpr char link2[] = "test-file-link2";
-  constexpr char text[] = "test-dir/test-file-text";
+  constexpr char text[] = "test-file-dir/test-file-text";
   unlink(link);
   unlink(link2);
   unlink(text);
