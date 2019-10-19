@@ -15,6 +15,8 @@
 #include "linker/path.hpp"
 #include "linker/script.hpp"
 #include "linker/state.hpp"
+#include "path.hpp"
+#include "util.hpp"
 
 namespace cc_wrapper {
 namespace linker {
@@ -46,7 +48,15 @@ int main(const bins::Info &info, nonstd::span<const nonstd::string_view> args) {
   state::Libs libs;
   if (dynamic && harden_env.add_rpath) {
     args::parseLibs(libs, filtered_args);
+#ifdef BUILD_DIR_ENV_VAR
+    auto build_dir = util::getenv(BUILD_DIR_ENV_VAR);
+#endif
     for (const auto &rpath : libs.resolveRequiredRPaths()) {
+#ifdef BUILD_DIR_ENV_VAR
+      if (build_dir && !build_dir->empty() &&
+          cc_wrapper::path::startsWith(rpath, *build_dir))
+        continue;
+#endif
       final_args.push_back("-rpath");
       final_args.push_back(rpath);
     }
