@@ -1,5 +1,4 @@
 #include <catch2/catch.hpp>
-#include <parallel_hashmap/phmap.h>
 #include <vector>
 
 #include "env.hpp"
@@ -22,9 +21,11 @@ TEST_CASE("Filter Arguments", "[appendGood]") {
       "-z", "/usr/zoink",
       "-isystemm/usr/include",
   };
-  phmap::flat_hash_set<nonstd::string_view> expected_saved_includes = {
+  std::vector<nonstd::string_view> expected_saved_includes = {
       "/build/include",
       "/build/include2",
+      "/build/include",
+      "/build/include",
       "m/usr/include",
   };
   const std::vector<nonstd::string_view> prefixes = {
@@ -51,10 +52,22 @@ TEST_CASE("Filter Arguments", "[appendGood]") {
       "-I/usr/include",
   };
   // clang-format on
-  phmap::flat_hash_set<nonstd::string_view> saved_includes;
+  std::vector<nonstd::string_view> saved_includes;
   appendGood(output, input, prefixes, saved_includes);
   CHECK(expected == output);
-  CHECK(expected_saved_includes == saved_includes);
+  CHECK(saved_includes == expected_saved_includes);
+}
+
+TEST_CASE("Combine prefix flags", "[prefixMapFlags]") {
+  const std::vector<nonstd::string_view> dirs = {
+      "/usr///", "/usr/include/", "/include", "relative", ".",
+  };
+  const std::vector<std::string> expected = {
+      "-fmap=/usr=/no-such-path",
+      "-fmap=/include=/no-such-path",
+  };
+  CHECK_THAT(prefixMapFlags("map", dirs),
+             Catch::Matchers::UnorderedEquals(expected));
 }
 
 }  // namespace path

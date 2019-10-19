@@ -81,10 +81,11 @@ clang-format:
 noinst_LIBRARIES = libccwrapper.a
 libccwrapper_a_SOURCES = src/env.cpp src/file.cpp src/flags.cpp src/fmt.cpp \
                          src/gcc.cpp src/gcc/args.cpp src/gcc/harden.cpp \
-                         src/gcc/harden_filter.cpp src/gcc/path_filter.cpp \
-                         src/generic.cpp src/linker.cpp \
-                         src/linker/args_dyld.cpp src/linker/args_dynamic.cpp \
-                         src/linker/args_libs.cpp src/linker/args_linking.cpp \
+                         src/gcc/harden_filter.cpp src/gcc/path.cpp \
+                         src/gcc/path_filter.cpp src/generic.cpp \
+                         src/linker.cpp src/linker/args_dyld.cpp \
+                         src/linker/args_dynamic.cpp src/linker/args_libs.cpp \
+                         src/linker/args_linking.cpp \
                          src/linker/args_filter_linking.cpp \
                          src/linker/compiler_filter.cpp \
                          src/linker/harden.cpp src/linker/harden_filter.cpp \

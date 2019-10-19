@@ -33,5 +33,13 @@ std::string canonicalize(nonstd::string_view path) {
   return ret;
 }
 
+bool startsWith(nonstd::string_view path, nonstd::string_view prefix) {
+  if (!strings::startsWith(path, prefix))
+    return false;
+  if (prefix.size() == 1 || path.size() == prefix.size())
+    return true;
+  return path[prefix.size()] == '/';
+}
+
 }  // namespace path
 }  // namespace cc_wrapper

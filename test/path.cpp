@@ -68,5 +68,15 @@ TEST_CASE("Canonicalize Path", "[canonicalize]") {
   CHECK(canonicalize("lib/abc/../def/../z") == "lib/z");
 }
 
+TEST_CASE("Has Prefix", "[startsWith]") {
+  CHECK(startsWith("/usr2", "/"));
+  CHECK(!startsWith("/usr2", "/usr"));
+  CHECK(startsWith("/usr/include", "/usr"));
+  CHECK(!startsWith("/data", "/usr"));
+  CHECK(!startsWith("/", "/data"));
+  CHECK(!startsWith("/usr", "/usr///"));
+  CHECK(!startsWith("abc", "/"));
+}
+
 }  // namespace path
 }  // namespace cc_wrapper

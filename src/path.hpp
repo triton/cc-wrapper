@@ -19,5 +19,7 @@ bool isAbsolute(nonstd::string_view path);
 std::string canonicalize(nonstd::string_view path);
 void canonicalizeInPlace(std::string &path);
 
+bool startsWith(nonstd::string_view path, nonstd::string_view prefix);
+
 }  // namespace path
 }  // namespace cc_wrapper

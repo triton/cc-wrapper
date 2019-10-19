@@ -1,17 +1,17 @@
 #include <nonstd/optional.hpp>
 #include <nonstd/string_view.hpp>
-#include <parallel_hashmap/phmap.h>
+#include <string>
 #include <vector>
 
 #include "config.h"
 #include "env.hpp"
 #include "flags.hpp"
+#include "fmt_sv.hpp"
 #include "gcc.hpp"
 #include "gcc/args.hpp"
 #include "gcc/harden.hpp"
 #include "gcc/path.hpp"
 #include "generic.hpp"
-#include "path.hpp"
 #include "strings.hpp"
 #include "util.hpp"
 
@@ -74,21 +74,19 @@ static int ccMainInternal(const bins::Info &info,
     final_args.push_back("-nostdinc");
   final_args.push_back("-B" TOOLDIR);
   harden::appendFlags(final_args, harden_env, state);
-  phmap::flat_hash_set<nonstd::string_view> saved_includes;
+  std::vector<nonstd::string_view> saved_includes;
   path::appendGood(final_args, new_args, env::purePrefixes(), saved_includes);
 #ifdef BUILD_DIR_ENV_VAR
   {
     auto val = util::getenv(BUILD_DIR_ENV_VAR);
     if (val)
-      saved_includes.insert(*val);
+      saved_includes.push_back(*val);
   }
 #endif
   std::vector<std::string> generated_flags;
   if (info.prefix_map_flag)
-    for (const auto &include : saved_includes)
-      if (cc_wrapper::path::isAbsolute(include))
-        generated_flags.push_back(strings::cat("-f", *info.prefix_map_flag, "=",
-                                               include, "=/no-such-path"));
+    generated_flags =
+        path::prefixMapFlags(*info.prefix_map_flag, saved_includes);
   for (const auto &flag : generated_flags)
     final_args.push_back(flag);
 

@@ -1,6 +1,5 @@
 #include <nonstd/optional.hpp>
 #include <nonstd/string_view.hpp>
-#include <parallel_hashmap/phmap.h>
 
 #include "../path.hpp"
 #include "path.hpp"
@@ -27,7 +26,7 @@ namespace path {
 void appendGood(std::vector<nonstd::string_view> &new_args,
                 nonstd::span<const nonstd::string_view> old_args,
                 nonstd::span<const nonstd::string_view> pure_prefixes,
-                phmap::flat_hash_set<nonstd::string_view> &saved_includes) {
+                std::vector<nonstd::string_view> &saved_includes) {
   int cs;
   nonstd::optional<nonstd::string_view> open_flag;
   bool is_include;
@@ -37,7 +36,7 @@ void appendGood(std::vector<nonstd::string_view> &new_args,
         new_args.push_back(*open_flag);
         new_args.push_back(arg);
         if (is_include)
-          saved_includes.insert(arg);
+          saved_includes.push_back(arg);
       }
       open_flag = nonstd::nullopt;
       continue;
@@ -58,7 +57,7 @@ void appendGood(std::vector<nonstd::string_view> &new_args,
       continue;
     new_args.push_back(arg);
     if (path && is_include)
-      saved_includes.insert(*path);
+      saved_includes.push_back(*path);
   }
 }
 
