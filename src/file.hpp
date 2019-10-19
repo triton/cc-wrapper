@@ -36,6 +36,8 @@ public:
 
 private:
   int fd;
+
+  static int open(const char *path, int flags);
 };
 
 }  // namespace file

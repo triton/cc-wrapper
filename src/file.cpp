@@ -50,12 +50,16 @@ nonstd::optional<std::string> readlinkCanonicalized(const char *path) {
 
 Fd::Fd(const char *path, int flags) : Fd(open(path, flags)) {}
 
-Fd::Fd(int fd) : fd(fd) {
-  if (fd < 0)
-    throw std::system_error(errno, std::generic_category(), "open");
-}
+Fd::Fd(int fd) : fd(fd) {}
 
 Fd::~Fd() { close(fd); }
+
+int Fd::open(const char *path, int flags) {
+  int fd = ::open(path, flags);
+  if (fd < 0)
+    throw std::system_error(errno, std::generic_category(), "open");
+  return fd;
+}
 
 nonstd::span<char> read(int fd, nonstd::span<char> buf) {
   ssize_t r = ::read(fd, buf.data(), buf.size());
