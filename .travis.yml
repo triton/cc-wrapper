@@ -1,0 +1,60 @@
+os: linux
+dist: bionic
+sudo: false
+language: cpp
+
+addons:
+  apt:
+    sources: &apt_sources
+      - sourceline: 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-9 main'
+        key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
+      - sourceline: 'ppa:ubuntu-toolchain-r/test'
+    packages: &apt_packages
+      - autoconf
+      - autoconf-archive
+      - automake
+      - clang-format
+      - libtool
+      - valgrind
+
+matrix:
+  include:
+    - os: linux
+      addons:
+        apt:
+          update: true
+          packages: [*apt_packages, 'g++-6', 'gcc-6']
+      env: CC=gcc-6 CXX=g++-6
+    - os: linux
+      addons:
+        apt:
+          update: true
+          packages: [*apt_packages, 'clang', 'libc++-dev', 'libc++abi-dev']
+      env: CC=clang-6.0 CXX=clang++-6.0 CXXFLAGS=-stdlib=libc++
+    - os: linux
+      addons:
+        apt:
+          update: true
+          sources: *apt_sources
+          packages: [*apt_packages, 'g++-9', 'gcc-9']
+      env: CC=gcc-9 CXX=g++-9 CXXFLAGS=-std=c++17
+    - os: linux
+      addons:
+        apt:
+          update: true
+          sources: *apt_sources
+          packages: [*apt_packages, 'clang-9', 'libc++-9-dev', 'libc++abi-9-dev']
+      env: CC=clang-9 CXX=clang++-9 CXXFLAGS='-std=c++14 -stdlib=libc++'
+
+script:
+  - ./autogen.sh
+  - mkdir build
+  - cd build
+  - ../configure --enable-maintainer-mode --enable-valgrind --with-tooldirs=/usr/bin --with-preferred-compiler=gcc --prefix=$(pwd)/../install
+  - make -j10
+  - make -j10 check
+  - make -j10 check-valgrind
+  - make -j10 install
+  - echo 'int main() { }' >main.c
+  - ../install/bin/cc-wrapper gcc -o main main.c
+  - ./main
