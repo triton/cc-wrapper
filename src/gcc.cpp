@@ -36,7 +36,7 @@ bool doHardenFlag(nonstd::string_view flag) {
 
 }  // namespace detail
 
-static int ccMainInternal(const bins::Info &info,
+static int ccMainInternal(const bins::GccInfo &info,
                           nonstd::span<const nonstd::string_view> args,
                           bool cxx) {
   const auto state = args::parseState(args);
@@ -95,12 +95,12 @@ static int ccMainInternal(const bins::Info &info,
 
 int ccMain(const bins::Info &info,
            nonstd::span<const nonstd::string_view> args) {
-  return ccMainInternal(info, args, false);
+  return ccMainInternal(static_cast<const bins::GccInfo &>(info), args, false);
 }
 
 int cxxMain(const bins::Info &info,
             nonstd::span<const nonstd::string_view> args) {
-  return ccMainInternal(info, args, true);
+  return ccMainInternal(static_cast<const bins::GccInfo &>(info), args, true);
 }
 
 int wrapperMain(const bins::Info &info,

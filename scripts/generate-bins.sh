@@ -33,6 +33,13 @@ ld.lld LINKER
 lld LINKER
 "
 
+info_func="
+clang make_gcc_info
+clang++ make_gcc_info
+gcc make_gcc_info
+g++ make_gcc_info
+"
+
 syms="
 clang cc cpp
 clang++ c++
@@ -72,6 +79,52 @@ get_prefix_map_flag() {
   fi
 }
 
+get_info_func() {
+  local f
+  f="$(echo "$info_func" | grep "^$1 " | awk '{print $2}')"
+  if [ -n "$f" ]; then
+    echo "$f"
+  else
+    echo 'make_info'
+  fi
+}
+
+_make_info() {
+  local refname="$1"
+  local tool="$2"
+  local name="$3"
+  local file="$4"
+  local class="$5"
+  local extra="${6-}"
+
+  local t="$(get_type "$tool")"
+  local args="$(get_extra_args "$name")"
+  echo "map.emplace(\"$refname\", new $class(\"$TARGET${TARGET:+-}$name\", Type::$t, \"$file\", $args$extra));"
+}
+
+make_info() {
+  local tool="$1"
+  local name="$2"
+  local file="$3"
+  shift 3
+  local class="${1-Info}"
+  if [ "$#" -gt 1 ]; then
+    shift
+  fi
+
+  if [ -n "$TARGET" ]; then
+    _make_info "$TARGET-$name" "$tool" "$name" "$file" "$class" "$@"
+  fi
+  _make_info "$name" "$tool" "$name" "$file" "$class" "$@"
+}
+
+make_gcc_info() {
+  local tool="$1"
+
+  local f="$(get_prefix_map_flag "$tool")"
+  make_info "$@" GccInfo ", $f"
+}
+
 exec 3>"$1"
 exec 4>"$2"
 
@@ -79,8 +132,8 @@ echo '#include "bins.hpp"' >&3
 echo '' >&3
 echo 'namespace cc_wrapper {' >&3
 echo 'namespace bins {' >&3
-echo 'const InfoMap& getInfoMap() {' >&3
-echo 'static InfoMap map = {' >&3
+echo 'InfoMap makeInfoMap() {' >&3
+echo 'InfoMap map;' >&3
 oldifs="$IFS"
 IFS=":"
 for dir in $TOOLDIRS; do
@@ -92,8 +145,7 @@ for dir in $TOOLDIRS; do
     done
     [ -n "$valid" ] || continue
     afile="$(readlink -f "$dir/$file")"
-    t="$(get_type "$valid")"
-    f="$(get_prefix_map_flag "$valid")"
+    func="$(get_info_func "$valid")"
     for s in "$valid" $(get_syms "$valid"); do
       linked=
       for tool in $linked_tools; do
@@ -104,16 +156,15 @@ for dir in $TOOLDIRS; do
         continue
       fi
       linked_tools="$linked_tools $s"
-      args="$(get_extra_args "$s")"
-      if [ -n "$TARGET" ]; then
-        echo "{\"$TARGET-$s\", { \"$TARGET-$s\", Type::$t, \"$afile\", $args, $f }}," >&3
-      fi
-      echo "{\"$s\", { \"$s\", Type::$t, \"$afile\", $args, $f }}," >&3
+      "$func" "$valid" "$s" "$afile" >&3
       echo "$s" >&4
     done
   done
 done
-echo '};' >&3
+echo 'return map;' >&3
+echo '}' >&3
+echo 'const InfoMap& getInfoMap() {' >&3
+echo 'static InfoMap map = makeInfoMap();' >&3
 echo 'return map;' >&3
 echo '}' >&3
 echo '}' >&3

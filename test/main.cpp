@@ -7,11 +7,15 @@
 namespace cc_wrapper {
 namespace bins {
 
+InfoMap makeInfoMap() {
+  InfoMap map;
+  map.emplace("true", new Info("true", Type::GENERIC, "/bin/true", {}));
+  map.emplace("false", new Info("false", Type::GENERIC, "/bin/true", {"-n"}));
+  return map;
+}
+
 const InfoMap &getInfoMap() {
-  static InfoMap map = {
-      {"true", {"true", Type::GENERIC, "/bin/true", {}, nonstd::nullopt}},
-      {"false", {"false", Type::GENERIC, "/bin/true", {"-n"}, nonstd::nullopt}},
-  };
+  static InfoMap map = makeInfoMap();
   return map;
 }
 
