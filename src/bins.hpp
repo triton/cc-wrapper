@@ -30,12 +30,13 @@ struct Info {
 
 struct GccInfo : public Info {
   nonstd::optional<Flag> prefix_map_flag;
+  bool has_lto;
 
   inline GccInfo(Name name, Type type, Path abs_path,
                  std::vector<Flag> &&extra_args,
-                 nonstd::optional<Flag> &&prefix_map_flag)
+                 nonstd::optional<Flag> &&prefix_map_flag, bool has_lto)
       : Info(name, type, abs_path, std::move(extra_args)),
-        prefix_map_flag(prefix_map_flag) {}
+        prefix_map_flag(prefix_map_flag), has_lto(has_lto) {}
 };
 
 using InfoMap = phmap::flat_hash_map<Name, std::unique_ptr<Info>,

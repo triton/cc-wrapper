@@ -122,7 +122,7 @@ make_gcc_info() {
   local tool="$1"
 
   local f="$(get_prefix_map_flag "$tool")"
-  make_info "$@" GccInfo ", $f"
+  make_info "$@" GccInfo ", $f, $ENABLE_LTO"
 }
 
 exec 3>"$1"

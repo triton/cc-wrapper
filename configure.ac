@@ -102,6 +102,10 @@ AC_DEFUN([PREFIX_MAP_FLAG], [
 PREFIX_MAP_FLAG([gcc])
 PREFIX_MAP_FLAG([clang])
 
+AC_ARG_ENABLE([lto], AC_HELP_STRING([--enable-lto], [Should the target perform LTO]), [], enable_lto=no)
+AS_IF([test "x$enable_lto" = "xyes"], [enable_lto=true], [enable_lto=false])
+AC_SUBST([ENABLE_LTO], [$enable_lto])
+
 AC_SUBST([PREFERRED_COMPILER], [$with_preferred_compiler])
 AC_SUBST([PREFIX_MAP_FLAG_GCC], [$with_prefix_map_flag_gcc])
 AC_SUBST([PREFIX_MAP_FLAG_CLANG], [$with_prefix_map_flag_clang])

@@ -21,7 +21,7 @@ bool getEnvVar(nonstd::string_view flag) {
   return harden;
 }
 
-Env getEnv() {
+Env getEnv(const bins::GccInfo &info) {
   Env env;
   env.position_independent = getEnvVar(CC_VAR("PI"));
   env.no_strict_overflow = getEnvVar(CC_VAR("NO_STRICT_OVERFLOW"));
@@ -29,7 +29,7 @@ Env getEnv() {
   env.stack_protector = getEnvVar(CC_VAR("STACK_PROTECTOR"));
   // TODO: env.stack_clash_protection
   env.optimize = getEnvVar(CC_VAR("OPTIMIZE"));
-  env.lto = getEnvVar(CC_VAR("LTO"));
+  env.lto = info.has_lto ? getEnvVar(CC_VAR("LTO")) : false;
   return env;
 }
 

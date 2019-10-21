@@ -3,6 +3,7 @@
 #include <nonstd/string_view.hpp>
 #include <vector>
 
+#include "bins.hpp"
 #include "gcc/args.hpp"
 
 namespace cc_wrapper {
@@ -19,7 +20,7 @@ struct Env {
   bool lto;
 };
 
-Env getEnv();
+Env getEnv(const bins::GccInfo &info);
 void appendFlags(std::vector<nonstd::string_view> &args, const Env &env,
                  const args::State &state);
 bool isValidFlag(nonstd::string_view arg, const Env &env);
