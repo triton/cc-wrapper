@@ -161,6 +161,9 @@ AC_SUBST([RAGEL], [$RAGEL])
 
 AS_IF([test "x$enable_maintainer_mode" != "xno"], [
     AC_CHECK_PROGS([CLANG_FORMAT], [clang-format], [@true])
+    AS_IF([test "x$enable_maintainer_mode" = "xyes" && test "x$CLANG_FORMAT" = "x@true"], [
+        AC_MSG_FAILURE("clang-format is required")
+    ])
 ], [
     CLANG_FORMAT=@true
 ])
