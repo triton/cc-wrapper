@@ -1,8 +1,8 @@
 #include <nonstd/optional.hpp>
 #include <nonstd/string_view.hpp>
 
-#include "../path.hpp"
-#include "path.hpp"
+#include <path.hpp>
+#include <gcc/path.hpp>
 
 namespace cc_wrapper {
 namespace gcc {

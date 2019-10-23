@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "graph.hpp"
+#include <graph.hpp>
 
 namespace cc_wrapper {
 namespace linker {

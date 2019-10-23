@@ -1,4 +1,4 @@
-#include "gcc/harden.hpp"
+#include <gcc/harden.hpp>
 
 namespace cc_wrapper {
 namespace gcc {

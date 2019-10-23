@@ -1,6 +1,7 @@
 #pragma once
-#include "linker/state.hpp"
 #include <nonstd/string_view.hpp>
+
+#include <linker/state.hpp>
 
 namespace cc_wrapper {
 namespace linker {

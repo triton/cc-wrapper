@@ -2,10 +2,10 @@
 #include <nonstd/span.hpp>
 #include <nonstd/string_view.hpp>
 
-#include "../path.hpp"
-#include "file.hpp"
-#include "linker/script.hpp"
-#include "strings.hpp"
+#include <file.hpp>
+#include <linker/script.hpp>
+#include <path.hpp>
+#include <strings.hpp>
 
 namespace cc_wrapper {
 namespace linker {

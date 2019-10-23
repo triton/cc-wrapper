@@ -1,8 +1,8 @@
 #include <array>
 #include <vector>
 
-#include "file.hpp"
-#include "linker/script.hpp"
+#include <file.hpp>
+#include <linker/script.hpp>
 
 namespace cc_wrapper {
 namespace linker {

@@ -2,9 +2,9 @@
 #include <nonstd/string_view.hpp>
 #include <vector>
 
-#include "config.h"
-#include "linker/harden.hpp"
-#include "util.hpp"
+#include <config.h>
+#include <linker/harden.hpp>
+#include <util.hpp>
 
 #define LD_VAR(name) (VAR_PREFIX "_LD_" name)
 

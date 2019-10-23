@@ -3,20 +3,20 @@
 #include <string>
 #include <vector>
 
-#include "config.h"
-#include "env.hpp"
-#include "file.hpp"
-#include "flags.hpp"
-#include "generic.hpp"
-#include "linker.hpp"
-#include "linker/args.hpp"
-#include "linker/compiler.hpp"
-#include "linker/harden.hpp"
-#include "linker/path.hpp"
-#include "linker/script.hpp"
-#include "linker/state.hpp"
-#include "path.hpp"
-#include "util.hpp"
+#include <config.h>
+#include <env.hpp>
+#include <file.hpp>
+#include <flags.hpp>
+#include <generic.hpp>
+#include <linker.hpp>
+#include <linker/args.hpp>
+#include <linker/compiler.hpp>
+#include <linker/harden.hpp>
+#include <linker/path.hpp>
+#include <linker/script.hpp>
+#include <linker/state.hpp>
+#include <path.hpp>
+#include <util.hpp>
 
 namespace cc_wrapper {
 namespace linker {

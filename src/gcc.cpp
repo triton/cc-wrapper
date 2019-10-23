@@ -3,17 +3,17 @@
 #include <string>
 #include <vector>
 
-#include "config.h"
-#include "env.hpp"
-#include "flags.hpp"
-#include "fmt_sv.hpp"
-#include "gcc.hpp"
-#include "gcc/args.hpp"
-#include "gcc/harden.hpp"
-#include "gcc/path.hpp"
-#include "generic.hpp"
-#include "strings.hpp"
-#include "util.hpp"
+#include <config.h>
+#include <env.hpp>
+#include <flags.hpp>
+#include <fmt_sv.hpp>
+#include <gcc.hpp>
+#include <gcc/args.hpp>
+#include <gcc/harden.hpp>
+#include <gcc/path.hpp>
+#include <generic.hpp>
+#include <strings.hpp>
+#include <util.hpp>
 
 #define CC_VAR(name) (VAR_PREFIX "_CC_" name)
 

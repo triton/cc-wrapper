@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "flags.hpp"
+#include <flags.hpp>
 
 namespace cc_wrapper {
 namespace flags {

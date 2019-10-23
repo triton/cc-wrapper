@@ -1,7 +1,7 @@
 #include <nonstd/optional.hpp>
 #include <nonstd/string_view.hpp>
 
-#include "linker/args.hpp"
+#include <linker/args.hpp>
 
 namespace cc_wrapper {
 namespace linker {

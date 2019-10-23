@@ -3,8 +3,8 @@
 #include <nonstd/string_view.hpp>
 #include <vector>
 
-#include "bins.hpp"
-#include "gcc/args.hpp"
+#include <bins.hpp>
+#include <gcc/args.hpp>
 
 namespace cc_wrapper {
 namespace gcc {

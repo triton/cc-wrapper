@@ -1,8 +1,8 @@
 #include <parallel_hashmap/phmap.h>
 
-#include "../path.hpp"
-#include "path.hpp"
-#include "strings.hpp"
+#include <gcc/path.hpp>
+#include <path.hpp>
+#include <strings.hpp>
 
 namespace cc_wrapper {
 namespace gcc {

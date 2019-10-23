@@ -3,8 +3,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "file.hpp"
-#include "linker/state.hpp"
+#include <file.hpp>
+#include <linker/state.hpp>
 
 namespace cc_wrapper {
 namespace linker {

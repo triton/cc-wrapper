@@ -4,8 +4,8 @@
 #include <nonstd/string_view.hpp>
 #include <sys/mman.h>
 
-#include "file.hpp"
-#include "linker/script.hpp"
+#include <file.hpp>
+#include <linker/script.hpp>
 
 namespace cc_wrapper {
 namespace linker {

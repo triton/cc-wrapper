@@ -101,7 +101,7 @@ nodist_cc_wrapper_SOURCES = src/bins.cpp
 cc_wrapper_LDADD = libccwrapper.a
 
 TEST_CPPFLAGS = $(AM_CPPFLAGS) -I$(srcdir)/third_party/Catch2/single_include \
-                -DSRCDIR=\"$(abs_srcdir)\"
+                -DSRCDIR=\"$(abs_srcdir)\" -I$(srcdir)/test
 check_PROGRAMS =
 TESTS = $(check_PROGRAMS)
 

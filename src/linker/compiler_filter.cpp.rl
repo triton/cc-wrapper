@@ -1,4 +1,4 @@
-#include "linker/compiler.hpp"
+#include <linker/compiler.hpp>
 
 namespace cc_wrapper {
 namespace linker {

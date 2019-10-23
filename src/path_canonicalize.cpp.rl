@@ -2,7 +2,7 @@
 #include <nonstd/span.hpp>
 #include <vector>
 
-#include "path.hpp"
+#include <path.hpp>
 
 namespace cc_wrapper {
 namespace path {

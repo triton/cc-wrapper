@@ -1,8 +1,8 @@
 #include <catch2/catch.hpp>
 #include <vector>
 
-#include "env.hpp"
-#include "path.hpp"
+#include <env.hpp>
+#include <path.hpp>
 
 namespace cc_wrapper {
 namespace path {

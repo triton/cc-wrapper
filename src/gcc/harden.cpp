@@ -2,9 +2,9 @@
 #include <nonstd/string_view.hpp>
 #include <vector>
 
-#include "config.h"
-#include "gcc/harden.hpp"
-#include "util.hpp"
+#include <config.h>
+#include <gcc/harden.hpp>
+#include <util.hpp>
 
 #define CC_VAR(name) (VAR_PREFIX "_CC_" name)
 

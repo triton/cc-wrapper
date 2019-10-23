@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "linker/args.hpp"
+#include <linker/args.hpp>
 
 namespace cc_wrapper {
 namespace linker {

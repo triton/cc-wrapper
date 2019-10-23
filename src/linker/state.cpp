@@ -4,14 +4,14 @@
 #include <string>
 #include <utility>
 
-#include "../path.hpp"
-#include "env.hpp"
-#include "file.hpp"
-#include "fmt_sv.hpp"
-#include "linker/script.hpp"
-#include "linker/state.hpp"
-#include "strings.hpp"
-#include "util.hpp"
+#include <env.hpp>
+#include <file.hpp>
+#include <fmt_sv.hpp>
+#include <linker/script.hpp>
+#include <linker/state.hpp>
+#include <path.hpp>
+#include <strings.hpp>
+#include <util.hpp>
 
 namespace cc_wrapper {
 namespace linker {

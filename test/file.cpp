@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
-#include "file.hpp"
+#include <file.hpp>
 
 namespace cc_wrapper {
 namespace file {

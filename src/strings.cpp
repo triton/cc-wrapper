@@ -1,4 +1,4 @@
-#include "strings.hpp"
+#include <strings.hpp>
 
 namespace cc_wrapper {
 namespace strings {

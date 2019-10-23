@@ -5,8 +5,8 @@
 #include <string>
 #include <vector>
 
-#include "mock_exec.hpp"
-#include "util.hpp"
+#include <mock_exec.hpp>
+#include <util.hpp>
 
 namespace cc_wrapper {
 namespace util {

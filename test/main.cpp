@@ -1,8 +1,8 @@
 #include <catch2/catch.hpp>
 
-#include "bins.hpp"
-#include "main.hpp"
-#include "mock_exec.hpp"
+#include <bins.hpp>
+#include <main.hpp>
+#include <mock_exec.hpp>
 
 namespace cc_wrapper {
 namespace bins {

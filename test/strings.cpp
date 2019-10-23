@@ -3,7 +3,7 @@
 #include <string>
 #include <utility>
 
-#include "strings.hpp"
+#include <strings.hpp>
 
 constexpr nonstd::string_view sv1 = "hi";
 constexpr nonstd::string_view sv2 = "world";

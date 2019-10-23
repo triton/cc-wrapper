@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "linker/harden.hpp"
+#include <linker/harden.hpp>
 
 namespace cc_wrapper {
 namespace linker {

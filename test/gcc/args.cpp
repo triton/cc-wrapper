@@ -2,7 +2,7 @@
 #include <nonstd/string_view.hpp>
 #include <vector>
 
-#include "gcc/args.hpp"
+#include <gcc/args.hpp>
 
 namespace cc_wrapper {
 namespace gcc {

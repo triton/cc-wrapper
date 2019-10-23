@@ -2,7 +2,7 @@
 #include <nonstd/span.hpp>
 #include <nonstd/string_view.hpp>
 
-#include "bins.hpp"
+#include <bins.hpp>
 
 namespace cc_wrapper {
 namespace linker {

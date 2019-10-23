@@ -2,8 +2,8 @@
 #include <nonstd/string_view.hpp>
 #include <parallel_hashmap/phmap.h>
 
-#include "../path.hpp"
-#include "path.hpp"
+#include <path.hpp>
+#include <gcc/path.hpp>
 
 namespace cc_wrapper {
 namespace linker {

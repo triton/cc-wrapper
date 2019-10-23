@@ -3,7 +3,7 @@
 #include <nonstd/string_view.hpp>
 #include <vector>
 
-#include "linker/state.hpp"
+#include <linker/state.hpp>
 
 namespace cc_wrapper {
 namespace linker {

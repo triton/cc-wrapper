@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 #include <vector>
 
-#include "linker/compiler.hpp"
+#include <linker/compiler.hpp>
 
 namespace cc_wrapper {
 namespace linker {
