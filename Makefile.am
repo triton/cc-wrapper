@@ -77,7 +77,7 @@ MAINTAINERCLEANFILES = src/gcc/args.cpp src/gcc/harden_filter.cpp \
 BUILT_SOURCES = clang-format
 .PHONY: clang-format
 clang-format:
-	$(CLANG_FORMAT) -i $(filter-out $(MAINTAINERCLEANFILES),$(DIST_SOURCES)) $(HEADERS)
+	$(CLANG_FORMAT) -i $(addprefix $(srcdir)/,$(filter-out $(MAINTAINERCLEANFILES),$(DIST_SOURCES)) $(HEADERS))
 
 noinst_LIBRARIES = libccwrapper.a
 libccwrapper_a_SOURCES = src/env.cpp src/file.cpp src/flags.cpp src/fmt.cpp \
