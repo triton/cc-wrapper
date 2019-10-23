@@ -45,6 +45,7 @@ export AM_CPPFLAGS = -I. -Isrc -I$(srcdir)/src -DTOOLDIR="\"$(tooldir)\"" \
                      -Dspan_CONFIG_INDEX_TYPE=std::size_t \
                      -I$(srcdir)/third_party/span-lite/include \
                      -I$(srcdir)/third_party/string-view-lite/include \
+                     -Wall -Wextra $(if $(WERROR) != no,-Werror) \
                      -Wno-implicit-fallthrough $(CODE_COVERAGE_CPPFLAGS)
 export AM_CFLAGS = $(CODE_COVERAGE_CFLAGS)
 export AM_CXXFLAGS = $(CODE_COVERAGE_CXXFLAGS)

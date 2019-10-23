@@ -33,8 +33,6 @@ LT_INIT
 
 # Checks for typedefs, structures, and compiler characteristics.
 AX_CXX_COMPILE_STDCXX([11], [noext], [mandatory])
-AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [CFLAGS])
-AX_APPEND_COMPILE_FLAGS([-Wall -Wextra], [CXXFLAGS])
 
 AC_DEFUN([WRAPPER_WITH], [
     m4_define([escaped], m4_translit([$1], [-+.], [___]))
@@ -196,10 +194,7 @@ AX_ADD_AM_MACRO_STATIC([])
 # Otherwise some perfectly valid checks can fail and cause our
 # final configuratin to be broken.
 AC_ARG_ENABLE([werror], AC_HELP_STRING([--disable-werror], [Whether to automatically add -Werror CFLAGS]))
-AS_IF([test "x$enable_tests" != "xno"], [
-    AX_APPEND_COMPILE_FLAGS([-Werror], [CFLAGS])
-    AX_APPEND_COMPILE_FLAGS([-Werror], [CXXFLAGS])
-])
+AC_SUBST([WERROR], [$enable_werror])
 
 # Create configured output
 AC_CONFIG_FILES([Makefile])
