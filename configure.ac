@@ -153,8 +153,8 @@ AS_IF([test "x$with_pure_prefix_env_vars" = "xno"], [
 with_pure_prefix_env_vars=`echo "$with_pure_prefix_env_vars" | sed 's,:, ,'`
 AC_DEFINE_UNQUOTED([PURE_PREFIX_ENV_VARS], ["$with_pure_prefix_env_vars"], [Pure Prefix Environment Variables])
 
-AC_CHECK_PROGS([RAGEL], [ragel])
-AS_IF([test "x$enable_maintainer_mode" = "xyes" && test "x$RAGEL" = "x"], [
+AC_CHECK_PROGS([RAGEL], [ragel], [missing])
+AS_IF([test "x$enable_maintainer_mode" = "xyes" && test "x$RAGEL" = "xmissing"], [
     AC_MSG_FAILURE("Ragel is required but could not be found")
 ])
 AC_SUBST([RAGEL], [$RAGEL])
