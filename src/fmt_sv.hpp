@@ -5,6 +5,7 @@
 
 namespace fmt {
 
+#if __cplusplus < 201703L
 template <typename Char>
 struct formatter<nonstd::basic_string_view<Char>, Char>
     : formatter<basic_string_view<Char>, Char> {
@@ -15,5 +16,6 @@ struct formatter<nonstd::basic_string_view<Char>, Char>
         {val.data(), val.size()}, ctx);
   }
 };
+#endif
 
 }  // namespace fmt
