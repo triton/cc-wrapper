@@ -4,6 +4,7 @@
 #include <type_traits>
 
 #include <graph.hpp>
+#include <strings.hpp>
 
 struct Expensive {
   int i;
@@ -59,7 +60,7 @@ TEST_CASE("Types", "[types]") {
 
 TEST_CASE("Deref hashing works as expected", "[hashing]") {
   nonstd::string_view a = "a";
-  auto s = a.to_string();
+  auto s = strings::toString(a);
   nonstd::string_view b = s;
   CHECK(a.data() != b.data());
   phmap::flat_hash_map<std::reference_wrapper<const nonstd::string_view>, int>

@@ -28,7 +28,7 @@ bool isAbsolute(nonstd::string_view path) {
 }
 
 std::string canonicalize(nonstd::string_view path) {
-  auto ret = path.to_string();
+  auto ret = strings::toString(path);
   canonicalizeInPlace(ret);
   return ret;
 }

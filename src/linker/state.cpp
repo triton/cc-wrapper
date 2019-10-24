@@ -22,11 +22,11 @@ void Libs::addRPath(nonstd::string_view path) {
 }
 
 void Libs::addLib(nonstd::string_view lib) {
-  libs_to_lookup.push_back(lib.to_string());
+  libs_to_lookup.push_back(strings::toString(lib));
 }
 
 void Libs::addFile(nonstd::string_view file) {
-  files_to_lookup.push_back(file.to_string());
+  files_to_lookup.push_back(strings::toString(file));
 }
 
 void Libs::addLibPath(nonstd::string_view path) {
@@ -68,13 +68,13 @@ std::vector<nonstd::string_view> Libs::resolveRequiredRPaths() {
       auto libdir = util::dirname(*lib);
       auto lnkdir = util::dirname(*lnk);
       if (libdir != lnkdir)
-        required_rpath_order.connectAndInsert(libdir.to_string(),
-                                              lnkdir.to_string());
+        required_rpath_order.connectAndInsert(strings::toString(libdir),
+                                              strings::toString(lnkdir));
       else
-        required_rpath_order.insert(libdir.to_string());
+        required_rpath_order.insert(strings::toString(libdir));
       *lib = std::move(*lnk);
     }
-    required_rpath_set.insert(util::dirname(*lib).to_string());
+    required_rpath_set.insert(strings::toString(util::dirname(*lib)));
   }
 
   auto possible_rpaths = required_rpath_order.toposort();
