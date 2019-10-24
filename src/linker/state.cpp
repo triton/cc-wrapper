@@ -81,9 +81,9 @@ std::vector<nonstd::string_view> Libs::resolveRequiredRPaths() {
   std::vector<nonstd::string_view> ret;
   ret.reserve(possible_rpaths.size());
   for (auto rpath : possible_rpaths) {
-    if (required_rpath_set.find(rpath) == required_rpath_set.end())
+    if (required_rpath_set.find(rpath.get()) == required_rpath_set.end())
       continue;
-    if (rpath_set.find(rpath) != rpath_set.end())
+    if (rpath_set.find(rpath.get()) != rpath_set.end())
       continue;
     ret.push_back(rpath.get());
   }
