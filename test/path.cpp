@@ -9,6 +9,7 @@ namespace path {
 
 TEST_CASE("Impure", "[isPure]") {
   env::detail::enforcingPurity() = false;
+  CHECK(isPure("/dev/null", {}));
   CHECK(isPure("./local/file", {}));
   CHECK(isPure("local", {}));
   CHECK(!isPure("/no-such-path", {}));
@@ -18,6 +19,7 @@ TEST_CASE("Impure", "[isPure]") {
 
 TEST_CASE("Pure", "[isPure]") {
   env::detail::enforcingPurity() = true;
+  CHECK(isPure("/dev/null", {}));
   CHECK(isPure("./local/file", {}));
   CHECK(isPure("local", {}));
   CHECK(!isPure("/no-such-path", {}));

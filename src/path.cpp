@@ -11,7 +11,7 @@ PurityError::PurityError(nonstd::string_view path)
 
 bool isPure(nonstd::string_view path,
             nonstd::span<const nonstd::string_view> pure_prefixes) {
-  if (path.empty() || path[0] != '/')
+  if (path.empty() || path[0] != '/' || path == "/dev/null")
     return true;
   if (strings::startsWith(path, "/no-such-path"))
     return false;
