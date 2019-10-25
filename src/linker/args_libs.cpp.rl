@@ -43,6 +43,7 @@ namespace args {
   action skip_next { ++it; }
 
   ignored_ls = ( 'dynamic-linker' | ( 'plugin' '-opt'? ) ) %/skip_next;
+  ignored_l = 'sort-section' %/skip_next;
   ignored_s = ( [hImozTe] | 'soname' | 'Map' ) %/skip_next;
   rpath_ls = 'rpath' %/rpath_next '=' any* >rpath;
   lib_s = 'l' %/lib_next any* @lib;
@@ -53,7 +54,7 @@ namespace args {
   dynamic_s = 'Bdynamic' %/{ ignore_libs = false; };
   short = ( ignored_s | lib_s | libpath_s | static_s | dynamic_s );
   long_short = '-'? ( ignored_ls | rpath_ls );
-  long = '-' ( lib_l | libpath_l );
+  long = '-' ( ignored_l | lib_l | libpath_l );
   flag = '-' ( long | long_short | short );
   file = [^\-] @file;
   main := flag | file;
