@@ -89,6 +89,11 @@ get_info_func() {
   fi
 }
 
+prefixes() {
+  echo "$TARGET-"
+  echo ""
+}
+
 _make_info() {
   local refname="$1"
   local tool="$2"
@@ -112,10 +117,10 @@ make_info() {
     shift
   fi
 
-  if [ -n "$TARGET" ]; then
-    _make_info "$TARGET-$name" "$tool" "$name" "$file" "$class" "$@"
-  fi
-  _make_info "$name" "$tool" "$name" "$file" "$class" "$@"
+  local pfx
+  for pfx in $(prefixes) ""; do
+    _make_info "$pfx$name" "$tool" "$name" "$file" "$class" "$@"
+  done
 }
 
 make_gcc_info() {
@@ -123,6 +128,50 @@ make_gcc_info() {
 
   local f="$(get_prefix_map_flag "$tool")"
   make_info "$@" GccInfo ", $f, $ENABLE_LTO"
+}
+
+process_tools() {
+  local pfx="$1"
+  echo "Considering tools: $pfx" >&2
+
+  local oldifs="$IFS"
+  IFS=":"
+  local dir
+  for dir in $TOOLDIRS; do
+    IFS="$oldifs"
+    local file
+    for file in $(ls $dir); do
+      [ "$pfx" != "" ] && [ "${file#$pfx}" = "$file" ] && continue
+      local valid=
+      local tool
+      for tool in $valid_tools; do
+        [ "$pfx$tool" = "$file" ] && valid="$tool"
+        [ "$tool" = "$file" ] && valid="$tool"
+      done
+      [ -n "$valid" ] || continue
+      local afile
+      afile="$(readlink -f "$dir/$file")"
+      local func
+      func="$(get_info_func "$valid")"
+      local s
+      for s in "$valid" $(get_syms "$valid"); do
+        local linked=
+        local tool
+        for tool in $linked_tools; do
+          [ "$s" = "$tool" ] && linked=1
+        done
+        if [ -n "$linked" ]; then
+          echo "WARNiNG: Skipping duplicate tool $s" >&2
+          continue
+        fi
+        echo "Linking tool: $s $afile" >&2
+        linked_tools="$linked_tools $s"
+        "$func" "$valid" "$s" "$LINKDIR"/"$TARGET-$s" >&3
+        echo "$s $afile" >&4
+      done
+    done
+  done
+  IFS="$oldifs"
 }
 
 exec 3>"$1"
@@ -134,32 +183,8 @@ echo 'namespace cc_wrapper {' >&3
 echo 'namespace bins {' >&3
 echo 'InfoMap makeInfoMap() {' >&3
 echo 'InfoMap map;' >&3
-oldifs="$IFS"
-IFS=":"
-for dir in $TOOLDIRS; do
-  IFS="$oldifs"
-  for file in $(ls $dir); do
-    valid=
-    for tool in $valid_tools; do
-      [ "$TARGET${TARGET:+-}$tool" = "$file" ] && valid="$tool"
-    done
-    [ -n "$valid" ] || continue
-    afile="$(readlink -f "$dir/$file")"
-    func="$(get_info_func "$valid")"
-    for s in "$valid" $(get_syms "$valid"); do
-      linked=
-      for tool in $linked_tools; do
-        [ "$s" = "$tool" ] && linked=1
-      done
-      if [ -n "$linked" ]; then
-        echo "WARNiNG: Skipping duplicate tool $s" >&2
-        continue
-      fi
-      linked_tools="$linked_tools $s"
-      "$func" "$valid" "$s" "$afile" >&3
-      echo "$s" >&4
-    done
-  done
+for pfx in $(prefixes) ""; do
+  process_tools "$pfx"
 done
 echo 'return map;' >&3
 echo '}' >&3

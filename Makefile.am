@@ -35,7 +35,8 @@ clean-local: code-coverage-clean
 
 @VALGRIND_CHECK_RULES@
 
-tooldir = $(pkglibdir)/$(target_alias)/bin
+tooldir = $(pkglibdir)/$(target)/bin
+linkdir = $(pkglibdir)/unwrapped/bin
 
 export AM_CPPFLAGS = -I. -Isrc -I$(srcdir)/src -DTOOLDIR="\"$(tooldir)\"" \
                      -I$(srcdir)/third_party/fmt/include \
@@ -56,7 +57,8 @@ export LDADD = $(CODE_COVERAGE_LIBS)
 CLEANFILES = src/bins.cpp
 .INTERMEDIATE: src/bins.cpp.tmp bins.txt.tmp
 src/bins.cpp bins.txt: $(srcdir)/scripts/generate-bins.sh
-	TARGET="$(target_alias)" TOOLDIRS="$(TOOLDIRS)" \
+	TARGET="$(target)" TARGET_ALIAS="$(target_alias)" TOOLDIRS="$(TOOLDIRS)" \
+		LINKDIR="$(linkdir)" \
 		PREFERRED_COMPILER="$(PREFERRED_COMPILER)" \
 		PREFIX_MAP_FLAG_GCC="$(PREFIX_MAP_FLAG_GCC)" \
 		PREFIX_MAP_FLAG_CLANG="$(PREFIX_MAP_FLAG_CLANG)" \
@@ -194,8 +196,8 @@ test_util_test_CPPFLAGS = $(TEST_CPPFLAGS)
 install-exec-local: install-links
 .PHONY: install-links
 install-links: $(srcdir)/scripts/install-links.sh bins.txt
-	TARGET="$(target_alias)" TOOLDIR="$(tooldir)" BINDIR="$(bindir)" \
-		$< bins.txt
+	TARGET="$(target)" TOOLDIR="$(tooldir)" BINDIR="$(bindir)" \
+		LINKDIR="$(linkdir)" TARGET_ALIAS="$(target_alias)" $< bins.txt
 
 
 EXTRA_DIST = LICENSE NOTICE README.md \

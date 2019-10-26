@@ -82,6 +82,9 @@ AC_DEFUN([PREFIX_MAP_FLAG], [
         AS_IF([test "x$with_prefix_map_flag_$1" = "xauto"], [
             m4_define([var], m4_translit([$1], [a-z], [A-Z]))
             AC_CHECK_TARGET_TOOL(var()_TO_WRAP, [$1], [], [$with_tooldirs])
+            AS_IF([test "x$]var()[_TO_WRAP" = "x"], [
+                AC_CHECK_TOOL(var()_TO_WRAP, [$1], [], [$with_tooldirs])
+            ])
             AS_IF([test "x$]var()[_TO_WRAP" != "x"], [
                 AC_MSG_CHECKING([whether $]var()[_TO_WRAP accepts -ffile-prefix-map])
                 AS_IF([echo "" | $]var()[_TO_WRAP -ffile-prefix-map=/usr=/no-such-path -E - >/dev/null 2>&1], [
