@@ -101,20 +101,18 @@ _make_info() {
   local refname="$1"
   local tool="$2"
   local name="$3"
-  local file="$4"
-  local class="$5"
-  local extra="${6-}"
+  local class="$4"
+  local extra="${5-}"
 
   local t="$(get_type "$tool")"
   local args="$(get_extra_args "$name")"
-  echo "map.emplace(\"$refname\", new $class(\"$TARGET${TARGET:+-}$name\", Type::$t, \"$file\", $args$extra));"
+  echo "map.emplace(\"$refname\", new $class(\"$TARGET${TARGET:+-}$name\", Type::$t, $args$extra));"
 }
 
 make_info() {
   local tool="$1"
   local name="$2"
-  local file="$3"
-  shift 3
+  shift 2
   local class="${1-Info}"
   if [ "$#" -gt 1 ]; then
     shift
@@ -122,7 +120,7 @@ make_info() {
 
   local pfx
   for pfx in $(prefixes) ""; do
-    _make_info "$pfx$name" "$tool" "$name" "$file" "$class" "$@"
+    _make_info "$pfx$name" "$tool" "$name" "$class" "$@"
   done
 }
 
@@ -169,7 +167,7 @@ process_tools() {
         fi
         echo "Linking tool: $s $afile" >&2
         linked_tools="$linked_tools $s"
-        "$func" "$valid" "$s" "$LINKDIR"/"$TARGET-$s" >&3
+        "$func" "$valid" "$s" >&3
         echo "$s $afile" >&4
       done
     done

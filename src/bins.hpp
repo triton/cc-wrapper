@@ -19,23 +19,19 @@ using Flag = nonstd::string_view;
 struct Info {
   Name name;
   Type type;
-  Path abs_path;
   std::vector<Flag> extra_args;
 
-  inline Info(Name name, Type type, Path abs_path,
-              std::vector<Flag> &&extra_args)
-      : name(name), type(type), abs_path(abs_path),
-        extra_args(std::move(extra_args)) {}
+  inline Info(Name name, Type type, std::vector<Flag> &&extra_args)
+      : name(name), type(type), extra_args(std::move(extra_args)) {}
 };
 
 struct GccInfo : public Info {
   nonstd::optional<Flag> prefix_map_flag;
   bool has_lto;
 
-  inline GccInfo(Name name, Type type, Path abs_path,
-                 std::vector<Flag> &&extra_args,
+  inline GccInfo(Name name, Type type, std::vector<Flag> &&extra_args,
                  nonstd::optional<Flag> &&prefix_map_flag, bool has_lto)
-      : Info(name, type, abs_path, std::move(extra_args)),
+      : Info(name, type, std::move(extra_args)),
         prefix_map_flag(prefix_map_flag), has_lto(has_lto) {}
 };
 

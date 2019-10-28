@@ -39,6 +39,7 @@ tooldir = $(pkglibdir)/$(target)/bin
 linkdir = $(pkglibdir)/unwrapped/bin
 
 export AM_CPPFLAGS = -I. -Isrc -I$(srcdir)/src -DTOOLDIR="\"$(tooldir)\"" \
+                     -DLINKDIR="\"$(linkdir)\"" \
                      -I$(srcdir)/third_party/fmt/include \
                      -DFMT_STRING_ALIAS=1 \
                      -I$(srcdir)/third_party/optional-lite/include \

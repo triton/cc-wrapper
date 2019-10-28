@@ -1,6 +1,7 @@
 #include <catch2/catch.hpp>
 
 #include <bins.hpp>
+#include <config.h>
 #include <main.hpp>
 #include <mock_exec.hpp>
 
@@ -9,8 +10,8 @@ namespace bins {
 
 InfoMap makeInfoMap() {
   InfoMap map;
-  map.emplace("true", new Info("true", Type::GENERIC, "/bin/true", {}));
-  map.emplace("false", new Info("false", Type::GENERIC, "/bin/true", {"-n"}));
+  map.emplace("true", new Info("true", Type::GENERIC, {}));
+  map.emplace("false", new Info("false", Type::GENERIC, {"-n"}));
   return map;
 }
 
@@ -43,9 +44,9 @@ TEST_CASE("Run true", "[main]") {
   char arg1[] = "yes";
   char *argv[] = {arg0, arg1, nullptr};
   CHECK(main(2, argv) == 126);
-  CHECK(gpath == "/bin/true");
+  CHECK(gpath == LINKDIR "/true");
   REQUIRE(gargv.size() == 2);
-  CHECK(gargv[0] == "/bin/true");
+  CHECK(gargv[0] == LINKDIR "/true");
   CHECK(gargv[1] == arg1);
 }
 
@@ -55,9 +56,9 @@ TEST_CASE("Run false", "[main]") {
   char arg2[] = "no";
   char *argv[] = {arg0, arg1, arg2, nullptr};
   CHECK(main(3, argv) == 126);
-  CHECK(gpath == "/bin/true");
+  CHECK(gpath == LINKDIR "/false");
   REQUIRE(gargv.size() == 3);
-  CHECK(gargv[0] == "/bin/false");
+  CHECK(gargv[0] == LINKDIR "/false");
   CHECK(gargv[1] == "-n");
   CHECK(gargv[2] == "no");
 }
