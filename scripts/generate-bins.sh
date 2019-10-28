@@ -91,6 +91,9 @@ get_info_func() {
 
 prefixes() {
   echo "$TARGET-"
+  if [ "$(echo "$TARGET" | tr '-' '\n' | wc -l)" -eq 4 ]; then
+    echo "$TARGET" | awk -F- '{ print $1"-"$3"-"$4"-"; }'
+  fi
   echo ""
 }
 
