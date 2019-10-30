@@ -44,6 +44,12 @@ static int ccMainInternal(const bins::GccInfo &info,
 
   // Generate an unsanitized args list
   std::vector<nonstd::string_view> new_args;
+  flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS_BEFORE");
+  flags::appendFromString(new_args, WRAPPER_CFLAGS_BEFORE);
+  if (cxx) {
+    flags::appendFromVar(new_args, VAR_PREFIX "_CXXFLAGS_BEFORE");
+    flags::appendFromString(new_args, WRAPPER_CXXFLAGS_BEFORE);
+  }
   for (const auto &arg : args)
     if (harden::isValidFlag(arg, harden_env))
       new_args.push_back(arg);

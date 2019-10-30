@@ -51,8 +51,10 @@ AS_IF([test "x$with_tooldirs" != "xno"],
       [AC_SUBST([TOOLDIRS], [$with_tooldirs])],
       [AC_MSG_FAILURE("--with-tooldirs is required")])
 WRAPPER_WITH_DEFINE([cflags], [C compiler flags to provide for all invocations])
+WRAPPER_WITH_DEFINE([cflags-before], [C compiler flags to provide before all invocations])
 WRAPPER_WITH_DEFINE([cflags-link], [C compiler flags to provide if recursing to linking])
 WRAPPER_WITH_DEFINE([cxxflags], [C++ compiler flags to provide for all invocations])
+WRAPPER_WITH_DEFINE([cxxflags-before], [C++ compiler flags to provide before all invocations])
 WRAPPER_WITH_DEFINE([cxxflags-link], [C++ compiler flags to provide if recursing to linking])
 WRAPPER_WITH_DEFINE([ldflags], [Linker flags to provide after passed arguments])
 WRAPPER_WITH_DEFINE([ldflags-before], [Linker flags to provide before any passed arguments])
