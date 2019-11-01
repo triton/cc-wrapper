@@ -44,32 +44,32 @@ static int ccMainInternal(const bins::GccInfo &info,
 
   // Generate an unsanitized args list
   std::vector<nonstd::string_view> new_args;
-  flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS_BEFORE");
   flags::appendFromString(new_args, WRAPPER_CFLAGS_BEFORE);
+  flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS_BEFORE");
   if (cxx) {
-    flags::appendFromVar(new_args, VAR_PREFIX "_CXXFLAGS_BEFORE");
     flags::appendFromString(new_args, WRAPPER_CXXFLAGS_BEFORE);
+    flags::appendFromVar(new_args, VAR_PREFIX "_CXXFLAGS_BEFORE");
   }
   for (const auto &arg : args)
     if (harden::isValidFlag(arg, harden_env))
       new_args.push_back(arg);
   // It's critical that c++ flags happen before c flags as they
   // often have include paths that need to be ordered before c ones
-  if (cxx)
-    flags::appendFromVar(new_args, VAR_PREFIX "_CXXFLAGS");
-  flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS");
   if (state.stdinc) {
     if (cxx && state.stdincxx)
       flags::appendFromString(new_args, WRAPPER_CXXFLAGS);
     flags::appendFromString(new_args, WRAPPER_CFLAGS);
   }
+  if (cxx)
+    flags::appendFromVar(new_args, VAR_PREFIX "_CXXFLAGS");
+  flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS");
   if (state.linking) {
     if (cxx) {
-      flags::appendFromVar(new_args, VAR_PREFIX "_CXXFLAGS_LINK");
       flags::appendFromString(new_args, WRAPPER_CXXFLAGS_LINK);
+      flags::appendFromVar(new_args, VAR_PREFIX "_CXXFLAGS_LINK");
     }
-    flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS_LINK");
     flags::appendFromString(new_args, WRAPPER_CFLAGS_LINK);
+    flags::appendFromVar(new_args, VAR_PREFIX "_CFLAGS_LINK");
   }
 
   // Sanitize the final argument list for paths

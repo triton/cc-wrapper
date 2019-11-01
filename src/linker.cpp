@@ -23,8 +23,8 @@ namespace linker {
 
 int main(const bins::Info &info, nonstd::span<const nonstd::string_view> args) {
   std::vector<nonstd::string_view> combined_args;
-  flags::appendFromVar(combined_args, VAR_PREFIX "_LDFLAGS_BEFORE");
   flags::appendFromString(combined_args, WRAPPER_LDFLAGS_BEFORE);
+  flags::appendFromVar(combined_args, VAR_PREFIX "_LDFLAGS_BEFORE");
 
   std::vector<nonstd::string_view> initial_args;
   compiler::filterFlags(initial_args, args,
@@ -33,12 +33,12 @@ int main(const bins::Info &info, nonstd::span<const nonstd::string_view> args) {
   harden::appendFlags(combined_args, harden_env);
   harden::filterFlags(combined_args, initial_args, harden_env);
 
-  flags::appendFromVar(combined_args, VAR_PREFIX "_LDFLAGS");
   flags::appendFromString(combined_args, WRAPPER_LDFLAGS);
+  flags::appendFromVar(combined_args, VAR_PREFIX "_LDFLAGS");
   const bool dynamic = args::isDynamicLinking(initial_args);
   if (dynamic) {
-    flags::appendFromVar(combined_args, VAR_PREFIX "_LDFLAGS_DYNAMIC");
     flags::appendFromString(combined_args, WRAPPER_LDFLAGS_DYNAMIC);
+    flags::appendFromVar(combined_args, VAR_PREFIX "_LDFLAGS_DYNAMIC");
   }
 
   std::vector<nonstd::string_view> filtered_args;
