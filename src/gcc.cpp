@@ -40,7 +40,7 @@ static int ccMainInternal(const bins::GccInfo &info,
                           nonstd::span<const nonstd::string_view> args,
                           bool cxx) {
   const auto state = args::parseState(args);
-  const auto harden_env = harden::getEnv(info);
+  const auto harden_env = harden::getEnv();
 
   // Generate an unsanitized args list
   std::vector<nonstd::string_view> new_args;

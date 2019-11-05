@@ -27,12 +27,11 @@ struct Info {
 
 struct GccInfo : public Info {
   nonstd::optional<Flag> prefix_map_flag;
-  bool has_lto;
 
   inline GccInfo(Name name, Type type, std::vector<Flag> &&extra_args,
-                 nonstd::optional<Flag> &&prefix_map_flag, bool has_lto)
+                 nonstd::optional<Flag> &&prefix_map_flag)
       : Info(name, type, std::move(extra_args)),
-        prefix_map_flag(prefix_map_flag), has_lto(has_lto) {}
+        prefix_map_flag(prefix_map_flag) {}
 };
 
 using InfoMap = phmap::flat_hash_map<Name, std::unique_ptr<Info>,

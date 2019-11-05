@@ -63,7 +63,6 @@ src/bins.cpp bins.txt: $(srcdir)/scripts/generate-bins.sh
 		PREFERRED_COMPILER="$(PREFERRED_COMPILER)" \
 		PREFIX_MAP_FLAG_GCC="$(PREFIX_MAP_FLAG_GCC)" \
 		PREFIX_MAP_FLAG_CLANG="$(PREFIX_MAP_FLAG_CLANG)" \
-		ENABLE_LTO="$(ENABLE_LTO)" \
 		$< src/bins.cpp.tmp bins.txt.tmp
 	mv src/bins.cpp.tmp src/bins.cpp
 	mv bins.txt.tmp bins.txt

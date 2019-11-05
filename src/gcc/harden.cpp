@@ -21,15 +21,10 @@ bool getEnvVar(nonstd::string_view flag) {
   return harden;
 }
 
-Env getEnv(const bins::GccInfo &info) {
+Env getEnv() {
   Env env;
   env.position_independent = getEnvVar(CC_VAR("PI"));
-  env.no_strict_overflow = getEnvVar(CC_VAR("NO_STRICT_OVERFLOW"));
-  env.fortify_source = getEnvVar(CC_VAR("FORTIFY_SOURCE"));
-  env.stack_protector = getEnvVar(CC_VAR("STACK_PROTECTOR"));
-  // TODO: env.stack_clash_protection
   env.optimize = getEnvVar(CC_VAR("OPTIMIZE"));
-  env.lto = info.has_lto ? getEnvVar(CC_VAR("LTO")) : false;
   return env;
 }
 
@@ -40,21 +35,8 @@ void appendFlags(std::vector<nonstd::string_view> &args, const Env &env,
     if (state.linking && !state.produceShlib)
       args.push_back("-pie");
   }
-  if (env.no_strict_overflow) {
-    args.push_back("-fno-strict-overflow");
-  }
-  if (env.fortify_source) {
-    args.push_back("-D_FORTIFY_SOURCE=2");
-  }
-  if (env.stack_protector) {
-    args.push_back("-fstack-protector-strong");
-  }
-  // TODO: -fstack-clash-protection
   if (env.optimize) {
     args.push_back("-O2");
-  }
-  if (env.lto) {
-    args.push_back("-flto");
   }
 }
 
