@@ -14,8 +14,8 @@ namespace harden {
   pi_suffix = 'PIC' | 'PIE' | 'pic' | 'pie';
   pi = ( flag_prefix pi_suffix  | '-' maybe_no 'pie' )
       %{ if (env.position_independent) return false; };
-  opt = '-O' @{ if (env.optimize) return false; };
   native = '-m' ( 'arch' | 'tune' ) '=native' %{ return false; };
+  opt = '-O'[^3] @{ if (env.optimize) return false; };
   main := pi | opt | native;
 
   write data;

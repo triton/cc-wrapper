@@ -23,6 +23,7 @@ TEST_CASE("Enabled flags", "[isValidFlag]") {
   CHECK(!isValidFlag("-O0", env));
   CHECK(!isValidFlag("-Ofast", env));
   CHECK(!isValidFlag("-Os", env));
+  CHECK(isValidFlag("-O3", env));
   CHECK(!isValidFlag("-march=native", env));
   CHECK(!isValidFlag("-mtune=native", env));
 }
@@ -44,6 +45,7 @@ TEST_CASE("Disabled Flags", "[isValidFlag]") {
   CHECK(isValidFlag("-O0", env));
   CHECK(isValidFlag("-Ofast", env));
   CHECK(isValidFlag("-Os", env));
+  CHECK(isValidFlag("-O3", env));
   CHECK(!isValidFlag("-march=native", env));
   CHECK(!isValidFlag("-mtune=native", env));
 }
