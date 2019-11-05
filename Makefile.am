@@ -73,7 +73,7 @@ MAINTAINERCLEANFILES = src/gcc/args.cpp src/gcc/harden_filter.cpp \
                        src/linker/args_linking.cpp \
                        src/linker/args_filter_linking.cpp \
                        src/linker/compiler_filter.cpp \
-                       src/linker/harden_filter.cpp src/linker/path_filter.cpp \
+                       src/linker/path_filter.cpp \
                        src/linker/script_libs.cpp src/path_canonicalize.cpp
 %.cpp: %.cpp.rl
 	$(RAGEL) -G2 -C -o $@ $<
@@ -93,7 +93,6 @@ libccwrapper_a_SOURCES = src/env.cpp src/file.cpp src/flags.cpp src/fmt.cpp \
                          src/linker/args_linking.cpp \
                          src/linker/args_filter_linking.cpp \
                          src/linker/compiler_filter.cpp \
-                         src/linker/harden.cpp src/linker/harden_filter.cpp \
                          src/linker/path_filter.cpp src/linker/script_libs.cpp \
                          src/linker/state.cpp src/linker/script.cpp \
                          src/main.cpp src/path.cpp src/path_canonicalize.cpp \
@@ -158,11 +157,6 @@ test_linker_compiler_test_SOURCES = test/linker/compiler.cpp
 test_linker_compiler_test_LDADD = libccwrapper.a libcatch.a
 test_linker_compiler_test_CPPFLAGS = $(TEST_CPPFLAGS)
 
-check_PROGRAMS += test/linker/harden_test
-test_linker_harden_test_SOURCES = test/linker/harden.cpp
-test_linker_harden_test_LDADD = libccwrapper.a libcatch.a
-test_linker_harden_test_CPPFLAGS = $(TEST_CPPFLAGS)
-
 check_PROGRAMS += test/linker/path_test
 test_linker_path_test_SOURCES = test/linker/path.cpp
 test_linker_path_test_LDADD = libccwrapper.a libcatch.a
@@ -206,7 +200,6 @@ EXTRA_DIST = LICENSE NOTICE README.md \
              src/linker/args_dynamic.cpp.rl src/linker/args_libs.cpp.rl \
              src/linker/args_linking.cpp.rl \
              src/linker/args_filter_linking.cpp.rl \
-             src/linker/harden_filter.cpp.rl \
              src/linker/path_filter.cpp.rl src/path_canonicalize.cpp.rl \
              src/linker/script_libs.cpp.rl \
              scripts/generate-bins.sh scripts/install-links.sh \
@@ -220,7 +213,7 @@ noinst_HEADERS = src/bins.hpp src/env.hpp src/file.hpp src/flags.hpp \
                  src/fmt_sv.hpp src/gcc.hpp src/gcc/args.hpp \
                  src/gcc/harden.hpp src/gcc/path.hpp src/generic.hpp \
                  src/graph.hpp src/linker.hpp src/linker/args.hpp \
-                 src/linker/compiler.hpp src/linker/harden.hpp \
+                 src/linker/compiler.hpp \
                  src/linker/path.hpp src/linker/script.hpp \
                  src/linker/state.hpp src/main.hpp src/path.hpp \
                  src/strings.hpp src/util.hpp \

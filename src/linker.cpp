@@ -11,7 +11,6 @@
 #include <linker.hpp>
 #include <linker/args.hpp>
 #include <linker/compiler.hpp>
-#include <linker/harden.hpp>
 #include <linker/path.hpp>
 #include <linker/script.hpp>
 #include <linker/state.hpp>
@@ -29,9 +28,8 @@ int main(const bins::Info &info, nonstd::span<const nonstd::string_view> args) {
   std::vector<nonstd::string_view> initial_args;
   compiler::filterFlags(initial_args, args,
                         args::hasDynamicLinker(combined_args));
-  const auto harden_env = harden::getEnv();
-  harden::appendFlags(combined_args, harden_env);
-  harden::filterFlags(combined_args, initial_args, harden_env);
+  for (const auto &arg : initial_args)
+    combined_args.push_back(arg);
 
   flags::appendFromString(combined_args, WRAPPER_LDFLAGS);
   flags::appendFromVar(combined_args, VAR_PREFIX "_LDFLAGS");
@@ -46,7 +44,9 @@ int main(const bins::Info &info, nonstd::span<const nonstd::string_view> args) {
 
   std::vector<nonstd::string_view> final_args;
   state::Libs libs;
-  if (dynamic && harden_env.add_rpath) {
+  const bool add_rpath =
+      util::getenv(VAR_PREFIX "_LD_ADD_RPATH").value_or("1") == "1";
+  if (dynamic && add_rpath) {
     args::parseLibs(libs, filtered_args);
 #ifdef BUILD_DIR_ENV_VAR
     auto build_dir = util::getenv(BUILD_DIR_ENV_VAR);
