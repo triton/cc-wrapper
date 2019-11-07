@@ -69,11 +69,6 @@ AC_ARG_WITH([dynamic-linker], AC_HELP_STRING(
             [with_dynamic_linker=no])
 AS_IF([test "x$with_dynamic_linker" = "xyes"], [with_dynamic_linker=])
 AS_IF([test "x$with_dynamic_linker" != "xno"], [
-    AS_IF([test "x$with_dynamic_linker" != "x"], [
-        AC_CHECK_FILE(["$with_dynamic_linker"], [], [
-            AC_MSG_FAILURE(["Invalid dynamic linker file"])
-        ])
-    ])
     AC_DEFINE_UNQUOTED(DYNAMIC_LINKER, ["$with_dynamic_linker"], [Dynamic Linker])
 ])
 
