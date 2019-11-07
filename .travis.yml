@@ -29,6 +29,12 @@ matrix:
       addons:
         apt:
           update: true
+          packages: [*apt_packages, 'g++-6-aarch64-linux-gnu', 'gcc-6-aarch64-linux-gnu']
+      env: CC=aarch64-linux-gnu-gcc-6 CXX=aarch64-linux-gnu-g++-6 CROSS=1 CONFIGURE_FLAGS=--host=aarch64-linux-gnu
+    - os: linux
+      addons:
+        apt:
+          update: true
           packages: [*apt_packages, 'clang', 'libc++-dev', 'libc++abi-dev']
       env: CC=clang-6.0 CXX=clang++-6.0 CXXFLAGS=-stdlib=libc++
     - os: linux
@@ -50,11 +56,11 @@ script:
   - ./autogen.sh
   - mkdir build
   - cd build
-  - ../configure --enable-maintainer-mode --enable-valgrind --with-tooldirs=/usr/bin --with-preferred-compiler=gcc --prefix=$(pwd)/../install
+  - ../configure ${CONFIGURE_FLAGS-} --enable-maintainer-mode --enable-valgrind --with-tooldirs=/usr/bin --with-preferred-compiler=gcc --prefix=$(pwd)/../install
   - make -j10
-  - make -j10 check
-  - make -j10 check-valgrind
+  - test -n "${CROSS-}" || make -j10 check
+  - test -n "${CROSS-}" || make -j10 check-valgrind
   - make -j10 install
-  - echo 'int main() { }' >main.c
-  - ../install/bin/cc-wrapper gcc -o main main.c
-  - ./main
+  - test -n "${CROSS-}" || echo 'int main() { }' >main.c
+  - test -n "${CROSS-}" || ../install/bin/cc-wrapper gcc -o main main.c
+  - test -n "${CROSS-}" || ./main
