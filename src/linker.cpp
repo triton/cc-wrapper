@@ -20,14 +20,25 @@
 namespace cc_wrapper {
 namespace linker {
 
+#ifdef DYNAMIC_LINKER
+constexpr bool remove_dynamic_linker = true;
+constexpr nonstd::string_view dynamic_linker = DYNAMIC_LINKER;
+#else
+constexpr bool remove_dynamic_linker = false;
+constexpr nonstd::string_view dynamic_linker = "";
+#endif
+
 int main(const bins::Info &info, nonstd::span<const nonstd::string_view> args) {
   std::vector<nonstd::string_view> combined_args;
+  if (!dynamic_linker.empty() && args::hasDynamicLinker(args)) {
+    combined_args.push_back("-dynamic-linker");
+    combined_args.push_back(dynamic_linker);
+  }
   flags::appendFromString(combined_args, WRAPPER_LDFLAGS_BEFORE);
   flags::appendFromVar(combined_args, VAR_PREFIX "_LDFLAGS_BEFORE");
 
   std::vector<nonstd::string_view> initial_args;
-  compiler::filterFlags(initial_args, args,
-                        args::hasDynamicLinker(combined_args));
+  compiler::filterFlags(initial_args, args, remove_dynamic_linker);
   for (const auto &arg : initial_args)
     combined_args.push_back(arg);
 

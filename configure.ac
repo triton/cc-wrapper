@@ -62,6 +62,21 @@ WRAPPER_WITH_DEFINE([ldflags], [Linker flags to provide after passed arguments])
 WRAPPER_WITH_DEFINE([ldflags-before], [Linker flags to provide before any passed arguments])
 WRAPPER_WITH_DEFINE([ldflags-dynamic], [Linker flags to provide if working with shared libraries])
 
+AC_ARG_WITH([dynamic-linker], AC_HELP_STRING(
+            [--with-dynamic-linker=<path to dyld>],
+            [The dynamic linker to use as an override if specified]),
+            [],
+            [with_dynamic_linker=no])
+AS_IF([test "x$with_dynamic_linker" = "xyes"], [with_dynamic_linker=])
+AS_IF([test "x$with_dynamic_linker" != "xno"], [
+    AS_IF([test "x$with_dynamic_linker" != "x"], [
+        AC_CHECK_FILE(["$with_dynamic_linker"], [], [
+            AC_MSG_FAILURE(["Invalid dynamic linker file"])
+        ])
+    ])
+    AC_DEFINE_UNQUOTED(DYNAMIC_LINKER, ["$with_dynamic_linker"], [Dynamic Linker])
+])
+
 AC_ARG_WITH([preferred-compiler], AC_HELP_STRING(
             [--with-preferred-compiler=<no|gcc|clang>],
             [The compiler to prefer when detecting and linking]),
