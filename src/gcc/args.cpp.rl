@@ -8,18 +8,35 @@ namespace args {
 %%{
   machine parse;
 
+  cxx = 'c++' %{ state.cxx = true; };
+  c = 'c' %{ state.cxx = false; };
+  xopts = cxx | c;
+
+  action xopts_next {
+    if (++it >= args.end())
+      fbreak;
+    p = it->data();
+    pe = p + it->size();
+    eof = pe;
+    fhold;
+    fgoto xopts;
+  }
+
   noLink = ( '-' . ('c'|'E'|'S'|'M'|'MM') ) %{ state.linking = false; };
   produceShlib = '-shared' %{ state.produceShlib = true; };
   stdinc = '-nostdinc' %{ state.stdinc = false; };
   stdincxx = '-nostdincxx' %{ state.stdincxx = false; };
   flagOnly = [^\-] @{ flagOnly = false; };
-  main := noLink | produceShlib | stdinc | stdincxx | flagOnly;
+  parse = noLink | produceShlib | stdinc | stdincxx | flagOnly;
+  lang = '-x' %/xopts_next xopts;
+
+  main := lang | parse;
 
   write data;
 }%%
 // clang-format on
 
-State parseState(nonstd::span<const nonstd::string_view> args) {
+State parseState(nonstd::span<const nonstd::string_view> args, bool cxx) {
   int cs;
   bool flagOnly = true;
   State state;
@@ -27,9 +44,10 @@ State parseState(nonstd::span<const nonstd::string_view> args) {
   state.produceShlib = false;
   state.stdinc = true;
   state.stdincxx = true;
-  for (const auto &arg : args) {
-    const char *p = arg.data();
-    const char *pe = p + arg.size();
+  state.cxx = cxx;
+  for (auto it = args.begin(); it < args.end(); ++it) {
+    const char *p = it->data();
+    const char *pe = p + it->size();
     const char *eof = pe;
     // clang-format off
     %% write init;

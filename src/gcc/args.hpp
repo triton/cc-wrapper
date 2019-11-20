@@ -11,9 +11,10 @@ struct State {
   bool produceShlib;
   bool stdinc;
   bool stdincxx;
+  bool cxx;
 };
 
-State parseState(nonstd::span<const nonstd::string_view> args);
+State parseState(nonstd::span<const nonstd::string_view> args, bool cxx);
 
 }  // namespace args
 }  // namespace gcc
