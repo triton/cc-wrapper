@@ -29,7 +29,8 @@ constexpr nonstd::string_view dynamic_linker = "";
 #endif
 
 void maybeFilterLinking(std::vector<nonstd::string_view> &new_args,
-                   nonstd::span<const nonstd::string_view> old_args, bool is_linking) {
+                        nonstd::span<const nonstd::string_view> old_args,
+                        bool is_linking) {
   if (!is_linking)
     args::filterLinking(new_args, old_args);
   else
@@ -60,7 +61,8 @@ int main(const bins::Info &info, nonstd::span<const nonstd::string_view> args) {
   }
 
   std::vector<nonstd::string_view> filtered_args, filtered_args_begin;
-  path::appendGood(filtered_args_begin, combined_args_begin, env::purePrefixes());
+  path::appendGood(filtered_args_begin, combined_args_begin,
+                   env::purePrefixes());
   path::appendGood(filtered_args, combined_args, env::purePrefixes());
 
   const bool is_linking = args::isLinking(args);
