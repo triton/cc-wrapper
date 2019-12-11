@@ -1,6 +1,6 @@
 # Initialization
 AC_PREREQ([2.69])
-AC_INIT([cc-wrapper], [0.1.5], [https://github.com/triton/cc-wrapper/issues])
+AC_INIT([cc-wrapper], [0.1.6], [https://github.com/triton/cc-wrapper/issues])
 AC_LANG([C++])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIRS([m4])
