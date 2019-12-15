@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include <file.hpp>
+#include <util.hpp>
 
 namespace cc_wrapper {
 namespace file {
@@ -69,7 +70,7 @@ TEST_CASE("File descriptor basic ops", "[readwrite]") {
   fd.write(expected);
   CHECK(fd.read(buf).size() == 0);
   fd.lseek(0, SEEK_SET);
-  CHECK(fd.read(buf) == expected);
+  CHECK(util::spanEqual(fd.read(buf), expected));
 }
 
 }  // namespace file

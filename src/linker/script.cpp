@@ -6,6 +6,7 @@
 #include <linker/script.hpp>
 #include <path.hpp>
 #include <strings.hpp>
+#include <util.hpp>
 
 namespace cc_wrapper {
 namespace linker {
@@ -32,7 +33,7 @@ bool isScript(int fd) {
   std::array<char, hdr.size()> buf;
   auto data = file::read(fd, buf);
   file::lseek(fd, -data.size(), SEEK_CUR);
-  return data == hdr;
+  return util::spanEqual(hdr, data);
 }
 
 }  // namespace script

@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include <nonstd/optional.hpp>
 #include <nonstd/span.hpp>
 #include <nonstd/string_view.hpp>
@@ -18,6 +19,11 @@ nonstd::string_view basename(nonstd::string_view path);
 
 void exec(nonstd::string_view bin,
           nonstd::span<const nonstd::string_view> args);
+
+template <typename A, typename B, size_t N>
+bool spanEqual(nonstd::span<A, N> a, nonstd::span<B, N> b) {
+  return a.size() == b.size() && std::equal(a.begin(), a.end(), b.begin());
+}
 
 }  // namespace util
 }  // namespace cc_wrapper

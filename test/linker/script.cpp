@@ -6,6 +6,7 @@
 
 #include <file.hpp>
 #include <linker/script.hpp>
+#include <util.hpp>
 
 namespace cc_wrapper {
 namespace linker {
@@ -16,6 +17,10 @@ TEST_CASE("Can determine if linker script", "[isScript]") {
   bool is_script;
   nonstd::span<const char> data;
   SECTION("Empty file") { is_script = false; }
+  SECTION("Short file") {
+    data = nonstd::string_view("/");
+    is_script = false;
+  }
   SECTION("Is script") {
     data = nonstd::string_view("/* GNU Linker");
     is_script = true;
@@ -29,7 +34,7 @@ TEST_CASE("Can determine if linker script", "[isScript]") {
   fd.lseek(0, SEEK_SET);
   CHECK(isScript(fd) == is_script);
   std::array<char, 32> buf;
-  CHECK(fd.read(buf) == data);
+  CHECK(util::spanEqual(data, fd.read(buf)));
 }
 
 TEST_CASE("Can parse libc linker script", "[parseLibs]") {
