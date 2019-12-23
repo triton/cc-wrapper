@@ -7,9 +7,6 @@
 #include <bins.hpp>
 #include <env.hpp>
 #include <fmt_sv.hpp>
-#include <gcc.hpp>
-#include <generic.hpp>
-#include <linker.hpp>
 #include <strings.hpp>
 #include <util.hpp>
 
@@ -50,18 +47,7 @@ int main(int argc, char *argv[]) {
       fmt::print(stderr, "\n");
     }
 
-    switch (info.type) {
-    case bins::Type::GCC_COMPILER:
-      return gcc::ccMain(info, args_view);
-    case bins::Type::GXX_COMPILER:
-      return gcc::cxxMain(info, args_view);
-    case bins::Type::GCC_WRAPPER:
-      return gcc::wrapperMain(info, args_view);
-    case bins::Type::LINKER:
-      return linker::main(info, args_view);
-    case bins::Type::GENERIC:
-      return generic::main(info, args_view);
-    };
+    return info.func(info, args_view);
   } catch (const std::out_of_range &) {
     fmt::print(stderr, "cc-wrapper: Invalid binary name\n");
   } catch (const std::exception &e) {

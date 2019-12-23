@@ -18,19 +18,19 @@ extra_args="
 cpp -E
 "
 
-types="
-clang GCC_COMPILER
-clang++ GXX_COMPILER
-gcc GCC_COMPILER
-g++ GXX_COMPILER
-gcc-ar GCC_WRAPPER
-gcc-nm GCC_WRAPPER
-gcc-ranlib GCC_WRAPPER
-ld LINKER
-ld.bfd LINKER
-ld.gold LINKER
-ld.lld LINKER
-lld LINKER
+funcs="
+clang gcc::ccMain
+clang++ gcc::cxxMain
+gcc gcc::ccMain
+g++ gcc::cxxMain
+gcc-ar gcc::ccMain
+gcc-nm gcc::ccMain
+gcc-ranlib gcc::ccMain
+ld linker::main
+ld.bfd linker::main
+ld.gold linker::main
+ld.lld linker::main
+lld linker::main
 "
 
 info_func="
@@ -54,10 +54,10 @@ gcc $PREFIX_MAP_FLAG_GCC
 g++ $PREFIX_MAP_FLAG_GCC
 "
 
-get_type() {
+get_func() {
   local t
-  t="$(echo "$types" | grep "^$1 " | awk '{print $2}')"
-  echo "${t:-GENERIC}"
+  t="$(echo "$funcs" | grep "^$1 " | awk '{print $2}')"
+  echo "${t:-generic::main}"
 }
 
 get_extra_args() {
@@ -104,9 +104,9 @@ _make_info() {
   local class="$4"
   local extra="${5-}"
 
-  local t="$(get_type "$tool")"
+  local f="$(get_func "$tool")"
   local args="$(get_extra_args "$name")"
-  echo "map.emplace(\"$refname\", new $class(\"$TARGET${TARGET:+-}$name\", Type::$t, $args$extra));"
+  echo "map.emplace(\"$refname\", new $class(\"$TARGET${TARGET:+-}$name\", $f, $args$extra));"
 }
 
 make_info() {
@@ -178,7 +178,10 @@ process_tools() {
 exec 3>"$1"
 exec 4>"$2"
 
-echo '#include "bins.hpp"' >&3
+echo '#include <bins.hpp>' >&3
+echo '#include <gcc.hpp>' >&3
+echo '#include <generic.hpp>' >&3
+echo '#include <linker.hpp>' >&3
 echo '' >&3
 echo 'namespace cc_wrapper {' >&3
 echo 'namespace bins {' >&3

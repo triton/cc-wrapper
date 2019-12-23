@@ -2,6 +2,7 @@
 
 #include <bins.hpp>
 #include <config.h>
+#include <generic.hpp>
 #include <main.hpp>
 #include <mock_exec.hpp>
 
@@ -10,8 +11,8 @@ namespace bins {
 
 InfoMap makeInfoMap() {
   InfoMap map;
-  map.emplace("true", new Info("true", Type::GENERIC, {}));
-  map.emplace("false", new Info("false", Type::GENERIC, {"-n"}));
+  map.emplace("true", new Info("true", generic::main, {}));
+  map.emplace("false", new Info("false", generic::main, {"-n"}));
   return map;
 }
 

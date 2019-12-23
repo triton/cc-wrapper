@@ -1,7 +1,7 @@
 #pragma once
-#include <functional>
 #include <memory>
 #include <nonstd/optional.hpp>
+#include <nonstd/span.hpp>
 #include <nonstd/string_view.hpp>
 #include <parallel_hashmap/phmap.h>
 #include <utility>
@@ -10,27 +10,27 @@
 namespace cc_wrapper {
 namespace bins {
 
-enum class Type { GENERIC, GCC_COMPILER, GXX_COMPILER, GCC_WRAPPER, LINKER };
+struct Info;
 
 using Name = nonstd::string_view;
-using Path = nonstd::string_view;
+using Func = int (*)(const Info &, nonstd::span<const nonstd::string_view>);
 using Flag = nonstd::string_view;
 
 struct Info {
   Name name;
-  Type type;
+  Func func;
   std::vector<Flag> extra_args;
 
-  inline Info(Name name, Type type, std::vector<Flag> &&extra_args)
-      : name(name), type(type), extra_args(std::move(extra_args)) {}
+  inline Info(Name name, Func func, std::vector<Flag> &&extra_args)
+      : name(name), func(func), extra_args(std::move(extra_args)) {}
 };
 
 struct GccInfo : public Info {
   nonstd::optional<Flag> prefix_map_flag;
 
-  inline GccInfo(Name name, Type type, std::vector<Flag> &&extra_args,
+  inline GccInfo(Name name, Func func, std::vector<Flag> &&extra_args,
                  nonstd::optional<Flag> &&prefix_map_flag)
-      : Info(name, type, std::move(extra_args)),
+      : Info(name, func, std::move(extra_args)),
         prefix_map_flag(prefix_map_flag) {}
 };
 
