@@ -67,14 +67,20 @@ src/bins.cpp bins.txt: $(srcdir)/scripts/generate-bins.sh
 	mv src/bins.cpp.tmp src/bins.cpp
 	mv bins.txt.tmp bins.txt
 
-MAINTAINERCLEANFILES = src/gcc/args.cpp src/gcc/harden_filter.cpp \
-                       src/gcc/path_filter.cpp src/linker/args_dyld.cpp \
-                       src/linker/args_dynamic.cpp src/linker/args_libs.cpp \
+MAINTAINERCLEANFILES = \
+                       src/gcc/args.cpp \
+                       src/gcc/harden_filter.cpp \
+                       src/gcc/path_filter.cpp \
+                       src/linker/args_dyld.cpp \
+                       src/linker/args_dynamic.cpp \
+                       src/linker/args_libs.cpp \
                        src/linker/args_linking.cpp \
                        src/linker/args_filter_linking.cpp \
                        src/linker/compiler_filter.cpp \
                        src/linker/path_filter.cpp \
-                       src/linker/script_libs.cpp src/path_canonicalize.cpp
+                       src/linker/script_libs.cpp \
+                       src/path_canonicalize.cpp
+
 %.cpp: %.cpp.rl
 	$(RAGEL) -G2 -C -o $@ $<
 
@@ -84,19 +90,34 @@ clang-format:
 	$(CLANG_FORMAT) -i $(addprefix $(srcdir)/,$(filter-out $(MAINTAINERCLEANFILES),$(DIST_SOURCES)) $(HEADERS))
 
 noinst_LIBRARIES = libccwrapper.a
-libccwrapper_a_SOURCES = src/env.cpp src/file.cpp src/flags.cpp src/fmt.cpp \
-                         src/gcc.cpp src/gcc/args.cpp src/gcc/harden.cpp \
-                         src/gcc/harden_filter.cpp src/gcc/path.cpp \
-                         src/gcc/path_filter.cpp src/generic.cpp \
-                         src/linker.cpp src/linker/args_dyld.cpp \
-                         src/linker/args_dynamic.cpp src/linker/args_libs.cpp \
+libccwrapper_a_SOURCES = \
+                         src/env.cpp \
+                         src/file.cpp \
+                         src/flags.cpp \
+                         src/fmt.cpp \
+                         src/gcc.cpp \
+                         src/gcc/args.cpp \
+                         src/gcc/harden.cpp \
+                         src/gcc/harden_filter.cpp \
+                         src/gcc/path.cpp \
+                         src/gcc/path_filter.cpp \
+                         src/generic.cpp \
+                         src/linker.cpp \
+                         src/linker/args_dyld.cpp \
+                         src/linker/args_dynamic.cpp \
+                         src/linker/args_libs.cpp \
                          src/linker/args_linking.cpp \
                          src/linker/args_filter_linking.cpp \
                          src/linker/compiler_filter.cpp \
-                         src/linker/path_filter.cpp src/linker/script_libs.cpp \
-                         src/linker/state.cpp src/linker/script.cpp \
-                         src/main.cpp src/path.cpp src/path_canonicalize.cpp \
-                         src/strings.cpp src/util.cpp
+                         src/linker/path_filter.cpp \
+                         src/linker/script_libs.cpp \
+                         src/linker/state.cpp \
+                         src/linker/script.cpp \
+                         src/main.cpp \
+                         src/path.cpp \
+                         src/path_canonicalize.cpp \
+                         src/strings.cpp \
+                         src/util.cpp
 
 bin_PROGRAMS = cc-wrapper
 cc_wrapper_SOURCES = src/realmain.cpp
@@ -194,27 +215,50 @@ install-links: $(srcdir)/scripts/install-links.sh bins.txt
 		LINKDIR="$(linkdir)" TARGET_ALIAS="$(target_alias)" $< bins.txt
 
 
-EXTRA_DIST = LICENSE NOTICE README.md \
-             src/gcc/args.cpp.rl src/gcc/harden_filter.cpp.rl \
-             src/gcc/path_filter.cpp.rl src/linker/args_dyld.cpp.rl \
-             src/linker/args_dynamic.cpp.rl src/linker/args_libs.cpp.rl \
+EXTRA_DIST = \
+             LICENSE \
+             NOTICE \
+             README.md \
+             src/gcc/args.cpp.rl \
+             src/gcc/harden_filter.cpp.rl \
+             src/gcc/path_filter.cpp.rl \
+             src/linker/args_dyld.cpp.rl \
+             src/linker/args_dynamic.cpp.rl \
+             src/linker/args_libs.cpp.rl \
              src/linker/args_linking.cpp.rl \
              src/linker/args_filter_linking.cpp.rl \
-             src/linker/path_filter.cpp.rl src/path_canonicalize.cpp.rl \
+             src/linker/path_filter.cpp.rl \
+             src/path_canonicalize.cpp.rl \
              src/linker/script_libs.cpp.rl \
-             scripts/generate-bins.sh scripts/install-links.sh \
-             third_party/fmt/include third_party/fmt/src \
+             scripts/generate-bins.sh \
+             scripts/install-links.sh \
+             third_party/fmt/include \
+             third_party/fmt/src \
              third_party/optional-lite/include \
              third_party/parallel-hashmap/parallel_hashmap \
              third_party/span-lite/include \
              third_party/string-view-lite/include
 
-noinst_HEADERS = src/bins.hpp src/env.hpp src/file.hpp src/flags.hpp \
-                 src/fmt_sv.hpp src/gcc.hpp src/gcc/args.hpp \
-                 src/gcc/harden.hpp src/gcc/path.hpp src/generic.hpp \
-                 src/graph.hpp src/linker.hpp src/linker/args.hpp \
+noinst_HEADERS = \
+                 src/bins.hpp \
+                 src/env.hpp \
+                 src/file.hpp \
+                 src/flags.hpp \
+                 src/fmt_sv.hpp \
+                 src/gcc.hpp \
+                 src/gcc/args.hpp \
+                 src/gcc/harden.hpp \
+                 src/gcc/path.hpp \
+                 src/generic.hpp \
+                 src/graph.hpp \
+                 src/linker.hpp \
+                 src/linker/args.hpp \
                  src/linker/compiler.hpp \
-                 src/linker/path.hpp src/linker/script.hpp \
-                 src/linker/state.hpp src/main.hpp src/path.hpp \
-                 src/strings.hpp src/util.hpp \
+                 src/linker/path.hpp \
+                 src/linker/script.hpp \
+                 src/linker/state.hpp \
+                 src/main.hpp \
+                 src/path.hpp \
+                 src/strings.hpp \
+                 src/util.hpp \
                  test/mock_exec.hpp
