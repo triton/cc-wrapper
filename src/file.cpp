@@ -40,6 +40,12 @@ void rename(const char *oldpath, const char *newpath) {
         fmt::format("rename `{}` -> `{}`", oldpath, newpath));
 }
 
+void unlink(const char *path) {
+  if (::unlink(path) < 0)
+    throw std::system_error(errno, std::generic_category(),
+                            fmt::format("unlink `{}`", path));
+}
+
 nonstd::optional<std::string> readlink(const char *path) {
   struct stat buf;
   if (::lstat(path, &buf) < 0)

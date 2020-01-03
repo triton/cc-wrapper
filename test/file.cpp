@@ -19,11 +19,11 @@ TEST_CASE("Stat", "[stat]") {
 
 TEST_CASE("Exists", "[exists]") {
   constexpr char text[] = "test-file-text";
-  unlink(text);
+  ::unlink(text);
   CHECK(!exists(text));
   Fd(text, O_RDWR | O_CREAT);
   CHECK(exists(text));
-  unlink(text);
+  ::unlink(text);
 }
 
 TEST_CASE("Readlink works", "[readlink]") {
@@ -32,9 +32,9 @@ TEST_CASE("Readlink works", "[readlink]") {
   constexpr char link[] = "test-file-dir/test-file-link";
   constexpr char link2[] = "test-file-link2";
   constexpr char text[] = "test-file-dir/test-file-text";
-  unlink(link);
-  unlink(link2);
-  unlink(text);
+  ::unlink(link);
+  ::unlink(link2);
+  ::unlink(text);
   rmdir(dir);
   CHECK(mkdir(dir, 0755) == 0);
   CHECK(symlink("test-file-text", link) == 0);
@@ -45,9 +45,9 @@ TEST_CASE("Readlink works", "[readlink]") {
   CHECK(readlinkCanonicalized(text) == nonstd::nullopt);
   CHECK(readlinkCanonicalized(link) == text);
   CHECK(readlinkCanonicalized(link2) == "/no-such-path");
-  unlink(link);
-  unlink(link2);
-  unlink(text);
+  ::unlink(link);
+  ::unlink(link2);
+  ::unlink(text);
   rmdir(dir);
 }
 
@@ -57,6 +57,14 @@ TEST_CASE("Rename", "[rename]") {
   rename("test-file-rename", "test-file-rename2");
   ::unlink("test-file-rename2");
   CHECK_THROWS_AS(rename("/no-such-path/1", "/2"), std::system_error);
+}
+
+TEST_CASE("Unlink", "[unlink]") {
+  Fd("test-file-unlink", O_RDWR | O_CREAT);
+  CHECK(exists("test-file-unlink"));
+  unlink("test-file-unlink");
+  CHECK(!exists("test-file-unlink"));
+  CHECK_THROWS_AS(unlink("test-file-unlink"), std::system_error);
 }
 
 TEST_CASE("Open file descriptor handles errors", "[open]") {
