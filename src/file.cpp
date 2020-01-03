@@ -1,4 +1,5 @@
 #include <fcntl.h>
+#include <fmt/format.h>
 #include <sys/stat.h>
 #include <system_error>
 #include <unistd.h>
@@ -18,19 +19,22 @@ bool exists(const char *path) {
     return true;
   if (errno == ENOENT)
     return false;
-  throw std::system_error(errno, std::generic_category(), "stat");
+  throw std::system_error(errno, std::generic_category(),
+                          fmt::format("stat `{}`", path));
 }
 
 nonstd::optional<std::string> readlink(const char *path) {
   struct stat buf;
   if (::lstat(path, &buf) < 0)
-    throw std::system_error(errno, std::generic_category(), "lstat");
+    throw std::system_error(errno, std::generic_category(),
+                            fmt::format("lstat `{}`", path));
   if ((buf.st_mode & S_IFMT) != S_IFLNK)
     return nonstd::nullopt;
   std::string ret(buf.st_size, '\0');
   ssize_t r = ::readlink(path, &ret[0], ret.size());
   if (r < 0)
-    throw std::system_error(errno, std::generic_category(), "readlink");
+    throw std::system_error(errno, std::generic_category(),
+                            fmt::format("readlink `{}`", path));
   if (static_cast<size_t>(r) != ret.size())
     throw std::runtime_error("Bad readlink data");
   return ret;
@@ -57,7 +61,8 @@ Fd::~Fd() { close(fd); }
 int Fd::open(const char *path, int flags) {
   int fd = ::open(path, flags);
   if (fd < 0)
-    throw std::system_error(errno, std::generic_category(), "open");
+    throw std::system_error(errno, std::generic_category(),
+                            fmt::format("open `{}`", path));
   return fd;
 }
 
