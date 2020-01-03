@@ -1,8 +1,8 @@
 #include <nonstd/optional.hpp>
 #include <nonstd/string_view.hpp>
 
-#include <path.hpp>
 #include <gcc/path.hpp>
+#include <path.hpp>
 
 namespace cc_wrapper {
 namespace gcc {
@@ -15,7 +15,8 @@ namespace path {
   action open { open_flag = arg; }
   action path { path = nonstd::string_view(p, pe-p); fbreak; }
 
-  includes = ( 'isystem' | 'idirafter' | 'I' ) @{ is_include = true; };
+  includes = ( 'isystem' | 'idirafter' @{ include_after = true; } | 'I' )
+      @{ is_include = true; };
   libs = [LB];
   main := '-' ( includes | libs ) %/open any* >path;
 
@@ -29,14 +30,16 @@ void appendGood(std::vector<nonstd::string_view> &new_args,
                 std::vector<nonstd::string_view> &saved_includes) {
   int cs;
   nonstd::optional<nonstd::string_view> open_flag;
-  bool is_include;
+  std::vector<nonstd::string_view> saved_includes_after;
+  bool is_include, include_after;
   for (const auto &arg : old_args) {
     if (open_flag) {
       if (cc_wrapper::path::isPure(arg, pure_prefixes)) {
         new_args.push_back(*open_flag);
         new_args.push_back(arg);
         if (is_include)
-          saved_includes.push_back(arg);
+          (include_after ? saved_includes_after : saved_includes)
+              .push_back(arg);
       }
       open_flag = nonstd::nullopt;
       continue;
@@ -47,6 +50,7 @@ void appendGood(std::vector<nonstd::string_view> &new_args,
     const char *eof = pe;
     nonstd::optional<nonstd::string_view> path;
     is_include = false;
+    include_after = false;
     // clang-format off
     %% write init;
     %% write exec;
@@ -57,8 +61,11 @@ void appendGood(std::vector<nonstd::string_view> &new_args,
       continue;
     new_args.push_back(arg);
     if (path && is_include)
-      saved_includes.push_back(*path);
+      (include_after ? saved_includes_after : saved_includes).push_back(*path);
   }
+
+  for (const auto &inc : saved_includes_after)
+    saved_includes.push_back(inc);
 }
 
 }  // namespace path

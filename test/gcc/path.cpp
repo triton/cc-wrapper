@@ -25,8 +25,8 @@ TEST_CASE("Filter Arguments", "[appendGood]") {
       "/build/include",
       "/build/include2",
       "/build/include",
-      "/build/include",
       "m/usr/include",
+      "/build/include",
   };
   const std::vector<nonstd::string_view> prefixes = {
       "/build",
