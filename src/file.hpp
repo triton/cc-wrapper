@@ -17,6 +17,7 @@ void lseek(int fd, off_t offset, int whence);
 class Fd {
 public:
   Fd(const char *path, int flags);
+  Fd(const char *path, int flags, mode_t mode);
   Fd(int fd);
   Fd(const Fd &) = delete;
   Fd(Fd &&) = delete;
@@ -36,8 +37,6 @@ public:
 
 private:
   int fd;
-
-  static int open(const char *path, int flags);
 };
 
 }  // namespace file

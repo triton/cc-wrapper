@@ -3,6 +3,7 @@
 #include <sys/stat.h>
 #include <system_error>
 #include <unistd.h>
+#include <utility>
 
 #include <file.hpp>
 #include <path.hpp>
@@ -52,19 +53,23 @@ nonstd::optional<std::string> readlinkCanonicalized(const char *path) {
   return ret;
 }
 
-Fd::Fd(const char *path, int flags) : Fd(open(path, flags)) {}
-
-Fd::Fd(int fd) : fd(fd) {}
-
-Fd::~Fd() { close(fd); }
-
-int Fd::open(const char *path, int flags) {
-  int fd = ::open(path, flags);
+template <typename... Args>
+int open(const char *path, Args &&... args) {
+  int fd = ::open(path, std::forward<Args>(args)...);
   if (fd < 0)
     throw std::system_error(errno, std::generic_category(),
                             fmt::format("open `{}`", path));
   return fd;
 }
+
+Fd::Fd(const char *path, int flags) : Fd(open(path, flags)) {}
+
+Fd::Fd(const char *path, int flags, mode_t mode)
+    : Fd(open(path, flags, mode)) {}
+
+Fd::Fd(int fd) : fd(fd) {}
+
+Fd::~Fd() { close(fd); }
 
 nonstd::span<char> read(int fd, nonstd::span<char> buf) {
   ssize_t r = ::read(fd, buf.data(), buf.size());
