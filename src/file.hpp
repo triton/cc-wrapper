@@ -2,10 +2,12 @@
 #include <nonstd/optional.hpp>
 #include <nonstd/span.hpp>
 #include <string>
+#include <sys/types.h>
 
 namespace cc_wrapper {
 namespace file {
 
+struct stat stat(const char *path);
 bool exists(const char *path);
 nonstd::optional<std::string> readlink(const char *path);
 nonstd::optional<std::string> readlinkCanonicalized(const char *path);

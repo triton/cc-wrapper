@@ -13,6 +13,15 @@
 namespace cc_wrapper {
 namespace file {
 
+struct stat stat(const char *path) {
+  struct stat buf;
+  int ret = ::stat(path, &buf);
+  if (ret < 0)
+    throw std::system_error(errno, std::generic_category(),
+                            fmt::format("stat `{}`", path));
+  return buf;
+}
+
 bool exists(const char *path) {
   struct stat buf;
   int ret = ::stat(path, &buf);

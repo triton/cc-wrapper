@@ -11,6 +11,12 @@
 namespace cc_wrapper {
 namespace file {
 
+TEST_CASE("Stat", "[stat]") {
+  auto st = stat("test");
+  CHECK(S_ISDIR(st.st_mode));
+  CHECK_THROWS_AS(stat("/no-such-path/1"), std::system_error);
+}
+
 TEST_CASE("Exists", "[exists]") {
   constexpr char text[] = "test-file-text";
   unlink(text);
