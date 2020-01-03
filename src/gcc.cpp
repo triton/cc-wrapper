@@ -18,9 +18,9 @@
 namespace cc_wrapper {
 namespace gcc {
 
-static int ccMainInternal(const bins::GccInfo &info,
-                          nonstd::span<const nonstd::string_view> args,
-                          bool cxx) {
+std::vector<nonstd::string_view>
+rewriteArgs(nonstd::span<const nonstd::string_view> args, bool cxx,
+            std::vector<nonstd::string_view> &saved_includes) {
   const auto state = args::parseState(args, cxx);
   const auto harden_env = harden::getEnv();
 
@@ -68,8 +68,15 @@ static int ccMainInternal(const bins::GccInfo &info,
     final_args.push_back("-nostdinc");
   final_args.push_back("-B" TOOLDIR);
   harden::appendFlags(final_args, harden_env, state);
-  std::vector<nonstd::string_view> saved_includes;
   path::appendGood(final_args, new_args, env::purePrefixes(), saved_includes);
+  return final_args;
+}
+
+static int ccMainInternal(const bins::GccInfo &info,
+                          nonstd::span<const nonstd::string_view> args,
+                          bool cxx) {
+  std::vector<nonstd::string_view> saved_includes;
+  auto final_args = rewriteArgs(args, cxx, saved_includes);
 #ifdef BUILD_DIR_ENV_VAR
   {
     auto val = util::getenv(BUILD_DIR_ENV_VAR);
