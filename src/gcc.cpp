@@ -15,26 +15,8 @@
 #include <strings.hpp>
 #include <util.hpp>
 
-#define CC_VAR(name) (VAR_PREFIX "_CC_" name)
-
 namespace cc_wrapper {
 namespace gcc {
-
-namespace detail {
-
-bool &isHardening() {
-  static bool harden = util::getenv(CC_VAR("HARDEN")) != "";
-  return harden;
-}
-
-bool doHardenFlag(nonstd::string_view flag) {
-  nonstd::optional<nonstd::string_view> val = util::getenv(flag);
-  if (val)
-    return *val == "1";
-  return isHardening();
-}
-
-}  // namespace detail
 
 static int ccMainInternal(const bins::GccInfo &info,
                           nonstd::span<const nonstd::string_view> args,
