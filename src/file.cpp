@@ -33,6 +33,13 @@ bool exists(const char *path) {
                           fmt::format("stat `{}`", path));
 }
 
+void rename(const char *oldpath, const char *newpath) {
+  if (::rename(oldpath, newpath) < 0)
+    throw std::system_error(
+        errno, std::generic_category(),
+        fmt::format("rename `{}` -> `{}`", oldpath, newpath));
+}
+
 nonstd::optional<std::string> readlink(const char *path) {
   struct stat buf;
   if (::lstat(path, &buf) < 0)

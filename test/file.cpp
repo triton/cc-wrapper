@@ -51,6 +51,14 @@ TEST_CASE("Readlink works", "[readlink]") {
   rmdir(dir);
 }
 
+TEST_CASE("Rename", "[rename]") {
+  Fd("test-file-rename", O_RDWR | O_CREAT);
+  ::unlink("test-file-rename2");
+  rename("test-file-rename", "test-file-rename2");
+  ::unlink("test-file-rename2");
+  CHECK_THROWS_AS(rename("/no-such-path/1", "/2"), std::system_error);
+}
+
 TEST_CASE("Open file descriptor handles errors", "[open]") {
   CHECK_THROWS_AS(Fd("/no-such-path/cc-wrapper", O_RDONLY), std::system_error);
 }

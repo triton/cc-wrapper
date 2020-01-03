@@ -9,6 +9,7 @@ namespace file {
 
 struct stat stat(const char *path);
 bool exists(const char *path);
+void rename(const char *oldpath, const char *newpath);
 nonstd::optional<std::string> readlink(const char *path);
 nonstd::optional<std::string> readlinkCanonicalized(const char *path);
 
